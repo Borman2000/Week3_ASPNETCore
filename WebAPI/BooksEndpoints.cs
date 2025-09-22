@@ -21,7 +21,8 @@ public static class BooksEndpoints
             return Results.Content(html, "text/html");
         });
 
-        app.MapGet("/books", async (BooksDb db) => { var bks = await db.Books.ToListAsync();
+        app.MapGet("/books", async (BooksDb db) => {
+            var bks = await db.Books.ToListAsync();
             return Results.Ok(bks);
         });
 
