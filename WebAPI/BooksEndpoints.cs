@@ -1,10 +1,8 @@
-using Microsoft.EntityFrameworkCore;
-
 namespace WebAPI;
 
 public static class BooksEndpoints
 {
-    public static void Map(WebApplication app)
+    public static void Map(WebApplication app, IBookRepository bookRepoService)
     {
         app.MapGet("/", () =>
         {
@@ -21,60 +19,10 @@ public static class BooksEndpoints
             return Results.Content(html, "text/html");
         });
 
-        app.MapGet("/books", async (BooksDb db) => {
-            var bks = await db.Books.ToListAsync();
-            return Results.Ok(bks);
-        });
-
-        app.MapGet("/books/{id:guid}", async (Guid id, BooksDb db) =>
-            await db.Books.FindAsync(id) is Book book ? Results.Ok(book) : Results.NotFound($"Book with id {id} was not found."));
-
-        app.MapPost("/books", async (Book book, BooksDb db) =>
-        {
-            db.Books.Add(book);
-            await db.SaveChangesAsync();
-            Console.WriteLine(book);
-
-            return Results.Created($"/books/{book.Id}", book);
-        });
-
-        app.MapPut("/books/{id}", async (HttpContext context, string id, BooksDb db) =>
-        {
-             Guid.TryParse(id, out Guid guidId);
-            if(Guid.Empty == guidId) return Results.NotFound($"Book with id {id} was not found: invalid id format");
-
-            var book = await db.Books.FindAsync(guidId);
-            if (book is null) return Results.NotFound($"Book with id {guidId} was not found.");
-
-            Book? source;
-
-            if (context.Request.HasJsonContentType())
-                source = await context.Request.ReadFromJsonAsync<Book>();
-            else
-                return Results.BadRequest("No data for update");
-
-            if (source is not null)
-            {
-                book.Author = source.Author ?? book.Author;
-                book.Title = source.Title ?? book.Title;
-                book.ISBN = source.ISBN ?? book.ISBN;
-                book.Year = source.Year > 1900 ? source.Year : book.Year;
-                book.Price = source.Price > 0 ? source.Price : book.Price;
-            }
-
-            await db.SaveChangesAsync();
-
-            return Results.Ok($"Book with id {book.Id} was updated.");
-        });
-
-        app.MapDelete("/books/{id:guid}", async (Guid id, BooksDb db) =>
-        {
-            if (await db.Books.FindAsync(id) is not Book book) return Results.NotFound($"Book with id {id} was not found.");
-
-            db.Books.Remove(book);
-            await db.SaveChangesAsync();
-            return Results.NoContent();
-
-        });
+        app.MapGet("/books", bookRepoService.GetAllAsync);
+        app.MapGet("/books/{id:guid}", bookRepoService.GetByIdAsync);
+        app.MapPost("/books", bookRepoService.CreateAsync);
+        app.MapPut("/books/{id}", bookRepoService.UpdateAsync);
+        app.MapDelete("/books/{id:guid}", bookRepoService.DeleteAsync);
     }
 }

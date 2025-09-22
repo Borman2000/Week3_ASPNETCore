@@ -2,7 +2,7 @@ namespace WebAPI;
 
 using Microsoft.EntityFrameworkCore;
 
-class BooksDb : DbContext
+public class BooksDb : DbContext
 {
     public BooksDb(DbContextOptions<BooksDb> options)
         : base(options) { }

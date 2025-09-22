@@ -22,6 +22,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddDbContext<BooksDb>(opt => opt.UseInMemoryDatabase("BookList"));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.Configure<CustomOptions>(builder.Configuration.GetSection(CustomOptions.Custom));
+builder.Services.AddScoped<IBookRepository, InMemoryBookRepository>();
 
 #if SERILOG_RESPONSES
 builder.Services.AddSerilog();
@@ -64,7 +65,11 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-BooksEndpoints.Map(app);
+using (var scope = app.Services.CreateScope())
+{
+	var scopedService = scope.ServiceProvider.GetRequiredService<IBookRepository>();
+	BooksEndpoints.Map(app, scopedService);
+}
 
 app.Run();
 
