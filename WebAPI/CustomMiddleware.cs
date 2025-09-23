@@ -16,7 +16,7 @@ public class CustomMiddleware
     public async Task InvokeAsync(HttpContext context)
     {
         var timer = Stopwatch.StartNew();
-        var strCorrName = context.RequestServices.GetRequiredService<IOptions<CustomOptions>>().Value.CorrelationName;
+        var strCorrName = context.RequestServices.GetRequiredService<IOptions<ApiSettings>>().Value.CorrelationName;
         var correlationId = context.Request.Headers[strCorrName].FirstOrDefault();
 
         if (string.IsNullOrEmpty(correlationId))

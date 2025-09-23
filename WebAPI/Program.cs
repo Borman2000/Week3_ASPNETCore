@@ -21,7 +21,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddDbContext<BooksDb>(opt => opt.UseInMemoryDatabase("BookList"));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-builder.Services.Configure<CustomOptions>(builder.Configuration.GetSection(CustomOptions.Custom));
+// builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection(ApiSettings.Section));
+builder.Services.AddOptions<ApiSettings>().Bind(builder.Configuration.GetSection(ApiSettings.Section)).ValidateDataAnnotations().ValidateOnStart();
 builder.Services.AddScoped<IBookRepository, InMemoryBookRepository>();
 
 #if SERILOG_RESPONSES
@@ -40,7 +41,7 @@ if (app.Environment.IsDevelopment())
     app.Use(async (context, next) =>
     {
         var timer = Stopwatch.StartNew();
-        var strCorrName = app.Services.GetRequiredService<IOptions<CustomOptions>>().Value.CorrelationName;
+        var strCorrName = app.Services.GetRequiredService<IOptions<ApiSettings>>().Value.CorrelationName;
         var correlationId = context.Request.Headers[strCorrName].FirstOrDefault();
 
         if (string.IsNullOrEmpty(correlationId))
@@ -70,6 +71,9 @@ using (var scope = app.Services.CreateScope())
 	var scopedService = scope.ServiceProvider.GetRequiredService<IBookRepository>();
 	BooksEndpoints.Map(app, scopedService);
 }
+
+// To test Environments: Development <=> Production in IIS Express in launchSettings.json
+Console.WriteLine($"App name: {app.Services.GetRequiredService<IOptions<ApiSettings>>().Value.Name}, version: {app.Services.GetRequiredService<IOptions<ApiSettings>>().Value.Version}");
 
 app.Run();
 
