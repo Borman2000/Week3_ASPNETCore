@@ -1,6 +1,7 @@
-namespace WebAPI;
-
+using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+
+namespace DataAccess.Repositories;
 
 public class BooksDb : DbContext
 {

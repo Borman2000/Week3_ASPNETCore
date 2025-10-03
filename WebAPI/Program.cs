@@ -1,13 +1,17 @@
 // #define SERILOG_RESPONSES       // Serilog logging/measurement. Otherwise - manual.
 #define USE_INLINE
 
+
+using Application;
+using Application.Models;
+using DataAccess;
+using DataAccess.Repositories.Impl;
+using Serilog;
+using WebAPI;
 #if USE_INLINE
 using System.Diagnostics;
 using Microsoft.Extensions.Options;
 #endif
-using Microsoft.EntityFrameworkCore;
-using Serilog;
-using WebAPI;
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
@@ -17,13 +21,8 @@ Log.Information("----- STARTING -----");
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddDbContext<BooksDb>(opt => opt.UseInMemoryDatabase("BookList"));
-builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-// builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection(ApiSettings.Section));
-builder.Services.AddOptions<ApiSettings>().Bind(builder.Configuration.GetSection(ApiSettings.Section)).ValidateDataAnnotations().ValidateOnStart();
-builder.Services.AddScoped<IBookRepository, InMemoryBookRepository>();
+builder.Services.AddDataAccess(builder.Configuration)
+				.AddApplication(builder.Configuration);
 
 #if SERILOG_RESPONSES
 builder.Services.AddSerilog();
@@ -54,6 +53,8 @@ if (app.Environment.IsDevelopment())
         context.Items["CorrelationId"] = correlationId;
 
         await next.Invoke();
+
+        timer.Stop();
 
 #if !SERILOG_RESPONSES
         Log.Information($"Request {correlationId}: ({context.Request.Method} {context.Request.Path}) processed in {timer.ElapsedMilliseconds} ms with status response {context.Response.StatusCode}");

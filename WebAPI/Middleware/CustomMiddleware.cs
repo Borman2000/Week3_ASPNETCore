@@ -1,8 +1,9 @@
 using System.Diagnostics;
+using Application.Models;
 using Microsoft.Extensions.Options;
 using Serilog;
 
-namespace WebAPI;
+namespace WebAPI.Middleware;
 
 public class CustomMiddleware
 {
