@@ -21,6 +21,7 @@ Log.Information("----- STARTING -----");
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddSwagger();
 builder.Services.AddDataAccess(builder.Configuration)
 				.AddApplication(builder.Configuration);
 
@@ -72,6 +73,9 @@ using (var scope = app.Services.CreateScope())
 	var scopedService = scope.ServiceProvider.GetRequiredService<IBookRepository>();
 	BooksEndpoints.Map(app, scopedService);
 }
+
+app.UseSwagger();
+app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPI V1"); });
 
 // To test Environments: Development <=> Production in IIS Express in launchSettings.json
 Console.WriteLine($"App name: {app.Services.GetRequiredService<IOptions<ApiSettings>>().Value.Name}, version: {app.Services.GetRequiredService<IOptions<ApiSettings>>().Value.Version}");
