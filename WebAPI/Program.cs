@@ -66,6 +66,8 @@ if (app.Environment.IsDevelopment())
 #endif
 }
 
+// app.UseDefaultFiles(); // Enables serving default files like index.html
+app.UseStaticFiles();  // Enables serving static files from wwwroot
 app.UseHttpsRedirection();
 
 using (var scope = app.Services.CreateScope())
