@@ -21,7 +21,9 @@ public static class ApplicationDependencyInjection
 	{
 		services.AddEndpointsApiExplorer();
 		services.AddOptions<ApiSettings>().Bind(configuration.GetSection(ApiSettings.Section)).ValidateDataAnnotations().ValidateOnStart();
-		services.AddScoped<IBookRepository, InMemoryBookRepository>();
+		services.AddScoped<IAuthorRepository, AuthorRepository>();
+		services.AddScoped<IBookRepository, BookRepository>();
+		services.AddScoped<ICategoryRepository, CategoryRepository>();
 	}
 
 	private static void RegisterMapper(this IServiceCollection services)

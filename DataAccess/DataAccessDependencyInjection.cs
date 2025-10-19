@@ -1,7 +1,10 @@
-﻿using DataAccess.Repositories;
+﻿using System.ComponentModel.DataAnnotations;
+using DataAccess.Repositories;
+using DataAccess.Repositories.Impl;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace DataAccess;
 
@@ -21,25 +24,26 @@ public static class DataAccessDependencyInjection
 
     private static void AddRepositories(this IServiceCollection services)
     {
-        // services.AddScoped<ITodoItemRepository, TodoItemRepository>();
+        services.AddScoped<IUnitOfWork>(c => c.GetRequiredService<BookStoreDbContext>());
+        services.AddScoped<IBookRepository, BookRepository>();
         // services.AddScoped<ITodoListRepository, TodoListRepository>();
     }
 
     private static void AddDatabase(this IServiceCollection services, IConfiguration configuration)
     {
-	    services.AddDbContext<BooksDb>(opt => opt.UseInMemoryDatabase("BookList"));
-	    // var databaseConfig = configuration.GetSection("Database").Get<DatabaseConfiguration>();
-     //
-     //    if (databaseConfig.UseInMemoryDatabase)
-     //        services.AddDbContext<DatabaseContext>(options =>
-     //        {
-     //            options.UseInMemoryDatabase("NTierDatabase");
-     //            options.ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning));
-     //        });
-     //    else
-     //        services.AddDbContext<DatabaseContext>(options =>
-     //            options.UseSqlServer(databaseConfig.ConnectionString,
-     //                opt => opt.MigrationsAssembly(typeof(DatabaseContext).Assembly.FullName)));
+        var connectionString = configuration.GetSection(DbSettings.Section).Get<DbSettings>()?.ConnectionString;
+        services.AddDbContext<BookStoreDbContext>(opt => opt.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+        //
+        //    if (databaseConfig.UseInMemoryDatabase)
+        //        services.AddDbContext<DatabaseContext>(options =>
+        //        {
+        //            options.UseInMemoryDatabase("NTierDatabase");
+        //            options.ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning));
+        //        });
+        //    else
+        //        services.AddDbContext<DatabaseContext>(options =>
+        //            options.UseSqlServer(databaseConfig.ConnectionString,
+        //                opt => opt.MigrationsAssembly(typeof(DatabaseContext).Assembly.FullName)));
     }
 
     private static void AddIdentity(this IServiceCollection services)
@@ -65,4 +69,11 @@ public static class DataAccessDependencyInjection
         //     options.User.RequireUniqueEmail = true;
         // });
     }
-}
+
+    public class DbSettings
+    {
+        public const string Section = "DBSettings";
+
+        [Required(AllowEmptyStrings = false)]
+        public string ConnectionString { get; set; }
+    }}
