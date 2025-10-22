@@ -6,29 +6,27 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.Repositories;
 
-public class BookRepository(BookStoreDbContext dbContext) : EfRepository<Book, BookDto>(dbContext), IBookRepository
+public class BookRepository(BookStoreDbContext dbContext, IMapper dtoMapper) : EfRepository<Book, BookDto>(dbContext, dtoMapper), IBookRepository
 {
-	public new async Task<IEnumerable<Book>> GetAllAsync()
-	{
-//		return await DbSet.Include(entity => entity.Author).ToListAsync();
-		return await DbSet.Include(entity => entity.Categories).ToListAsync();
-	}
+//	public new async Task<IEnumerable<Book>> GetAllAsync()
+//	{
+//		var books = await DbSet.Include(a => a.Author)
+//			.Include(b => b.Categories).ToListAsync();
+//		var dto = DtoMapper.Map<List<BookDto>>(books);
+////		return dto;
+////		return await DbSet.Include(entity => entity.Author).ToListAsync();
+//		return await DbSet.Include(entity => entity.Categories).ToListAsync();
+//	}
 
-	public new async Task<BookDto?> GetByIdAsync(Guid id, IMapper mapper)
+	public override async Task<BookDto?> GetByIdAsync(Guid id)
 	{
 		var book = await DbSet.Include(a => a.Author).Include(a => a.Categories).SingleOrDefaultAsync(a => a.Id == id);
-		var bookDto = mapper.Map<BookDto>(book);
+		var bookDto = DtoMapper.Map<BookDto>(book);
 		return bookDto;
 	}
 
-	public new async Task<Book?> AddAsync(BookDto bookDto)
+	public override async Task<Book?> AddAsync(BookDto bookDto)
     {
-//        var book2 = mapper.Map<Book>(bookDto);
-//        await DbContext.Books.AddAsync(book2);
-//
-//		await DbContext.SaveChangesAsync();
-//
-//        return book2;
         var book = await DbContext.Books.FirstOrDefaultAsync(a => a.Title == bookDto.Title);
         if (book is not null)
 			return null;	//Results.Conflict("Book already exists");
@@ -37,11 +35,11 @@ public class BookRepository(BookStoreDbContext dbContext) : EfRepository<Book, B
         var author = await DbContext.Authors.FirstOrDefaultAsync(a => a.FirstName == bk.FirstName && a.LastName == bk.LastName);
         if (author == null)
         {
-            author = new Author(bk.FirstName, bk.LastName, DateTime.MinValue);
+            author = new Author(bk.FirstName, bk.LastName, DateOnly.MinValue);
             DbContext.Authors.Add(author);
         }
 
-        // var dbCategories = await DbContext.Categories.Where(c => bookDto.Categories.Contains(c.Name)).Select(c => c.Name).ToListAsync();
+//        var dbCategories = await DbContext.Categories.Where(c => bookDto.Categories.Contains(c.Name)).Select(c => c.Name).ToListAsync();
         var dbCategories = await DbContext.Categories.Where(c => bookDto.Categories.Contains(c.Name)).ToListAsync();
         if (dbCategories.Count != bookDto.Categories.Length)
         {
@@ -70,46 +68,24 @@ public class BookRepository(BookStoreDbContext dbContext) : EfRepository<Book, B
         }
 
 		await DbContext.SaveChangesAsync();
-		// Console.WriteLine(book);
 
 		return null;
 	}
 
-    public async Task<Book?> UpdateAsync(BookUpdateDto newBook)
+	public override async Task UpdateAsync(BookDto dto)
 	{
-		// Guid.TryParse(id, out Guid guidId);
-		// if(Guid.Empty == guidId) return null;
-		//
-		var book = await DbContext.Books.FindAsync("");
-		// if (book is null) return null;
-		//
-		// Book? source;
-		//
-		// if (context.Request.HasJsonContentType())
-		// 	source = await context.Request.ReadFromJsonAsync<Book>();
-		// else
-		// 	return null;
-		//
-		// if (source is not null)
-		// {
-		// 	book.Author = source.Author ?? book.Author;
-		// 	book.Title = source.Title ?? book.Title;
-		// 	book.ISBN = source.ISBN ?? book.ISBN;
-		// 	book.Year = source.Year > 1900 ? source.Year : book.Year;
-		// 	book.Price = source.Price > 0 ? source.Price : book.Price;
-		// }
-
-		await DbContext.SaveChangesAsync();
-
-		return book;
-	}
-
-	public async Task<bool> DeleteAsync(Guid id)
-	{
-		if (await DbContext.Books.FindAsync(id) is not Book book) return false;
-
-        DbContext.Books.Remove(book);
-		await DbContext.SaveChangesAsync();
-		return true;
+		var book = await DbSet.FindAsync(dto.Id);
+		if (book != null)
+		{
+			book.Title = dto.Title ?? book.Title;
+			book.ISBN = dto.ISBN ?? book.ISBN;
+			book.Price = dto.Price > 0 ? dto.Price : book.Price;
+			book.Year = dto.Year > 0 ? dto.Year : book.Year;
+			if (dto.Categories != null)
+			{
+				book.Categories = DtoMapper.Map<List<Category>>(dto.Categories);
+			}
+			await DbContext.SaveChangesAsync();
+		}
 	}
 }

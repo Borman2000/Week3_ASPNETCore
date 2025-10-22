@@ -1,4 +1,5 @@
 using Domain.Base;
+using Domain.Entities;
 
 namespace Domain.DTOs;
 
@@ -18,6 +19,8 @@ Console.WriteLine("BookDto constructor 3");
         Price = price;
         Categories = categories;
     }
+
+    public Author Author { get; set; }
 
     public string[] Categories { get; set; }
 }

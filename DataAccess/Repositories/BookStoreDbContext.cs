@@ -75,10 +75,10 @@ public class BookStoreDbContext(DbContextOptions<BookStoreDbContext> options) : 
 			author.HasIndex(a => new { a.FirstName, a.LastName }).IsUnique();
 			author.HasMany(a => a.Books).WithOne(b => b.Author).HasForeignKey(b => b.AuthorId);
 			author.HasData(
-				new Author{FirstName = "Isaac", LastName = "Asimov", Id = new Guid("AB29FC40-CA47-1067-B31D-00DD010662D1"), BirthDate = new DateTime(1920, 1, 2)},
-				new Author{FirstName = "Ray", LastName = "Bradbury", Id = new Guid("AB29FC40-CA47-1067-B31D-00DD010662D2"), BirthDate = new DateTime(1920, 8, 22)},
-				new Author{FirstName = "Robert", LastName = "Heinlein", Id = new Guid("AB29FC40-CA47-1067-B31D-00DD010662D3"), BirthDate = new DateTime(1907, 7, 7), Biography = "Robert Anson Heinlein (July 7, 1907 – May 8, 1988) was an American science fiction author, aeronautical engineer, and naval officer. Sometimes called the \"dean of science fiction writers\", he was among the first to emphasize scientific accuracy in his fiction and was thus a pioneer of the subgenre of hard science fiction. His published works, both fiction and non-fiction, express admiration for competence and emphasize the value of critical thinking. His plots often posed provocative situations which challenged conventional social mores. His work continues to have an influence on the science-fiction genre and on modern culture more generally."},
-				new Author{FirstName = "Stephen", LastName = "King", Id = new Guid("AB29FC40-CA47-1067-B31D-00DD010662D4"), BirthDate = new DateTime(1947, 9, 21)});
+				new Author{FirstName = "Isaac", LastName = "Asimov", Id = new Guid("AB29FC40-CA47-1067-B31D-00DD010662D1"), BirthDate = new DateOnly(1920, 1, 2)},
+				new Author{FirstName = "Ray", LastName = "Bradbury", Id = new Guid("AB29FC40-CA47-1067-B31D-00DD010662D2"), BirthDate = new DateOnly(1920, 8, 22)},
+				new Author{FirstName = "Robert", LastName = "Heinlein", Id = new Guid("AB29FC40-CA47-1067-B31D-00DD010662D3"), BirthDate = new DateOnly(1907, 7, 7), Biography = "Robert Anson Heinlein (July 7, 1907 – May 8, 1988) was an American science fiction author, aeronautical engineer, and naval officer. Sometimes called the \"dean of science fiction writers\", he was among the first to emphasize scientific accuracy in his fiction and was thus a pioneer of the subgenre of hard science fiction. His published works, both fiction and non-fiction, express admiration for competence and emphasize the value of critical thinking. His plots often posed provocative situations which challenged conventional social mores. His work continues to have an influence on the science-fiction genre and on modern culture more generally."},
+				new Author{FirstName = "Stephen", LastName = "King", Id = new Guid("AB29FC40-CA47-1067-B31D-00DD010662D4"), BirthDate = new DateOnly(1947, 9, 21)});
 		});
 
 	    modelBuilder.Entity<Book>(book =>

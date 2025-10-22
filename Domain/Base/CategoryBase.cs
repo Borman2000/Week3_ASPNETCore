@@ -27,7 +27,7 @@ Console.WriteLine("Category constructor 3");
 
     [Required(ErrorMessage = "Category name is required")]
     [StringLength(20, ErrorMessage = "Category name must not exceed 20 characters.")]
-    public required string Name {get; set;}
+    public string Name {get; set;}
 
     public string? Description { get; set; }
 }

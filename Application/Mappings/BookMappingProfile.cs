@@ -25,8 +25,8 @@ Console.WriteLine($"MapCategories: ${obj}");
 	    //     return new Book{Title = source.Title, Author = new Author(source.FirstName, source.LastName), Categories = source.Categories.Select(new Func<object, Category>(c => new Category((string)c))).ToList(), ISBN = source.ISBN, Price = source.Price};
 	    // });
 	    CreateMap<Category, String>().ConvertUsing(r => r.Name);
-	    CreateMap<Category, CategoryDto>();
-	    CreateMap<Book, BookDto>();
+	    CreateMap<Category, CategoryDto>().ReverseMap();
+	    CreateMap<Book, BookDto>().ReverseMap();
 //	        .ForSourceMember(src => src.Author, opt => opt.DoNotValidate());
 //	        .ForMember(dest => dest.FirstName, opt => opt.Ignore())
 //	        .ForMember(dest => dest.LastName, opt => opt.Ignore());

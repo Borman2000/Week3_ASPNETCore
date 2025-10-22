@@ -21,12 +21,12 @@ Console.WriteLine("Author constructor 1");
     }
 
     [SetsRequiredMembers]
-    public Author(string firstName, string lastName, DateTime? birthDate)
+    public Author(string firstName, string lastName, DateOnly? birthDate)
     {
 Console.WriteLine("Author constructor 2");
         FirstName = firstName;
         LastName = lastName;
-        BirthDate = birthDate ?? DateTime.MinValue;
+        BirthDate = birthDate ?? DateOnly.MinValue;
     }
 
     [Required(ErrorMessage = "Author's first name is required")]
@@ -38,7 +38,7 @@ Console.WriteLine("Author constructor 2");
     public required string LastName { get; set; }
 
     [Required(ErrorMessage = "Birth date is required")]
-    public DateTime BirthDate {get; set;}
+    public DateOnly BirthDate {get; set;}
 
     public string? Biography {get; set;}
 

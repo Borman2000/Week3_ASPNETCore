@@ -8,12 +8,12 @@ public class BookBase : BaseEntity
 {
     [Required(ErrorMessage = "Book title is required")]
     [StringLength(100, ErrorMessage = "The book title must not exceed 100 characters.")]
-    public required string Title {get; set;}
+    public string Title {get; set;}
 
     [IsbnValidation]
     [Required(ErrorMessage = "Book ISBN is required")]
     [StringLength(17, MinimumLength = 10, ErrorMessage = "The ISBN length must be between 10 and 17 symbols.")]
-    public required string ISBN { get; set; }
+    public string ISBN { get; set; }
 
     [Required(ErrorMessage = "Year is required")]
     [Range(1900, 2050, ErrorMessage = "The year must be between 1900 and 2050")]
