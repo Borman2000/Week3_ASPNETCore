@@ -3,4 +3,7 @@ using Domain.Entities;
 
 namespace DataAccess.Repositories.Impl;
 
-public interface IBookRepository : IRepository<Book, BookDto>;
+public interface IBookRepository : IRepository<Book, BookDto>
+{
+	Task<StatisticDto> GetStatistics();
+}
