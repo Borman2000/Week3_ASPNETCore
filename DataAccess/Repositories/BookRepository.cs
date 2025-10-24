@@ -103,7 +103,7 @@ public class BookRepository(BookStoreDbContext dbContext, IMapper dtoMapper) : E
 		return statistics;
 	}
 
-	public async Task<List<BookDto>> Search(string? title, string? author, string? category, decimal? minPrice, decimal? maxPrice)
+	public async Task<List<BookDto>> Search(string? title, string? author, string? category, decimal? minPrice, decimal? maxPrice, int? page, int? pageSize)
 	{
 		IQueryable<Book> query = DbSet.AsNoTracking().Include(b => b.Author).AsNoTracking().Include(b => b.Categories).AsNoTracking();
 		if(title is not null)
@@ -116,7 +116,8 @@ public class BookRepository(BookStoreDbContext dbContext, IMapper dtoMapper) : E
 			query = query.Where(b => b.Author.FirstName.Contains(author) || b.Author.LastName.Contains(author));
 		if(category is not null)
 			query = query.Where(b => b.Categories.Select(c => c.Name).Any(cat => cat.Contains(category)));
-
+		if (page > 0)
+			query = query.Skip((page - 1) * pageSize ?? 0).Take(pageSize ?? 10);
 		var res = await query.ToListAsync();
 		return DtoMapper.Map<List<BookDto>>(res);
 	}

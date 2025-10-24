@@ -16,7 +16,7 @@ public static class Endpoints
         app.MapPost("/books", (IBookRepository bookRepoService, BookCreateDto bookDto) => bookRepoService.AddAsync(bookDto));
         app.MapPut("/books/", (IBookRepository bookRepoService, BookDto bookDto) => bookRepoService.UpdateAsync(bookDto));
         app.MapDelete("/books/{id:guid}", (IBookRepository bookRepoService, [FromRoute] Guid id) => bookRepoService.DeleteAsync(id));
-        app.MapGet("/books/search", (IBookRepository bookRepoService, [FromQuery] string? title, [FromQuery] string? author, [FromQuery] string? category, [FromQuery] decimal? minPrice, [FromQuery] decimal? maxPrice) => bookRepoService.Search(title, author, category, minPrice, maxPrice));
+        app.MapGet("/books/search", (IBookRepository bookRepoService, [FromQuery] string? title, [FromQuery] string? author, [FromQuery] string? category, [FromQuery] decimal? minPrice, [FromQuery] decimal? maxPrice, [FromQuery] int? page, [FromQuery] int? pageSize) => bookRepoService.Search(title, author, category, minPrice, maxPrice, page, pageSize:10));
         app.MapGet("/statistics", (IBookRepository bookRepoService) => bookRepoService.GetStatistics());
 
         app.MapGet("/authors", (IAuthorRepository authorRepoService) => authorRepoService.GetAllAsync());
