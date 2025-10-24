@@ -1,5 +1,4 @@
 // #define SERILOG_RESPONSES       // Serilog logging/measurement. Otherwise - manual.
-#define USE_INLINE
 
 using System.Text.Json.Serialization;
 using Application;
@@ -7,12 +6,10 @@ using Application.Mappings;
 using Application.Models;
 using AutoMapper;
 using DataAccess;
+using Microsoft.Extensions.Options;
 using Serilog;
 using WebAPI;
-#if USE_INLINE
-using System.Diagnostics;
-using Microsoft.Extensions.Options;
-#endif
+using WebAPI.Middleware;
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
@@ -45,6 +42,7 @@ var mapConf = new MapperConfiguration(config =>
 IMapper mapper = mapConf.CreateMapper();
 builder.Services.AddSingleton(mapper);
 builder.Services.AddAutoMapper(cfg => mapConf.CreateMapper(), typeof(BookMappingProfile).Assembly);
+builder.Services.AddHealthChecks();
 
 #if SERILOG_RESPONSES
 builder.Services.AddSerilog();
@@ -58,33 +56,7 @@ if (app.Environment.IsDevelopment())
 #if SERILOG_RESPONSES
     app.UseSerilogRequestLogging();
 #endif
-#if USE_INLINE
-    app.Use(async (context, next) =>
-    {
-        var timer = Stopwatch.StartNew();
-        var strCorrName = app.Services.GetRequiredService<IOptions<ApiSettings>>().Value.CorrelationName;
-        var correlationId = context.Request.Headers[strCorrName].FirstOrDefault();
-
-        if (string.IsNullOrEmpty(correlationId))
-        {
-            correlationId = Guid.NewGuid().ToString();
-        }
-
-		context.Response.Headers[strCorrName] = correlationId;
-
-        context.Items["CorrelationId"] = correlationId;
-
-        await next.Invoke();
-
-        timer.Stop();
-
-#if !SERILOG_RESPONSES
-        Log.Information($"Request {correlationId}: ({context.Request.Method} {context.Request.Path}) processed in {timer.ElapsedMilliseconds} ms with status response {context.Response.StatusCode}");
-#endif
-    });
-#else
     app.UseCustomMiddleware();
-#endif
 }
 
 // app.UseDefaultFiles(); // Enables serving default files like index.html
@@ -100,6 +72,7 @@ app.UseHttpsRedirection();
 
 app.UseSwagger();
 app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPI V1"); });
+app.MapHealthChecks("/health");
 
 // To test Environments: Development <=> Production in IIS Express in launchSettings.json
 Console.WriteLine($"App name: {app.Services.GetRequiredService<IOptions<ApiSettings>>().Value.Name}, version: {app.Services.GetRequiredService<IOptions<ApiSettings>>().Value.Version}");
