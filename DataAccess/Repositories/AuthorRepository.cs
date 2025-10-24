@@ -21,9 +21,9 @@ public class AuthorRepository(BookStoreDbContext dbContext, IMapper dtoMapper) :
 	{
 		var a = await DbSet.Include(a => a.Books)
 			.ThenInclude(b => b.Categories)
+			.Select(a => new AuthorDto{Id = a.Id, FirstName = a.FirstName, LastName = a.LastName, BooksRaw = DtoMapper.Map<List<BookDto>>(a.Books), Biography = a.Biography, BirthDate = a.BirthDate})
 			.SingleOrDefaultAsync(a => a.Id == id);
-		var dto = DtoMapper.Map<AuthorDto>(a);
-		return dto;
+		return a;
 	}
 
 	public override async Task UpdateAsync(AuthorDto dto)
