@@ -20,14 +20,14 @@ public class BookRepository(BookStoreDbContext dbContext, IMapper dtoMapper) : E
 
 	public override async Task<BookDto?> GetByIdAsync(Guid id)
 	{
-		var book = await DbSet.Include(a => a.Author).Include(a => a.Categories).SingleOrDefaultAsync(a => a.Id == id);
+		var book = await DbSet.AsNoTracking().Include(a => a.Author).AsNoTracking().Include(a => a.Categories).AsNoTracking().SingleOrDefaultAsync(a => a.Id == id);
 		var bookDto = DtoMapper.Map<BookDto>(book);
 		return bookDto;
 	}
 
 	public override async Task<Book?> AddAsync(BookDto bookDto)
     {
-        var book = await DbContext.Books.FirstOrDefaultAsync(a => a.Title == bookDto.Title);
+        var book = await DbContext.Books.AsNoTracking().FirstOrDefaultAsync(a => a.Title == bookDto.Title);
         if (book is not null)
 			return null;	//Results.Conflict("Book already exists");
 
@@ -40,7 +40,7 @@ public class BookRepository(BookStoreDbContext dbContext, IMapper dtoMapper) : E
         }
 
 //        var dbCategories = await DbContext.Categories.Where(c => bookDto.Categories.Contains(c.Name)).Select(c => c.Name).ToListAsync();
-        var dbCategories = await DbContext.Categories.Where(c => bookDto.Categories.Contains(c.Name)).ToListAsync();
+        var dbCategories = await DbContext.Categories.AsNoTracking().Where(c => bookDto.Categories.Contains(c.Name)).ToListAsync();
         if (dbCategories.Count != bookDto.Categories.Length)
         {
             var newCategories = bookDto.Categories.Except(dbCategories.Select(c => c.Name));

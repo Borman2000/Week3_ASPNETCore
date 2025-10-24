@@ -21,7 +21,7 @@ Console.WriteLine("EfRepository constructed");
 
     public async Task<IEnumerable<TEntity>> GetAllAsync()
     {
-        return await DbSet.ToListAsync();
+        return await DbSet.AsNoTracking().ToListAsync();
     }
 
     public virtual async Task<TDto?> GetByIdAsync(Guid id)
