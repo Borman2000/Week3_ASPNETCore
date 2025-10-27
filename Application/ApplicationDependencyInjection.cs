@@ -1,8 +1,12 @@
-﻿using Application.Models;
+﻿using System.Text.Json.Serialization;
+using Application.Mappings;
+using Application.Models;
+using AutoMapper;
 using DataAccess.Repositories;
 using DataAccess.Repositories.Impl;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Application;
 
@@ -28,6 +32,25 @@ public static class ApplicationDependencyInjection
 
 	private static void RegisterMapper(this IServiceCollection services)
 	{
-		// services.AddMapster();
+//including the automapper via dependency injection
+		var loggerFactory = LoggerFactory.Create(bld =>
+		{
+			bld.AddConsole();
+			bld.SetMinimumLevel(LogLevel.Information); // Adjust log level as needed
+		});
+
+		var mapConf = new MapperConfiguration(config =>
+		{
+			config.AddProfile<BookMappingProfile>();
+		}, loggerFactory);
+
+		IMapper mapper = mapConf.CreateMapper();
+		services.AddSingleton(mapper);
+		services.AddAutoMapper(cfg => mapConf.CreateMapper(), typeof(BookMappingProfile).Assembly);
+
+		services.AddControllers().AddJsonOptions(options =>
+		{
+			options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+		});
 	}
 }

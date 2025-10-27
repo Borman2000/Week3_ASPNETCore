@@ -1,10 +1,7 @@
 // #define SERILOG_RESPONSES       // Serilog logging/measurement. Otherwise - manual.
 
-using System.Text.Json.Serialization;
 using Application;
-using Application.Mappings;
 using Application.Models;
-using AutoMapper;
 using DataAccess;
 using Microsoft.Extensions.Options;
 using Serilog;
@@ -22,26 +19,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSwagger();
 builder.Services.AddApplication(builder.Configuration)
                 .AddDataAccess(builder.Configuration);
-builder.Services.AddControllers().AddJsonOptions(options =>
-{
-	options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-});
-//including the automapper via dependency injection
-
-var loggerFactory = LoggerFactory.Create(bld =>
-{
-    bld.AddConsole();
-    bld.SetMinimumLevel(LogLevel.Information); // Adjust log level as needed
-});
-
-var mapConf = new MapperConfiguration(config =>
-{
-    config.AddProfile<BookMappingProfile>();
-}, loggerFactory);
-
-IMapper mapper = mapConf.CreateMapper();
-builder.Services.AddSingleton(mapper);
-builder.Services.AddAutoMapper(cfg => mapConf.CreateMapper(), typeof(BookMappingProfile).Assembly);
 builder.Services.AddHealthChecks();
 
 #if SERILOG_RESPONSES

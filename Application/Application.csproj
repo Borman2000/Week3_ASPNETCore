@@ -13,9 +13,4 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\DataAccess\DataAccess.csproj" />
 	</ItemGroup>
-
-	<ItemGroup>
-	  <PackageReference Include="AutoMapper" Version="15.0.1" />
-	</ItemGroup>
-
 </Project>
