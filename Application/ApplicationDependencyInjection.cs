@@ -14,6 +14,7 @@ public static class ApplicationDependencyInjection
 {
 	public static IServiceCollection AddApplication(this IServiceCollection services, IConfiguration configuration)
 	{
+		services.AddProblemDetails();
 		services.AddServices(configuration);
 
 		services.RegisterMapper();

@@ -26,10 +26,31 @@ builder.Services.AddSerilog();
 #endif
 
 var app = builder.Build();
+// process exceptions in middleware. If some of them wasn't processed by middleware - will be processed in exception handler below
+app.UseErrorHandlerMiddleware();
+
+app.UseExceptionHandler(exceptionHandlerApp =>
+{
+	exceptionHandlerApp.Run(async httpContext =>
+	{
+		var pds = httpContext.RequestServices.GetService<IProblemDetailsService>();
+		if (pds == null || !await pds.TryWriteAsync(new() { HttpContext = httpContext }))
+		{
+			// Fallback behavior
+			await httpContext.Response.WriteAsync("Fallback: An error occurred.");
+		}
+	});
+});
+
+app.MapGet("/exception", () =>
+{
+	throw new InvalidOperationException("Sample Exception");
+});
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+//	app.UseDeveloperExceptionPage();
 #if SERILOG_RESPONSES
     app.UseSerilogRequestLogging();
 #endif
