@@ -1,7 +1,7 @@
 using Domain.DTOs;
 using Domain.Entities;
 
-namespace DataAccess.Repositories.Impl;
+namespace Infrastructure.Repositories.Impl;
 
 public interface IAuthorRepository : IRepository<Author, AuthorDto>
 {

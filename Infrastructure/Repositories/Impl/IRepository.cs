@@ -1,4 +1,4 @@
-namespace DataAccess.Repositories.Impl;
+namespace Infrastructure.Repositories.Impl;
 
 public interface IRepository<TEntity, TDto> where TEntity:class where TDto : class
 {

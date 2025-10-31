@@ -2,8 +2,8 @@
 using Application.Mappings;
 using Application.Models;
 using AutoMapper;
-using DataAccess.Repositories;
-using DataAccess.Repositories.Impl;
+using Infrastructure.Repositories;
+using Infrastructure.Repositories.Impl;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;

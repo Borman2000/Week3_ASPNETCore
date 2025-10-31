@@ -1,9 +1,9 @@
 using AutoMapper;
-using DataAccess.Repositories.Impl;
 using Domain.Base;
+using Infrastructure.Repositories.Impl;
 using Microsoft.EntityFrameworkCore;
 
-namespace DataAccess.Repositories;
+namespace Infrastructure.Repositories;
 
 public class EfRepository<TEntity, TDto> : IRepository<TEntity, TDto> where TEntity : BaseEntity where TDto : BaseEntity
 {

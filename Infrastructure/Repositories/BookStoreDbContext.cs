@@ -1,9 +1,9 @@
-using DataAccess.Repositories.Impl;
 using Domain.Entities;
+using Infrastructure.Repositories.Impl;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace DataAccess.Repositories;
+namespace Infrastructure.Repositories;
 
 public class BookStoreDbContext(DbContextOptions<BookStoreDbContext> options) : DbContext(options), IUnitOfWork
 {

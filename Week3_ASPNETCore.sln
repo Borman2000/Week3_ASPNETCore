@@ -6,7 +6,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAPI", "WebAPI\WebAPI.csp
 		{4F8BCA3B-7B23-4FE9-BC48-3775A93A1972} = {4F8BCA3B-7B23-4FE9-BC48-3775A93A1972}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess", "DataAccess\DataAccess.csproj", "{164FF00C-C9EA-470A-AB3B-4AD24B6C1029}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{164FF00C-C9EA-470A-AB3B-4AD24B6C1029}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Application\Application.csproj", "{4F8BCA3B-7B23-4FE9-BC48-3775A93A1972}"
 EndProject

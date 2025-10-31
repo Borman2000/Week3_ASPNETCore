@@ -2,7 +2,7 @@
 
 using Application;
 using Application.Models;
-using DataAccess;
+using Infrastructure;
 using Microsoft.Extensions.Options;
 using Serilog;
 using WebAPI;

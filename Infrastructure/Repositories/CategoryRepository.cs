@@ -1,9 +1,9 @@
 using AutoMapper;
-using DataAccess.Repositories.Impl;
 using Domain.DTOs;
 using Domain.Entities;
+using Infrastructure.Repositories.Impl;
 
-namespace DataAccess.Repositories;
+namespace Infrastructure.Repositories;
 
 public class CategoryRepository(BookStoreDbContext dbContext, IMapper dtoMapper)
 	: EfRepository<Category, CategoryDto>(dbContext, dtoMapper), ICategoryRepository

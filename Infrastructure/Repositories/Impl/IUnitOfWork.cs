@@ -1,7 +1,7 @@
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace DataAccess.Repositories.Impl;
+namespace Infrastructure.Repositories.Impl;
 
 public interface IUnitOfWork : IDisposable
 {

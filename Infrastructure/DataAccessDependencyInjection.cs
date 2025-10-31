@@ -1,11 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using DataAccess.Repositories;
-using DataAccess.Repositories.Impl;
+using Infrastructure.Repositories;
+using Infrastructure.Repositories.Impl;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DataAccess;
+namespace Infrastructure;
 
 public static class DataAccessDependencyInjection
 {

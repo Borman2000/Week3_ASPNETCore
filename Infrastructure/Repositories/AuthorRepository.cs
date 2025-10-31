@@ -1,10 +1,10 @@
 using AutoMapper;
-using DataAccess.Repositories.Impl;
 using Domain.DTOs;
 using Domain.Entities;
+using Infrastructure.Repositories.Impl;
 using Microsoft.EntityFrameworkCore;
 
-namespace DataAccess.Repositories;
+namespace Infrastructure.Repositories;
 
 public class AuthorRepository(BookStoreDbContext dbContext, IMapper dtoMapper) : EfRepository<Author, AuthorDto>(dbContext, dtoMapper), IAuthorRepository
 {
