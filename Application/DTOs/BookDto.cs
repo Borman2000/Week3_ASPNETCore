@@ -1,7 +1,7 @@
 using Domain.Base;
 using Domain.Entities;
 
-namespace Domain.DTOs;
+namespace Application.DTOs;
 
 public class BookDto : BookBase
 {

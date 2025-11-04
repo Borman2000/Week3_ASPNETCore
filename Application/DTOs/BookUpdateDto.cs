@@ -1,8 +1,8 @@
 using Domain.Entities;
 
-namespace Domain.DTOs;
+namespace Application.DTOs;
 
-public class BookUpdateDto(string? Title,  Author Author, string? ISBN, int Year, decimal Price, List<Category> Categories) : BookDto;
+public class BookUpdateDto(string? Title, Author Author, string? ISBN, int Year, decimal Price, string[] Categories) : BookDto(Title, ISBN, Year, Price, Categories);
 
 // public record BookUpdateDto
 // {

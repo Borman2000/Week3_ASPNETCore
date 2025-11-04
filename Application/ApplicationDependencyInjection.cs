@@ -1,9 +1,8 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Reflection;
+using System.Text.Json.Serialization;
 using Application.Mappings;
 using Application.Models;
 using AutoMapper;
-using Infrastructure.Repositories;
-using Infrastructure.Repositories.Impl;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -18,6 +17,9 @@ public static class ApplicationDependencyInjection
 		services.AddServices(configuration);
 
 		services.RegisterMapper();
+		services.AddMediatR(cfg => {
+			cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
+		});
 
 		return services;
 	}
@@ -26,9 +28,6 @@ public static class ApplicationDependencyInjection
 	{
 		services.AddEndpointsApiExplorer();
 		services.AddOptions<ApiSettings>().Bind(configuration.GetSection(ApiSettings.Section)).ValidateDataAnnotations().ValidateOnStart();
-		services.AddScoped<IAuthorRepository, AuthorRepository>();
-		services.AddScoped<IBookRepository, BookRepository>();
-		services.AddScoped<ICategoryRepository, CategoryRepository>();
 	}
 
 	private static void RegisterMapper(this IServiceCollection services)

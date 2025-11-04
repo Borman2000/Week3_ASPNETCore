@@ -1,19 +1,19 @@
+using Application.DTOs;
+using Application.Interfaces;
 using AutoMapper;
-using Domain.DTOs;
 using Domain.Entities;
-using Infrastructure.Repositories.Impl;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories;
 
-public class AuthorRepository(BookStoreDbContext dbContext, IMapper dtoMapper) : EfRepository<Author, AuthorDto>(dbContext, dtoMapper), IAuthorRepository
+public class AuthorRepository(BookStoreDbContext dbContext, IMapper dtoMapper) : EfRepository<Author>(dbContext, dtoMapper), IAuthorRepository
 {
-	public override async Task<AuthorDto?> GetByIdAsync(Guid id)
+	public override async Task<Author?> GetByIdAsync(Guid id)
 	{
 		var a = await DbSet.AsNoTracking().Include(a => a.Books)
 			.ThenInclude(b => b.Categories).AsNoTracking()
 			.SingleOrDefaultAsync(a => a.Id == id);
-		var dto = DtoMapper.Map<AuthorDto>(a);
+		var dto = DtoMapper.Map<Author>(a);
 		return dto;
 	}
 
@@ -26,7 +26,7 @@ public class AuthorRepository(BookStoreDbContext dbContext, IMapper dtoMapper) :
 		return a;
 	}
 
-	public override async Task UpdateAsync(AuthorDto dto)
+	public override async Task UpdateAsync(Author dto)
 	{
 		var author = await DbSet.FindAsync(dto.Id);
 		if (author != null)

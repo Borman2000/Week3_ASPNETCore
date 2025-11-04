@@ -66,7 +66,8 @@ app.UseHttpsRedirection();
 // 	var scopedService = scope.ServiceProvider.GetRequiredService<IBookRepository>();
 //	BooksEndpoints.Map(app, scopedService);
 // }
-	Endpoints.Map(app);
+//	Endpoints.Map(app);
+	Endpoints.MapCQRS(app);
 
 app.UseSwagger();
 app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPI V1"); });

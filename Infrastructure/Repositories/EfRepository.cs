@@ -1,11 +1,11 @@
 using AutoMapper;
 using Domain.Base;
-using Infrastructure.Repositories.Impl;
+using Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories;
 
-public class EfRepository<TEntity, TDto> : IRepository<TEntity, TDto> where TEntity : BaseEntity where TDto : BaseEntity
+public class EfRepository<TEntity> : IRepository<TEntity> where TEntity : BaseEntity
 {
     protected readonly BookStoreDbContext DbContext;
     protected readonly DbSet<TEntity> DbSet;
@@ -24,13 +24,13 @@ Console.WriteLine("EfRepository constructed");
         return await DbSet.AsNoTracking().ToListAsync();
     }
 
-    public virtual async Task<TDto?> GetByIdAsync(Guid id)
+    public virtual async Task<TEntity?> GetByIdAsync(Guid id)
     {
-	    return DtoMapper.Map<TDto>(await DbSet.FindAsync(id));
+	    return DtoMapper.Map<TEntity>(await DbSet.FindAsync(id));
 //        return await DbSet.FindAsync(id);
     }
 
-    public virtual async Task<TEntity?> AddAsync(TDto dto)
+    public virtual async Task<TEntity?> AddAsync(TEntity dto)
     {
         var entity = DtoMapper.Map<TEntity>(dto);
         await DbSet.AddAsync(entity);
@@ -46,7 +46,7 @@ Console.WriteLine("EfRepository constructed");
         return entity;
     }
 
-    public virtual async Task UpdateAsync(TDto dto)
+    public virtual async Task UpdateAsync(TEntity dto)
     {
         throw new NotImplementedException();
     }

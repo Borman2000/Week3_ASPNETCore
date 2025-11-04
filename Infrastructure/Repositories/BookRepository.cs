@@ -1,12 +1,12 @@
+using Application.DTOs;
+using Application.Interfaces;
 using AutoMapper;
-using Domain.DTOs;
 using Domain.Entities;
-using Infrastructure.Repositories.Impl;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories;
 
-public class BookRepository(BookStoreDbContext dbContext, IMapper dtoMapper) : EfRepository<Book, BookDto>(dbContext, dtoMapper), IBookRepository
+public class BookRepository(BookStoreDbContext dbContext, IMapper dtoMapper) : EfRepository<Book>(dbContext, dtoMapper), IBookRepository
 {
 //	public new async Task<IEnumerable<Book>> GetAllAsync()
 //	{
@@ -18,14 +18,14 @@ public class BookRepository(BookStoreDbContext dbContext, IMapper dtoMapper) : E
 //		return await DbSet.Include(entity => entity.Categories).ToListAsync();
 //	}
 
-	public override async Task<BookDto?> GetByIdAsync(Guid id)
+	public async Task<BookDto?> GetByIdAsync(Guid id)
 	{
 		var book = await DbSet.AsNoTracking().Include(a => a.Author).AsNoTracking().Include(a => a.Categories).AsNoTracking().SingleOrDefaultAsync(a => a.Id == id);
 		var bookDto = DtoMapper.Map<BookDto>(book);
 		return bookDto;
 	}
 
-	public override async Task<Book?> AddAsync(BookDto bookDto)
+	public async Task<Book?> AddAsync(BookDto bookDto)
     {
 //	    Is this method implements Unit of Work pattern?
 
@@ -74,7 +74,7 @@ public class BookRepository(BookStoreDbContext dbContext, IMapper dtoMapper) : E
 		return null;
 	}
 
-	public override async Task UpdateAsync(BookDto dto)
+	public async Task UpdateAsync(BookDto dto)
 	{
 		var book = await DbSet.FindAsync(dto.Id);
 		if (book != null)
@@ -105,7 +105,7 @@ public class BookRepository(BookStoreDbContext dbContext, IMapper dtoMapper) : E
 		return statistics;
 	}
 
-	public async Task<List<BookDto>> Search(string? title, string? author, string? category, decimal? minPrice, decimal? maxPrice, int? page, int? pageSize)
+	public async Task<List<Book>> Search(int? page, int? pageSize, string? title, string? author, string? category, decimal? minPrice, decimal? maxPrice)
 	{
 		IQueryable<Book> query = DbSet.AsNoTracking().Include(b => b.Author).AsNoTracking().Include(b => b.Categories).AsNoTracking();
 		if(title is not null)
@@ -121,6 +121,6 @@ public class BookRepository(BookStoreDbContext dbContext, IMapper dtoMapper) : E
 		if (page > 0)
 			query = query.Skip((page - 1) * pageSize ?? 0).Take(pageSize ?? 10);
 		var res = await query.ToListAsync();
-		return DtoMapper.Map<List<BookDto>>(res);
+		return res;
 	}
 }

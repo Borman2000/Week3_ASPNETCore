@@ -1,15 +1,15 @@
+using Application.Interfaces;
 using AutoMapper;
-using Domain.DTOs;
 using Domain.Entities;
-using Infrastructure.Repositories.Impl;
+using Domain.Interfaces;
 
 namespace Infrastructure.Repositories;
 
 public class CategoryRepository(BookStoreDbContext dbContext, IMapper dtoMapper)
-	: EfRepository<Category, CategoryDto>(dbContext, dtoMapper), ICategoryRepository
+	: EfRepository<Category>(dbContext, dtoMapper), ICategoryRepository
 {
 
-	public override async Task UpdateAsync(CategoryDto dto)
+	public override async Task UpdateAsync(Category dto)
 	{
 		var category = await DbSet.FindAsync(dto.Id);
 		if (category != null)

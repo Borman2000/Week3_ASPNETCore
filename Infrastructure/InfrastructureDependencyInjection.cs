@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Application.Interfaces;
+using Domain.Interfaces;
 using Infrastructure.Repositories;
 using Infrastructure.Repositories.Impl;
 using Microsoft.EntityFrameworkCore;
@@ -7,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Infrastructure;
 
-public static class DataAccessDependencyInjection
+public static class InfrastructureDependencyInjection
 {
     public static IServiceCollection AddDataAccess(this IServiceCollection services, IConfiguration configuration)
     {
@@ -24,7 +26,9 @@ public static class DataAccessDependencyInjection
     private static void AddRepositories(this IServiceCollection services)
     {
         services.AddScoped<IUnitOfWork>(c => c.GetRequiredService<BookStoreDbContext>());
+        services.AddScoped<IAuthorRepository, AuthorRepository>();
         services.AddScoped<IBookRepository, BookRepository>();
+        services.AddScoped<ICategoryRepository, CategoryRepository>();
         // services.AddScoped<ITodoListRepository, TodoListRepository>();
     }
 
