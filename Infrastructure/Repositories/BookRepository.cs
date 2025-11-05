@@ -91,6 +91,23 @@ public class BookRepository(BookStoreDbContext dbContext, IMapper dtoMapper) : E
 		}
 	}
 
+	public override async Task UpdateAsync(Book dto)
+	{
+		var book = await DbSet.FindAsync(dto.Id);
+		if (book != null)
+		{
+			book.Title = dto.Title ?? book.Title;
+			book.ISBN = dto.ISBN ?? book.ISBN;
+			book.Price = dto.Price > 0 ? dto.Price : book.Price;
+			book.Year = dto.Year > 0 ? dto.Year : book.Year;
+			if (dto.Categories != null)
+			{
+				book.Categories = DtoMapper.Map<List<Category>>(dto.Categories);
+			}
+			await DbContext.SaveChangesAsync();
+		}
+	}
+
 	public async Task<StatisticDto> GetStatistics()
 	{
 		var numBooks = await DbContext.Categories.AsNoTracking().Select(cat => new {name = cat.Name, count = cat.Books.Count}).ToDictionaryAsync(c => c.name, c => c.count);

@@ -1,8 +1,10 @@
 ﻿using System.Reflection;
 using System.Text.Json.Serialization;
+using Application.Behaviors;
 using Application.Mappings;
 using Application.Models;
 using AutoMapper;
+using FluentValidation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -17,8 +19,15 @@ public static class ApplicationDependencyInjection
 		services.AddServices(configuration);
 
 		services.RegisterMapper();
+		services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly(), includeInternalTypes: true);
+
 		services.AddMediatR(cfg => {
 			cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
+			cfg.AddOpenBehavior(typeof(LoggingBehavior<,>));
+//			cfg.AddOpenBehavior(typeof(UnhandledExceptionBehaviour<,>));
+//			cfg.AddOpenBehavior(typeof(AuthorizationBehaviour<,>));
+			cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
+			cfg.AddOpenBehavior(typeof(PerformanceBehavior<,>));
 		});
 
 		return services;

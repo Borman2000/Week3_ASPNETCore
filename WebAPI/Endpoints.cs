@@ -1,6 +1,7 @@
 using Application.Books.Create;
 using Application.Books.GetById;
 using Application.Books.GetPagedList;
+using Application.Books.Update;
 using Application.DTOs;
 using Application.Interfaces;
 using Domain.Entities;
@@ -56,6 +57,9 @@ public static class Endpoints
 	        var book = await mediatr.Send(command);
 	        return Results.Created($"/products/{book.Id}", new { id = book.Id });
         });
-        app.MapPut("/books/", (IBookRepository bookRepoService, Book book) => bookRepoService.UpdateAsync(book));
+        app.MapPut("/books", async (UpdateBookCommand command, ISender mediatr) => {
+	        var book = await mediatr.Send(command);
+	        return Results.Accepted($"/products/{book.Id}", new { id = book.Id });
+        });
     }
 }

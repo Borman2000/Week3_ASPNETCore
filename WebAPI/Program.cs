@@ -47,6 +47,8 @@ app.MapGet("/exception", () =>
 	throw new InvalidOperationException("Sample Exception");
 });
 
+app.UseMiddleware<ValidationExceptionHandlingMiddleware>();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
