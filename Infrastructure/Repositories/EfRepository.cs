@@ -36,7 +36,7 @@ Console.WriteLine("EfRepository constructed");
         await DbSet.AddAsync(entity);
         try
         {
-	        await DbContext.SaveChangesAsync();
+	        await DbContext.Commit();
         }
         catch (Exception e)
         {

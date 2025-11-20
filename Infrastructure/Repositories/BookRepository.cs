@@ -69,7 +69,7 @@ public class BookRepository(BookStoreDbContext dbContext, IMapper dtoMapper) : E
             await DbContext.Books.AddAsync(book);
         }
 
-		await DbContext.SaveChangesAsync();
+		await DbContext.Commit();
 
 		return null;
 	}
@@ -87,7 +87,7 @@ public class BookRepository(BookStoreDbContext dbContext, IMapper dtoMapper) : E
 			{
 				book.Categories = DtoMapper.Map<List<Category>>(dto.Categories);
 			}
-			await DbContext.SaveChangesAsync();
+			await DbContext.Commit();
 		}
 	}
 
@@ -104,7 +104,7 @@ public class BookRepository(BookStoreDbContext dbContext, IMapper dtoMapper) : E
 			{
 				book.Categories = DtoMapper.Map<List<Category>>(dto.Categories);
 			}
-			await DbContext.SaveChangesAsync();
+			await DbContext.Commit();
 		}
 	}
 

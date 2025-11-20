@@ -21,7 +21,9 @@ public static class ApplicationDependencyInjection
 		services.RegisterMapper();
 		services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly(), includeInternalTypes: true);
 
-		services.AddMediatR(cfg => {
+		services.AddMediatR(cfg =>
+		{
+			cfg.AutoRegisterRequestProcessors = true;
 			cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
 			cfg.AddOpenBehavior(typeof(LoggingBehavior<,>));
 //			cfg.AddOpenBehavior(typeof(UnhandledExceptionBehaviour<,>));

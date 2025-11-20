@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Application.Interfaces;
-using Domain.Interfaces;
 using Infrastructure.Repositories;
 using Infrastructure.Repositories.Impl;
+using Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -71,6 +71,12 @@ public static class InfrastructureDependencyInjection
         //         "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
         //     options.User.RequireUniqueEmail = true;
         // });
+    }
+
+    public static IServiceCollection AddServices(this IServiceCollection services)
+    {
+	    services.AddScoped<IEmailService, EmailService>();
+	    return services;
     }
 
     public class DbSettings

@@ -26,7 +26,7 @@ Console.WriteLine($"MapCategories: ${obj}");
 	    // });
 	    CreateMap<Category, String>().ConvertUsing(r => r.Name);
 	    CreateMap<Category, CategoryDto>().ReverseMap();
-	    CreateMap<Book, BookDto>().ReverseMap();
+	    CreateMap<Book, BookDto>().ForMember(dest => dest.DomainEvents, opt => opt.Ignore()).ReverseMap();
 //	        .ForSourceMember(src => src.Author, opt => opt.DoNotValidate());
 //	        .ForMember(dest => dest.FirstName, opt => opt.Ignore())
 //	        .ForMember(dest => dest.LastName, opt => opt.Ignore());

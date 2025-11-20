@@ -1,13 +1,16 @@
 using Domain.Entities;
 using Infrastructure.Repositories.Impl;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.Repositories;
 
-public class BookStoreDbContext(DbContextOptions<BookStoreDbContext> options) : DbContext(options), IUnitOfWork
+public class BookStoreDbContext : DbContext, IUnitOfWork
 {
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+	private readonly IMediator _mediator;
+
+	protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
 	    base.OnConfiguring(optionsBuilder);
 		optionsBuilder.LogTo(Console.WriteLine, LogLevel.Information).EnableSensitiveDataLogging();
@@ -55,6 +58,7 @@ public class BookStoreDbContext(DbContextOptions<BookStoreDbContext> options) : 
     {
 		modelBuilder.Entity<Category>(category =>
 		{
+			category.Ignore(c => c.DomainEvents);
 			category.HasIndex(c => new { c.Name }).IsUnique();
 			category.HasMany(c => c.Books).WithMany(b => b.Categories);
 			category.HasData(
@@ -72,6 +76,7 @@ public class BookStoreDbContext(DbContextOptions<BookStoreDbContext> options) : 
 
 		modelBuilder.Entity<Author>(author =>
 		{
+			author.Ignore(a => a.DomainEvents);
 			author.HasIndex(a => new { a.FirstName, a.LastName }).IsUnique();
 			author.HasMany(a => a.Books).WithOne(b => b.Author).HasForeignKey(b => b.AuthorId);
 			author.HasData(
@@ -83,6 +88,7 @@ public class BookStoreDbContext(DbContextOptions<BookStoreDbContext> options) : 
 
 	    modelBuilder.Entity<Book>(book =>
 	    {
+		    book.Ignore(b => b.DomainEvents);
 		    book.HasIndex(a => new { a.Title }).IsUnique();
 		    book.Property(e => e.Price).HasColumnType("decimal(5, 2)");
 		    book.HasData(
@@ -146,14 +152,19 @@ public class BookStoreDbContext(DbContextOptions<BookStoreDbContext> options) : 
     public DbSet<Category> Categories => Set<Category>();
     public DbSet<Book> Books => Set<Book>();
 
-    public async void Commit()
+    public BookStoreDbContext(DbContextOptions<BookStoreDbContext> options, IMediator mediator) : base(options)
     {
-        await SaveChangesAsync();
+	    _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
     }
 
-    public void Rollback()
+    public async Task Commit()
     {
+        await SaveChangesAsync();
+        await _mediator.DispatchDomainEventsAsync(this);
+    }
 
+    public async Task Rollback()
+    {
         throw new NotImplementedException();
     }
 }

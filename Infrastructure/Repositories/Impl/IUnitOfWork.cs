@@ -9,6 +9,6 @@ public interface IUnitOfWork : IDisposable
     DbSet<Author> Authors { get; }
     DbSet<Category> Categories { get; }
 
-    void Commit();
-    void Rollback();
+    Task Commit();
+    Task Rollback();
 }

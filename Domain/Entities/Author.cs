@@ -42,6 +42,8 @@ Console.WriteLine("Author constructor 2");
 
     public string? Biography {get; set;}
 
+    public string? Email {get; set;}
+
     [JsonIgnore]
     public List<Book> Books {get; set;} = new();
 }

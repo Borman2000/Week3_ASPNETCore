@@ -10,7 +10,7 @@ public class CreateBookCommandHandler(IBookRepository bookRepository, IMapper dt
 {
 	public async Task<BookDto?> Handle(CreateBookCommand command, CancellationToken cancellationToken)
 	{
-		var book = await bookRepository.AddAsync(new Book{AuthorId =  command.AuthorId, Title = command.Title, Price = command.Price, ISBN = command.ISBN});
+		var book = await bookRepository.AddAsync(new Book(command.AuthorId, command.Title, command.Price, command.ISBN));
 		return dtoMapper.Map<BookDto>(book);
 	}
 }
