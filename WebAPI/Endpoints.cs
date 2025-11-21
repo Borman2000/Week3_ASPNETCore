@@ -1,3 +1,4 @@
+using Application.Authors.Create;
 using Application.Books.Create;
 using Application.Books.GetById;
 using Application.Books.GetPagedList;
@@ -60,6 +61,11 @@ public static class Endpoints
         app.MapPut("/books", async (UpdateBookCommand command, ISender mediatr) => {
 	        var book = await mediatr.Send(command);
 	        return Results.Accepted($"/products/{book.Id}", new { id = book.Id });
+        });
+
+        app.MapPost("/authors", async (CreateAuthorCommand command, ISender mediatr) => {
+	        var author = await mediatr.Send(command);
+	        return Results.Created($"/products/{author.Id}", new { id = author.Id });
         });
     }
 }
