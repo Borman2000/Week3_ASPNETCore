@@ -26,8 +26,6 @@ public static class ApplicationDependencyInjection
 			cfg.AutoRegisterRequestProcessors = true;
 			cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
 			cfg.AddOpenBehavior(typeof(LoggingBehavior<,>));
-//			cfg.AddOpenBehavior(typeof(UnhandledExceptionBehaviour<,>));
-//			cfg.AddOpenBehavior(typeof(AuthorizationBehaviour<,>));
 			cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
 			cfg.AddOpenBehavior(typeof(PerformanceBehavior<,>));
 		});

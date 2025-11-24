@@ -10,13 +10,11 @@ public class Author : BaseEntity
 {
     public Author()
     {
-Console.WriteLine("Author constructor 0");
     }
 
     [SetsRequiredMembers]
     public Author(string firstName, string lastName)
     {
-Console.WriteLine("Author constructor 1");
         FirstName = firstName;
         LastName = lastName;
     }
@@ -24,7 +22,6 @@ Console.WriteLine("Author constructor 1");
     [SetsRequiredMembers]
     public Author(string firstName, string lastName, DateOnly? birthDate)
     {
-Console.WriteLine("Author constructor 2");
         FirstName = firstName;
         LastName = lastName;
         BirthDate = birthDate ?? DateOnly.MinValue;

@@ -7,20 +7,17 @@ public class CategoryBase : BaseEntity
 {
     public CategoryBase()
     {
-Console.WriteLine("Category constructor 1");
     }
 
     [SetsRequiredMembers]
     public CategoryBase(string categoryName)
     {
-Console.WriteLine("Category constructor 2");
         Name = categoryName;
     }
 
     [SetsRequiredMembers]
     public CategoryBase(string categoryName, string? categoryDescription)
     {
-Console.WriteLine("Category constructor 3");
         Name = categoryName;
         Description = categoryDescription;
     }

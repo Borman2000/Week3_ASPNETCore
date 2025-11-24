@@ -14,44 +14,6 @@ public class BookStoreDbContext : DbContext, IUnitOfWork
     {
 	    base.OnConfiguring(optionsBuilder);
 		optionsBuilder.LogTo(Console.WriteLine, LogLevel.Information).EnableSensitiveDataLogging();
-
-// Need net9+ to seed data this way
-//		optionsBuilder.UseSeeding((context, _) =>
-//			{
-//				var testBlog = context.Set<Book>().FirstOrDefault(b => b.Title == "Fahrenheit 451");
-//				if (testBlog == null)
-//				{
-//					context.Set<Book>().Add(
-//						new Book {
-//							Title = "Fahrenheit 451", ISBN = "978-0-7432-4722-1", Author = new Author("Ray", "Bradbury"),
-//							Categories = new List<Category>{new("Dystopian")}, Price = (decimal)9.99, Year = 1953
-//						});
-//					context.Set<Book>().Add(
-//						new Book {
-//							Title = "Dandelion Wine", ISBN = "0-553-27753-7", Author = new Author("Ray", "Bradbury"),
-//							Categories = new List<Category>{new("Fiction"), new ("Fantasy"), new ("Classics")}, Price = (decimal)7.99, Year = 1957
-//						});
-//					context.SaveChanges();
-//				}
-//			})
-//			.UseAsyncSeeding(async (context, _, cancellationToken) =>
-//			{
-//				var testBlog = await context.Set<Book>().FirstOrDefaultAsync(b => b.Title == "Fahrenheit 451", cancellationToken);
-//				if (testBlog == null)
-//				{
-//					context.Set<Book>().Add(
-//						new Book {
-//							Title = "Fahrenheit 451", ISBN = "978-0-7432-4722-1", Author = new Author("Ray", "Bradbury"),
-//							Categories = new List<Category>{new("Dystopian")}, Price = (decimal)9.99, Year = 1953
-//						});
-//					context.Set<Book>().Add(
-//						new Book {
-//							Title = "Dandelion Wine", ISBN = "0-553-27753-7", Author = new Author("Ray", "Bradbury"),
-//							Categories = new List<Category>{new("Fiction"), new ("Fantasy"), new ("Classics")}, Price = (decimal)7.99, Year = 1957
-//						});
-//					await context.SaveChangesAsync(cancellationToken);
-//				}
-//			});
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

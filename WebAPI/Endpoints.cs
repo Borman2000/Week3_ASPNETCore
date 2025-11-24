@@ -15,7 +15,6 @@ public static class Endpoints
 {
     public static void Map(WebApplication app)
     {
-//        app.MapGet("/", () => Results.Redirect("/index.html"));
         app.MapGet("/", () => Results.Redirect("swagger/index.html")).ExcludeFromDescription();
 
         app.MapGet("/books", (IBookRepository bookRepoService) => bookRepoService.GetAllAsync());

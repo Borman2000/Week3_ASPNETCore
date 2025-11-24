@@ -17,8 +17,5 @@ internal sealed class CreateAuthorCommandValidator : AbstractValidator<CreateAut
 
         RuleFor(c => c.BirthDate).NotNull().WithErrorCode(AuthorErrorCodes.CreateAuthor.InvalidBirthDate);
         RuleFor(c => c.BirthDate).LessThan(DateOnly.FromDateTime(DateTime.Today)).WithErrorCode(AuthorErrorCodes.CreateAuthor.FutureDate);
-
-//        RuleFor(b => b.Email)
-//	        .Must(ISBNValidator.IsValid).WithErrorCode(AuthorErrorCodes.CreateBook.InvalidISBN);
     }
 }

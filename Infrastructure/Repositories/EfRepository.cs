@@ -13,7 +13,6 @@ public class EfRepository<TEntity> : IRepository<TEntity> where TEntity : BaseEn
 
     protected EfRepository(BookStoreDbContext context, IMapper dtoMapper)
     {
-Console.WriteLine("EfRepository constructed");
 	    DbContext = context;
         DbSet = context.Set<TEntity>();
         DtoMapper = dtoMapper;
@@ -27,7 +26,6 @@ Console.WriteLine("EfRepository constructed");
     public virtual async Task<TEntity?> GetByIdAsync(Guid id)
     {
 	    return DtoMapper.Map<TEntity>(await DbSet.FindAsync(id));
-//        return await DbSet.FindAsync(id);
     }
 
     public virtual async Task<TEntity?> AddAsync(TEntity dto)

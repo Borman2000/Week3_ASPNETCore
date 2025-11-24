@@ -3,7 +3,6 @@ using Domain.Validations;
 
 namespace Domain.Base;
 
-//[Index(nameof(Title))]
 public class BookBase : BaseEntity
 {
     [Required(ErrorMessage = "Book title is required")]

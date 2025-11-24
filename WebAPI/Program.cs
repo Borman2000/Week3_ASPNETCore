@@ -53,7 +53,6 @@ app.UseMiddleware<ValidationExceptionHandlingMiddleware>();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-//	app.UseDeveloperExceptionPage();
 #if SERILOG_RESPONSES
     app.UseSerilogRequestLogging();
 #endif
@@ -63,13 +62,6 @@ if (app.Environment.IsDevelopment())
 // app.UseDefaultFiles(); // Enables serving default files like index.html
 app.UseStaticFiles();  // Enables serving static files from wwwroot
 app.UseHttpsRedirection();
-
-// using (var scope = app.Services.CreateScope())
-// {
-// 	var scopedService = scope.ServiceProvider.GetRequiredService<IBookRepository>();
-//	BooksEndpoints.Map(app, scopedService);
-// }
-//	Endpoints.Map(app);
 	Endpoints.MapCQRS(app);
 
 app.UseSwagger();

@@ -8,16 +8,6 @@ namespace Infrastructure.Repositories;
 
 public class BookRepository(BookStoreDbContext dbContext, IMapper dtoMapper) : EfRepository<Book>(dbContext, dtoMapper), IBookRepository
 {
-//	public new async Task<IEnumerable<Book>> GetAllAsync()
-//	{
-//		var books = await DbSet.Include(a => a.Author)
-//			.Include(b => b.Categories).ToListAsync();
-//		var dto = DtoMapper.Map<List<BookDto>>(books);
-////		return dto;
-////		return await DbSet.Include(entity => entity.Author).ToListAsync();
-//		return await DbSet.Include(entity => entity.Categories).ToListAsync();
-//	}
-
 	public async Task<BookDto?> GetByIdAsync(Guid id)
 	{
 		var book = await DbSet.AsNoTracking().Include(a => a.Author).AsNoTracking().Include(a => a.Categories).AsNoTracking().SingleOrDefaultAsync(a => a.Id == id);
@@ -28,7 +18,6 @@ public class BookRepository(BookStoreDbContext dbContext, IMapper dtoMapper) : E
 	public async Task<Book?> AddAsync(BookDto bookDto)
     {
 //	    Is this method implements Unit of Work pattern?
-
         var book = await DbContext.Books.AsNoTracking().FirstOrDefaultAsync(a => a.Title == bookDto.Title);
         if (book is not null)
 			return null;	//Results.Conflict("Book already exists");
@@ -41,7 +30,6 @@ public class BookRepository(BookStoreDbContext dbContext, IMapper dtoMapper) : E
             DbContext.Authors.Add(author);
         }
 
-//        var dbCategories = await DbContext.Categories.Where(c => bookDto.Categories.Contains(c.Name)).Select(c => c.Name).ToListAsync();
         var dbCategories = await DbContext.Categories.AsNoTracking().Where(c => bookDto.Categories.Contains(c.Name)).ToListAsync();
         if (dbCategories.Count != bookDto.Categories.Length)
         {
@@ -113,7 +101,6 @@ public class BookRepository(BookStoreDbContext dbContext, IMapper dtoMapper) : E
 		var numBooks = await DbContext.Categories.AsNoTracking().Select(cat => new {name = cat.Name, count = cat.Books.Count}).ToDictionaryAsync(c => c.name, c => c.count);
 		var statistics = new StatisticDto{NumBooksByCategory = numBooks};
 		var avgPrices = await DbContext.Authors.AsNoTracking().Include(a => a.Books)
-//			.Where(a => a.Books.Count > 0)
 			.Select(p => new {name = p.FirstName + " " + p.LastName, avg = p.Books.Count > 0 ? p.Books.Select(b => b.Price).Average() : 0}).ToDictionaryAsync(c => c.name, c => c.avg);
 		statistics.AvgPriceByAuthor = avgPrices;
 		var top = await DbSet.AsNoTracking().Take(10).OrderByDescending(b => b.Price).ToDictionaryAsync(b => b.Title, b => b.Price);

@@ -15,9 +15,6 @@ public sealed class ValidationBehavior<TRequest, TResponse>(IEnumerable<IValidat
 		var errors = validationFailures
 			.Where(validationResult => !validationResult.IsValid)
 			.SelectMany(validationResult => validationResult.Errors)
-//			.Select(validationFailure => new ValidationError(
-//				validationFailure.PropertyName,
-//				validationFailure.ErrorMessage))
 			.ToList();
 
 		if (errors.Any())

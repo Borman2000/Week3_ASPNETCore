@@ -1,7 +1,6 @@
 using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
-using Domain.Interfaces;
 
 namespace Infrastructure.Repositories;
 
