@@ -25,12 +25,11 @@ public class EfRepository<TEntity> : IRepository<TEntity> where TEntity : BaseEn
 
     public virtual async Task<TEntity?> GetByIdAsync(Guid id)
     {
-	    return DtoMapper.Map<TEntity>(await DbSet.FindAsync(id));
+	    return await DbSet.FindAsync(id);
     }
 
-    public virtual async Task<TEntity?> AddAsync(TEntity dto)
+    public virtual async Task<TEntity?> AddAsync(TEntity entity)
     {
-        var entity = DtoMapper.Map<TEntity>(dto);
         await DbSet.AddAsync(entity);
         try
         {

@@ -31,6 +31,12 @@ public class Book : BookBase
     private void AddBookCreatedEvent(Guid id, string title, Guid authorId)
     {
 	    var domainEvent = new BookCreatedEvent(id, title, authorId);
-	    this.AddDomainEvent(domainEvent);
+	    AddDomainEvent(domainEvent);
+    }
+
+    public void AddPriceUpdatedEvent(decimal oldPrice)
+    {
+	    var domainEvent = new PriceChangedEvent(Id, oldPrice, Price);
+	    AddDomainEvent(domainEvent);
     }
 }
