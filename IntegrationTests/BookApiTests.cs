@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace IntegrationTests;
 
+[Collection("ApiTests")]
 public class BookApiTests(CustomWebApplicationFactory factory) : BaseTestCqrs(factory)
 {
 	// Arrange

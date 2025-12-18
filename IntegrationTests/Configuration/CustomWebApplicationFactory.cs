@@ -13,7 +13,8 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IAsyn
     private readonly MySqlContainer _dbContainer = new MySqlBuilder()
 		    .WithImage("mysql:8.0")
 		    .WithDatabase("BooksDBTests")
-		    .WithPortBinding(65530, 3306)
+//		    .WithPortBinding(65530, 3306)	// bind to concrete port to connect to DB in manager during test's debug
+		    .WithPortBinding(65530, true)
 		    .WithUsername("root")
 		    .WithPassword("root")
 		    .Build();
