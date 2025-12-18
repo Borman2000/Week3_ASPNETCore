@@ -10,8 +10,20 @@ public class UpdateBookCommandHandler(IBookRepository bookRepository, IMapper dt
 {
 	public async Task<BookDto?> Handle(UpdateBookCommand command, CancellationToken cancellationToken)
 	{
-		var book = new Book { Id = command.Id, Title = command.Title, Price = command.Price };
+		var origBook = await bookRepository.GetByIdAsync(command.Id);
+		if (origBook is null)
+			return null;
+
+		var book = new Book { Id = command.Id, Title = command.Title ?? origBook.Title, Price = command.Price ?? origBook.Price };
+
+		var oldPrice = origBook.Price;
+
 		await bookRepository.UpdateAsync(book);
+
+// Move event adding to Infrastructure.Repositories.BookRepository.UpdateAsync ???
+		if(oldPrice != book.Price)
+			book.AddPriceUpdatedEvent(oldPrice);
+
 		return dtoMapper.Map<BookDto>(book);
 	}
 }

@@ -7,23 +7,22 @@ public abstract class BaseEntity
 {
     public Guid Id {get; init;} = Guid.Empty;
 
-    private List<INotification> _domainEvents;
     [Ignore]
-    public List<INotification> DomainEvents => _domainEvents;
+    public List<INotification>? DomainEvents { get; set; }
 
     public void AddDomainEvent(INotification eventItem)
     {
-	    _domainEvents = _domainEvents ?? new List<INotification>();
-	    _domainEvents.Add(eventItem);
+	    DomainEvents ??= [];
+	    DomainEvents.Add(eventItem);
     }
 
     public void RemoveDomainEvent(INotification eventItem)
     {
-	    _domainEvents?.Remove(eventItem);
+	    DomainEvents?.Remove(eventItem);
     }
 
     public void ClearDomainEvents()
     {
-	    _domainEvents?.Clear();
+	    DomainEvents?.Clear();
     }
 }

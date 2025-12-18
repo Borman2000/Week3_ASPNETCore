@@ -20,7 +20,7 @@ public class ValidationExceptionHandlingMiddleware
 		}
 		catch (ValidationException exception)
 		{
-			var problemDetails = new ProblemDetails
+			var problemDetails = new ValidationProblemDetails
 			{
 				Status = StatusCodes.Status400BadRequest,
 				Type = "ValidationFailure",
@@ -28,10 +28,10 @@ public class ValidationExceptionHandlingMiddleware
 				Detail = "One or more validation errors has occurred"
 			};
 
-			if (exception.Errors is not null)
-			{
+//			if (exception.Errors is not null)
+//			{
 				problemDetails.Extensions["errors"] = exception.Errors;
-			}
+//			}
 
 			context.Response.StatusCode = StatusCodes.Status400BadRequest;
 

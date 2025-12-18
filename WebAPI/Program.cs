@@ -62,7 +62,8 @@ if (app.Environment.IsDevelopment())
 // app.UseDefaultFiles(); // Enables serving default files like index.html
 app.UseStaticFiles();  // Enables serving static files from wwwroot
 app.UseHttpsRedirection();
-	Endpoints.MapCQRS(app);
+
+Endpoints.MapCQRS(app);
 
 app.UseSwagger();
 app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPI V1"); });
@@ -75,3 +76,5 @@ app.Run();
 
 Log.Information("----- FINISHING -----");
 Log.CloseAndFlush();
+
+public partial class Program { }

@@ -66,5 +66,10 @@ public static class Endpoints
 	        var author = await mediatr.Send(command);
 	        return Results.Created($"/products/{author.Id}", new { id = author.Id });
         });
+
+        app.MapGet("/authors", (IAuthorRepository authorRepoService) => authorRepoService.GetAllAsync());
+        app.MapGet("/authors/{id:guid}/books", (IAuthorRepository authorRepoService, [FromRoute] Guid id) =>  authorRepoService.GetByIdWithBooksAsync(id));
+        app.MapPost("/categories", (ICategoryRepository categoryRepoService, Category category) => categoryRepoService.AddAsync(category));
+//        app.MapPost("/authors", (IAuthorRepository authorRepoService, AuthorDto authorDto) => authorRepoService.AddAsync(authorDto));
     }
 }
