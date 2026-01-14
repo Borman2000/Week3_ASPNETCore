@@ -1,0 +1,101 @@
+title;isbn;firstName;lastName;birthDate;bio;price;categories;year;email
+1984;9780451524935;George;Orwell;1903-06-25;English novelist and essayist, famed for dystopian works.;1.22;Adventure;1949;george.orwell1@example.com
+To Kill a Mockingbird;9780061120084;Harper;Lee;1926-04-28;American novelist best known for 'Mockingbird'.;12.17;Philosophical,Science Fiction,Romance;1960;harper.lee2@example.com
+Pride and Prejudice;9780141439518;Jane;Austen;1775-12-16;English novelist known for witty romances.;11.53;Fable,Science Fiction;1813;jane.austen3@example.com
+The Great Gatsby;9780743273565;F. Scott;Fitzgerald;1896-09-24;American novelist of the Jazz Age.;2.51;Historical;1925;f. scott.fitzgerald4@example.com
+Moby-Dick;9780142437247;Herman;Melville;1819-08-01;American novelist and poet, wrote 'Moby-Dick'.;1.21;Coming-of-Age,Dystopian;1851;herman.melville5@example.com
+The Catcher in the Rye;9780316769488;J. D.;Salinger;1919-01-01;Reclusive American writer, author of 'Catcher'.;18.87;Bestseller,Fable;1951;j. d..salinger6@example.com
+The Hobbit;9780547928227;J. R. R.;Tolkien;1892-01-03;English philologist and author of Middle-earth.;1.33;Historical,Adventure,Fantasy,Dystopian,Fable;1937;j. r. r..tolkien7@example.com
+Brave New World;9780060850524;Aldous;Huxley;1894-07-26;English writer and philosopher.;17.4;Adventure,Bestseller,Science Fiction;1932;aldous.huxley8@example.com
+The Alchemist;9780061122415;Paulo;Coelho;1947-08-24;Brazilian lyricist and novelist.;4.33;Classics,Romance,Historical,Epic,Fantasy;1988;paulo.coelho9@example.com
+The Name of the Wind;9780756404741;Patrick;Rothfuss;1973-06-06;American fantasy author.;18.62;Fable,Science Fiction,Fantasy;2007;patrick.rothfuss10@example.com
+War and Peace;9780228174601;George;Orwell;1903-06-25;English novelist and essayist, famed for dystopian works.;12.93;Coming-of-Age,Classics,Dystopian,Fable;1902;george.orwell11@example.com
+Crime and Punishment;9780175452020;Paulo;Coelho;1947-08-24;Brazilian lyricist and novelist.;7.63;Epic,Romance,Political Fiction;2014;paulo.coelho12@example.com
+Anna Karenina;9780576942624;Herman;Melville;1819-08-01;American novelist and poet, wrote 'Moby-Dick'.;17.03;Coming-of-Age,Philosophical;1870;herman.melville13@example.com
+Les Misérables;9780153931616;Patrick;Rothfuss;1973-06-06;American fantasy author.;18.54;Political Fiction;1845;patrick.rothfuss14@example.com
+The Brothers Karamazov;9780555762509;Harper;Lee;1926-04-28;American novelist best known for 'Mockingbird'.;11.6;Historical,Bestseller,Fable,Dystopian;1943;harper.lee15@example.com
+Don Quixote;9780305033712;J. R. R.;Tolkien;1892-01-03;English philologist and author of Middle-earth.;18.06;Epic,Coming-of-Age,Tragedy,Adventure,Bestseller;1998;j. r. r..tolkien16@example.com
+Ulysses;9780548540356;Patrick;Rothfuss;1973-06-06;American fantasy author.;3.23;Fable,Bestseller,American Literature;1890;patrick.rothfuss17@example.com
+Madame Bovary;9780771211429;George;Orwell;1903-06-25;English novelist and essayist, famed for dystopian works.;12.74;Fantasy,Philosophical,Coming-of-Age,Fable;1868;george.orwell18@example.com
+The Divine Comedy;9780183469628;Herman;Melville;1819-08-01;American novelist and poet, wrote 'Moby-Dick'.;8.01;Adventure,Coming-of-Age;2014;herman.melville19@example.com
+Hamlet;9780186174101;Herman;Melville;1819-08-01;American novelist and poet, wrote 'Moby-Dick'.;18.44;Dystopian,Political Fiction,American Literature;2020;herman.melville20@example.com
+Macbeth;9780488933591;Harper;Lee;1926-04-28;American novelist best known for 'Mockingbird'.;10.57;Science Fiction,Dystopian,Classics,Romance;2017;harper.lee21@example.com
+Othello;9780185143245;J. R. R.;Tolkien;1892-01-03;English philologist and author of Middle-earth.;17.16;Historical,American Literature,Political Fiction,Adventure;1837;j. r. r..tolkien22@example.com
+King Lear;9780148614573;Harper;Lee;1926-04-28;American novelist best known for 'Mockingbird'.;10.8;Fable,Romance,Historical,Political Fiction;1973;harper.lee23@example.com
+A Tale of Two Cities;9780983564440;F. Scott;Fitzgerald;1896-09-24;American novelist of the Jazz Age.;15.14;Philosophical;1873;f. scott.fitzgerald24@example.com
+Great Expectations;9780263423289;George;Orwell;1903-06-25;English novelist and essayist, famed for dystopian works.;15.54;Philosophical;1819;george.orwell25@example.com
+David Copperfield;9780961029531;George;Orwell;1903-06-25;English novelist and essayist, famed for dystopian works.;13.82;Science Fiction;1850;george.orwell26@example.com
+Oliver Twist;9780457554770;George;Orwell;1903-06-25;English novelist and essayist, famed for dystopian works.;15.17;Science Fiction;1867;george.orwell27@example.com
+Bleak House;9780185555299;Harper;Lee;1926-04-28;American novelist best known for 'Mockingbird'.;6.06;American Literature;1937;harper.lee28@example.com
+Middlemarch;9780109981060;Harper;Lee;1926-04-28;American novelist best known for 'Mockingbird'.;19.65;Romance;1813;harper.lee29@example.com
+Jane Eyre;9780344805186;Patrick;Rothfuss;1973-06-06;American fantasy author.;14.63;Political Fiction,Classics,Tragedy;1869;patrick.rothfuss30@example.com
+Wuthering Heights;9780777587742;F. Scott;Fitzgerald;1896-09-24;American novelist of the Jazz Age.;15.07;Fantasy,Epic,Political Fiction,Bestseller,Philosophical;1828;f. scott.fitzgerald31@example.com
+Frankenstein;9780570198766;J. D.;Salinger;1919-01-01;Reclusive American writer, author of 'Catcher'.;15.61;Fable,Philosophical,Political Fiction,Tragedy;1861;j. d..salinger32@example.com
+Dracula;9780608723175;Patrick;Rothfuss;1973-06-06;American fantasy author.;12.57;Adventure;1943;patrick.rothfuss33@example.com
+The Picture of Dorian Gray;9780700796872;Patrick;Rothfuss;1973-06-06;American fantasy author.;17.02;Political Fiction,Coming-of-Age,Fantasy,Fable,Bestseller;1853;patrick.rothfuss34@example.com
+The Sound and the Fury;9780491902666;F. Scott;Fitzgerald;1896-09-24;American novelist of the Jazz Age.;3.72;Classics;1978;f. scott.fitzgerald35@example.com
+Absalom, Absalom!;9780887720936;George;Orwell;1903-06-25;English novelist and essayist, famed for dystopian works.;10.52;Political Fiction,Dystopian;1841;george.orwell36@example.com
+Light in August;9780858165024;Harper;Lee;1926-04-28;American novelist best known for 'Mockingbird'.;13.17;Romance;1999;harper.lee37@example.com
+East of Eden;9780464488913;J. R. R.;Tolkien;1892-01-03;English philologist and author of Middle-earth.;14.81;Adventure,Classics,Science Fiction;1804;j. r. r..tolkien38@example.com
+Of Mice and Men;9780798173365;J. R. R.;Tolkien;1892-01-03;English philologist and author of Middle-earth.;11.54;Epic,Fantasy,Historical,Dystopian,Adventure;1838;j. r. r..tolkien39@example.com
+Cannery Row;9780279981195;Harper;Lee;1926-04-28;American novelist best known for 'Mockingbird'.;5.9;Tragedy;1830;harper.lee40@example.com
+The Grapes of Wrath;9780156028664;J. D.;Salinger;1919-01-01;Reclusive American writer, author of 'Catcher'.;5.11;Bestseller,Fable,Adventure,Romance;1853;j. d..salinger41@example.com
+Catch-22;9780446774048;Patrick;Rothfuss;1973-06-06;American fantasy author.;9.2;Epic,Classics,Romance;1942;patrick.rothfuss42@example.com
+Slaughterhouse-Five;9780639952173;F. Scott;Fitzgerald;1896-09-24;American novelist of the Jazz Age.;3.85;Fantasy;2014;f. scott.fitzgerald43@example.com
+Breakfast of Champions;9780682239096;F. Scott;Fitzgerald;1896-09-24;American novelist of the Jazz Age.;7.48;Coming-of-Age,Fable,Political Fiction,Dystopian,Romance;1981;f. scott.fitzgerald44@example.com
+Cat's Cradle;9780976229378;J. R. R.;Tolkien;1892-01-03;English philologist and author of Middle-earth.;3.68;Classics,Coming-of-Age,Romance;1886;j. r. r..tolkien45@example.com
+Player Piano;9780847195815;Patrick;Rothfuss;1973-06-06;American fantasy author.;15.01;Fable,Adventure,Science Fiction,Tragedy,Romance;1963;patrick.rothfuss46@example.com
+Lord of the Flies;9780166873474;George;Orwell;1903-06-25;English novelist and essayist, famed for dystopian works.;5.59;Romance,Tragedy,Adventure,Dystopian,American Literature;1860;george.orwell47@example.com
+Animal Farm;9780980800145;J. D.;Salinger;1919-01-01;Reclusive American writer, author of 'Catcher'.;12.86;Romance,Tragedy,Science Fiction,Fable;1863;j. d..salinger48@example.com
+Fahrenheit 451;9780725293381;George;Orwell;1903-06-25;English novelist and essayist, famed for dystopian works.;13.64;Classics,Political Fiction,Bestseller,Epic;1942;george.orwell49@example.com
+The Road;9780815652012;Paulo;Coelho;1947-08-24;Brazilian lyricist and novelist.;3.62;Fantasy,American Literature,Dystopian,Coming-of-Age,Historical;2018;paulo.coelho50@example.com
+Blood Meridian;9780182429764;F. Scott;Fitzgerald;1896-09-24;American novelist of the Jazz Age.;9.6;Dystopian,Historical,Tragedy;1849;f. scott.fitzgerald51@example.com
+No Country for Old Men;9780833125578;Patrick;Rothfuss;1973-06-06;American fantasy author.;2.56;Dystopian,Philosophical,Coming-of-Age;1893;patrick.rothfuss52@example.com
+All the Pretty Horses;9780882966349;Harper;Lee;1926-04-28;American novelist best known for 'Mockingbird'.;12.56;Philosophical,Epic;1921;harper.lee53@example.com
+Beloved;9780110159709;Patrick;Rothfuss;1973-06-06;American fantasy author.;13.09;Fable,Bestseller,Classics;1869;patrick.rothfuss54@example.com
+Song of Solomon;9780207468137;George;Orwell;1903-06-25;English novelist and essayist, famed for dystopian works.;6.41;Fantasy,Fable,Romance,American Literature,Adventure;1804;george.orwell55@example.com
+Sula;9780324710020;Harper;Lee;1926-04-28;American novelist best known for 'Mockingbird'.;12.78;Historical,Tragedy,Dystopian,Epic;1992;harper.lee56@example.com
+Tar Baby;9780432502503;George;Orwell;1903-06-25;English novelist and essayist, famed for dystopian works.;15.18;American Literature,Epic,Tragedy,Classics;1964;george.orwell57@example.com
+Paradise;9780924729179;George;Orwell;1903-06-25;English novelist and essayist, famed for dystopian works.;4.36;Epic,Historical;1895;george.orwell58@example.com
+Jazz;9780411888170;George;Orwell;1903-06-25;English novelist and essayist, famed for dystopian works.;14.79;American Literature,Historical;1834;george.orwell59@example.com
+Love;9780578887875;J. R. R.;Tolkien;1892-01-03;English philologist and author of Middle-earth.;1.1;Adventure,Bestseller,Romance,Classics,Tragedy;1943;j. r. r..tolkien60@example.com
+Invisible Man;9780207339402;Harper;Lee;1926-04-28;American novelist best known for 'Mockingbird'.;12.89;Science Fiction;1819;harper.lee61@example.com
+Native Son;9780468338192;George;Orwell;1903-06-25;English novelist and essayist, famed for dystopian works.;5.96;Philosophical,Adventure,Political Fiction,American Literature,Dystopian;1922;george.orwell62@example.com
+Black Boy;9780217254721;Herman;Melville;1819-08-01;American novelist and poet, wrote 'Moby-Dick'.;14.63;Epic,Bestseller,Historical,Tragedy;1949;herman.melville63@example.com
+Go Tell It on the Mountain;9780753941003;Paulo;Coelho;1947-08-24;Brazilian lyricist and novelist.;19.63;Dystopian,Fable,Philosophical,Science Fiction,Coming-of-Age;1961;paulo.coelho64@example.com
+Another Country;9780316498474;J. D.;Salinger;1919-01-01;Reclusive American writer, author of 'Catcher'.;17.42;Adventure,Philosophical,Bestseller,Romance;1915;j. d..salinger65@example.com
+Giovanni's Room;9780519809594;F. Scott;Fitzgerald;1896-09-24;American novelist of the Jazz Age.;15.82;Coming-of-Age,Dystopian;1953;f. scott.fitzgerald66@example.com
+If Beale Street Could Talk;9780776478966;George;Orwell;1903-06-25;English novelist and essayist, famed for dystopian works.;3.03;Dystopian,Fantasy;1935;george.orwell67@example.com
+Just Above My Head;9780681411916;Harper;Lee;1926-04-28;American novelist best known for 'Mockingbird'.;10.35;Fantasy,Romance,Epic,Coming-of-Age,American Literature;1894;harper.lee68@example.com
+The Fire Next Time;9780126266060;George;Orwell;1903-06-25;English novelist and essayist, famed for dystopian works.;3.28;Philosophical,Fable,Epic;1808;george.orwell69@example.com
+Notes of a Native Son;9780342767343;J. D.;Salinger;1919-01-01;Reclusive American writer, author of 'Catcher'.;2.46;Adventure,Epic,American Literature,Fantasy,Romance;1936;j. d..salinger70@example.com
+Things Fall Apart;9780186345580;George;Orwell;1903-06-25;English novelist and essayist, famed for dystopian works.;7.52;Bestseller,American Literature,Tragedy;1945;george.orwell71@example.com
+Arrow of God;9780968175773;F. Scott;Fitzgerald;1896-09-24;American novelist of the Jazz Age.;13.36;Adventure,Bestseller,Science Fiction,Historical,American Literature;1966;f. scott.fitzgerald72@example.com
+No Longer at Ease;9780283058190;Harper;Lee;1926-04-28;American novelist best known for 'Mockingbird'.;16.95;Historical;1901;harper.lee73@example.com
+A Man of the People;9780303191208;J. D.;Salinger;1919-01-01;Reclusive American writer, author of 'Catcher'.;19.02;American Literature,Philosophical,Bestseller,Romance,Fable;1914;j. d..salinger74@example.com
+Anthills of the Savannah;9780663788660;George;Orwell;1903-06-25;English novelist and essayist, famed for dystopian works.;18.53;American Literature,Coming-of-Age,Bestseller,Political Fiction,Dystopian;1974;george.orwell75@example.com
+Purple Hibiscus;9780520732093;F. Scott;Fitzgerald;1896-09-24;American novelist of the Jazz Age.;16.14;Classics,Dystopian,Bestseller,Tragedy;1846;f. scott.fitzgerald76@example.com
+Half of a Yellow Sun;9780852083684;Patrick;Rothfuss;1973-06-06;American fantasy author.;18.15;Bestseller;1910;patrick.rothfuss77@example.com
+Americanah;9780886547177;George;Orwell;1903-06-25;English novelist and essayist, famed for dystopian works.;16.17;Fable,Epic;2002;george.orwell78@example.com
+Homegoing;9780239049063;Harper;Lee;1926-04-28;American novelist best known for 'Mockingbird'.;16.52;Dystopian,Fantasy;1809;harper.lee79@example.com
+Transcendent Kingdom;9780462334546;Harper;Lee;1926-04-28;American novelist best known for 'Mockingbird'.;19.46;Coming-of-Age,Dystopian;2013;harper.lee80@example.com
+The Underground Railroad;9780118811596;Patrick;Rothfuss;1973-06-06;American fantasy author.;11.93;Adventure,Dystopian,American Literature,Coming-of-Age,Epic;2004;patrick.rothfuss81@example.com
+Harlem Shuffle;9780660237320;Herman;Melville;1819-08-01;American novelist and poet, wrote 'Moby-Dick'.;9.97;Political Fiction,Bestseller,Historical;1905;herman.melville82@example.com
+Nickel Boys;9780283364548;F. Scott;Fitzgerald;1896-09-24;American novelist of the Jazz Age.;9.29;Epic,Classics,Dystopian,American Literature;1820;f. scott.fitzgerald83@example.com
+Sag Harbor;9780268849788;George;Orwell;1903-06-25;English novelist and essayist, famed for dystopian works.;13.48;Fantasy,Science Fiction,American Literature,Romance,Political Fiction;1875;george.orwell84@example.com
+Zone One;9780624382004;Patrick;Rothfuss;1973-06-06;American fantasy author.;7.04;Adventure;1873;patrick.rothfuss85@example.com
+The Intuitionist;9780415969923;George;Orwell;1903-06-25;English novelist and essayist, famed for dystopian works.;15.75;American Literature;1929;george.orwell86@example.com
+John Henry Days;9780610114871;George;Orwell;1903-06-25;English novelist and essayist, famed for dystopian works.;17.65;Philosophical,Adventure,Romance,Political Fiction;2015;george.orwell87@example.com
+Apex Hides the Hurt;9780207492729;F. Scott;Fitzgerald;1896-09-24;American novelist of the Jazz Age.;2.18;Historical,Tragedy,Science Fiction,Fable;1814;f. scott.fitzgerald88@example.com
+The Colossus of New York;9780110572439;F. Scott;Fitzgerald;1896-09-24;American novelist of the Jazz Age.;10.13;Historical,Science Fiction;2015;f. scott.fitzgerald89@example.com
+The Noble Hustle;9780678744635;F. Scott;Fitzgerald;1896-09-24;American novelist of the Jazz Age.;10.93;Tragedy,Coming-of-Age;1976;f. scott.fitzgerald90@example.com
+White Teeth;9780479627457;Patrick;Rothfuss;1973-06-06;American fantasy author.;3.94;Historical,Adventure,Tragedy,Science Fiction,Dystopian;1825;patrick.rothfuss91@example.com
+On Beauty;9780281773956;Harper;Lee;1926-04-28;American novelist best known for 'Mockingbird'.;12.13;American Literature,Classics,Historical;1817;harper.lee92@example.com
+NW;9780130741737;J. R. R.;Tolkien;1892-01-03;English philologist and author of Middle-earth.;9.45;Historical,Fantasy,Political Fiction,Science Fiction,Philosophical;1966;j. r. r..tolkien93@example.com
+Swing Time;9780225120518;J. D.;Salinger;1919-01-01;Reclusive American writer, author of 'Catcher'.;11.01;Philosophical,Classics,Bestseller,Political Fiction;1887;j. d..salinger94@example.com
+Grand Union;9780638097071;George;Orwell;1903-06-25;English novelist and essayist, famed for dystopian works.;8.16;Science Fiction,Historical;1959;george.orwell95@example.com
+The Buddha of Suburbia;9780537743926;Patrick;Rothfuss;1973-06-06;American fantasy author.;12.95;Romance,Coming-of-Age,Science Fiction,Epic,Fable;1850;patrick.rothfuss96@example.com
+Midnight's Children;9780990748909;Patrick;Rothfuss;1973-06-06;American fantasy author.;9.42;Adventure;2010;patrick.rothfuss97@example.com
+Shame;9780430002818;F. Scott;Fitzgerald;1896-09-24;American novelist of the Jazz Age.;6.9;Bestseller,Tragedy,Fable;1803;f. scott.fitzgerald98@example.com
+The Moor's Last Sigh;9780645394326;F. Scott;Fitzgerald;1896-09-24;American novelist of the Jazz Age.;3.67;Political Fiction;1951;f. scott.fitzgerald99@example.com
+The Ground Beneath Her Feet;9780732858109;Aldous;Huxley;1894-07-26;English writer and philosopher.;2.82;Adventure,Fantasy,Bestseller,Historical,Coming-of-Age;1961;aldous.huxley100@example.com

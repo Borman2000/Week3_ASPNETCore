@@ -3,6 +3,7 @@ using Application.Books.Create;
 using Application.Books.GetById;
 using Application.Books.GetPagedList;
 using Application.Books.Update;
+using Application.Books.UploadCsv;
 using Application.DTOs;
 using Application.Interfaces;
 using Domain.Entities;
@@ -61,6 +62,10 @@ public static class Endpoints
 	        var book = await mediatr.Send(command);
 	        return Results.Accepted($"/products/{book.Id}", new { id = book.Id });
         });
+        app.MapPost("/uploadCsv", async ([FromForm] UploadCsvCommand command, ISender mediatr) => {
+	        var book = await mediatr.Send(command);
+	        return Results.Created($"/products/{book.Id}", new { id = book.Id });
+        }).DisableAntiforgery();;
 
         app.MapPost("/authors", async (CreateAuthorCommand command, ISender mediatr) => {
 	        var author = await mediatr.Send(command);

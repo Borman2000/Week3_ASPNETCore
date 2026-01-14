@@ -62,6 +62,54 @@ public class BookRepository(BookStoreDbContext dbContext, IMapper dtoMapper) : E
 		return null;
 	}
 
+	public override async Task AddBulkAsync(IEnumerable<Book> entities)
+    {
+//	    Is this method implements Unit of Work pattern?
+	    Dictionary<string, Author> addedAuthors = [];
+	    List<Category> existingCategories = [];
+
+	    foreach (Book entity in entities)
+	    {
+		    var book = await DbContext.Books.AsNoTracking().FirstOrDefaultAsync(a => a.Title == entity.Title);
+		    if (book is not null)
+			    continue;	//Results.Conflict("Book already exists");
+
+		    var author = await DbContext.Authors.FirstOrDefaultAsync(a => a.FirstName == entity.Author.FirstName && a.LastName == entity.Author.LastName);
+		    if (author == null)
+		    {
+			    var key = entity.Author.FirstName + " " + entity.Author.LastName;
+			    if (addedAuthors.ContainsKey(key)) {
+				    author = addedAuthors[key];
+			    } else {
+				    author = DbContext.Authors.Add(entity.Author).Entity;
+				    addedAuthors[key] = author;
+			    }
+		    }
+
+		    entity.Author = author;
+		    entity.AuthorId = author.Id;
+
+		    HashSet<string> catNames = entity.Categories.Select(ct => ct.Name).ToHashSet();
+		    List<Category> entityCategories = await DbContext.Categories.Where(c => catNames.Contains(c.Name)).ToListAsync();
+		    if(entityCategories.Count > 0)
+				existingCategories = existingCategories.UnionBy(entityCategories, c => c.Name).ToList();
+		    HashSet<string> existingCategoriesSet = existingCategories.Select(c => c.Name).ToHashSet();
+		    List<Category> newCategories = entity.Categories.Where(c => !existingCategoriesSet.Contains(c.Name)).ToList();
+
+			if(newCategories.Count > 0)
+				await DbContext.Categories.AddRangeAsync(newCategories);
+
+			entityCategories = entityCategories.Concat(newCategories).ToList();
+			entity.Categories = entityCategories;
+
+			existingCategories = existingCategories.Concat(newCategories).ToList();
+
+			await DbContext.Books.AddAsync(entity);
+	    }
+
+		await DbContext.Commit();
+	}
+
 	public async Task UpdateAsync(BookDto dto)
 	{
 		var book = await DbSet.FindAsync(dto.Id);

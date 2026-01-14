@@ -11,6 +11,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\CSVParser\CSVParser.csproj" />
 		<ProjectReference Include="..\Domain\Domain.csproj" />
 	</ItemGroup>
 

@@ -43,6 +43,11 @@ public class EfRepository<TEntity> : IRepository<TEntity> where TEntity : BaseEn
         return entity;
     }
 
+    public virtual Task AddBulkAsync(IEnumerable<TEntity> entities)
+    {
+	    throw new NotImplementedException();
+    }
+
     public virtual async Task UpdateAsync(TEntity dto)
     {
         throw new NotImplementedException();

@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Application.Interfaces;
+using CSVParser;
 using Infrastructure.Repositories;
 using Infrastructure.Repositories.Impl;
 using Infrastructure.Services;
@@ -39,6 +40,7 @@ public static class InfrastructureDependencyInjection
     public static IServiceCollection AddServices(this IServiceCollection services)
     {
 	    services.AddScoped<IEmailService, EmailService>();
+	    services.AddScoped<ICsvParser, ParserSimple>();
 	    return services;
     }
 
