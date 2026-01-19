@@ -3,11 +3,11 @@ using CSVParser;
 using Domain.Entities;
 using MediatR;
 
-namespace Application.Books.UploadCsv;
+namespace Application.Books.UploadCsvSpan;
 
-public class UploadCsvCommandHandler(IBookRepository bookRepository, ParserSimple csvParser) : IRequestHandler<UploadCsvCommand, Task>
+public class UploadCsvSpanCommandHandler(IBookRepository bookRepository, ParserMemory csvParser) : IRequestHandler<UploadCsvSpanCommand, Task>
 {
-	public async Task<Task> Handle(UploadCsvCommand command, CancellationToken cancellationToken)
+	public async Task<Task> Handle(UploadCsvSpanCommand command, CancellationToken cancellationToken)
 	{
 		var stream = command.file.OpenReadStream();
 		stream.Seek(0, SeekOrigin.Begin);

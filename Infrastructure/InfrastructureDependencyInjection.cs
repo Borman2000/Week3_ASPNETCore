@@ -40,7 +40,8 @@ public static class InfrastructureDependencyInjection
     public static IServiceCollection AddServices(this IServiceCollection services)
     {
 	    services.AddScoped<IEmailService, EmailService>();
-	    services.AddScoped<ICsvParser, ParserSimple>();
+	    services.AddScoped<ParserSimple>();
+	    services.AddScoped<ParserMemory>();
 	    return services;
     }
 

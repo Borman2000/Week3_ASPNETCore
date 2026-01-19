@@ -66,6 +66,10 @@ public static class Endpoints
 	        var book = await mediatr.Send(command);
 	        return Results.Created($"/products/{book.Id}", new { id = book.Id });
         }).DisableAntiforgery();;
+        app.MapPost("/uploadCsvMemory", async ([FromForm] UploadCsvSpanCommand command, ISender mediatr) => {
+	        var book = await mediatr.Send(command);
+	        return Results.Created($"/products/{book.Id}", new { id = book.Id });
+        }).DisableAntiforgery();;
 
         app.MapPost("/authors", async (CreateAuthorCommand command, ISender mediatr) => {
 	        var author = await mediatr.Send(command);
