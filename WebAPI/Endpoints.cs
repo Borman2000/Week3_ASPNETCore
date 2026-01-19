@@ -1,11 +1,18 @@
+using System.Diagnostics;
 using Application.Authors.Create;
 using Application.Books.Create;
 using Application.Books.GetById;
 using Application.Books.GetPagedList;
 using Application.Books.Update;
 using Application.Books.UploadCsv;
+using Application.Books.UploadCsvSpan;
 using Application.DTOs;
 using Application.Interfaces;
+using BenchmarkDotNet.Exporters;
+using BenchmarkDotNet.Loggers;
+using BenchmarkDotNet.Reports;
+using BenchmarkDotNet.Running;
+using CSVParser;
 using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -70,6 +77,16 @@ public static class Endpoints
 	        var book = await mediatr.Send(command);
 	        return Results.Created($"/products/{book.Id}", new { id = book.Id });
         }).DisableAntiforgery();;
+        app.MapGet("/benchmark", () => {
+	        var summary = BenchmarkRunner.Run<CsvParserBenchmark>();
+	        var p = new Process();
+	        p.StartInfo = new ProcessStartInfo(@"BenchmarkDotNet.Artifacts\\results\\CSVParser.CsvParserBenchmark-report.html")
+	        {
+		        UseShellExecute = true
+	        };
+	        p.Start();
+	        return Results.Ok(GetSummaryAsString(summary));
+        });
 
         app.MapPost("/authors", async (CreateAuthorCommand command, ISender mediatr) => {
 	        var author = await mediatr.Send(command);
@@ -81,4 +98,23 @@ public static class Endpoints
         app.MapPost("/categories", (ICategoryRepository categoryRepoService, Category category) => categoryRepoService.AddAsync(category));
 //        app.MapPost("/authors", (IAuthorRepository authorRepoService, AuthorDto authorDto) => authorRepoService.AddAsync(authorDto));
     }
+
+    private static string GetSummaryAsString(Summary summary)
+    {
+	    var stringWriter = new StringWriter();
+	    var consoleLogger = new TextLogger(stringWriter);
+
+	    // Use any of the built-in exporters, for example, MarkdownExporter.Default
+	    // Other options include HtmlExporter.Default, CsvExporter.Default, etc.
+	    var exporter = MarkdownExporter.Default;
+//	    var exporter = HtmlExporter.Default;
+//	    var exporter = CsvExporter.Default;
+//exporter = XmlExporter.Default;
+
+	    // The ExportToLog method writes the formatted summary to the logger (StringWriter)
+	    exporter.ExportToLog(summary, consoleLogger);
+
+	    return stringWriter.ToString();
+    }
+
 }
