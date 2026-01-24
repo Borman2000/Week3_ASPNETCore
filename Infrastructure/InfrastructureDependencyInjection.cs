@@ -26,6 +26,7 @@ public static class InfrastructureDependencyInjection
     {
         services.AddScoped<IUnitOfWork>(c => c.GetRequiredService<BookStoreDbContext>());
         services.AddScoped<IAuthorRepository, AuthorRepository>();
+        services.Decorate<IAuthorRepository, CachedAuthorRepository>();
         services.AddScoped<IBookRepository, BookRepository>();
         services.AddScoped<ICategoryRepository, CategoryRepository>();
         // services.AddScoped<ITodoListRepository, TodoListRepository>();
@@ -39,6 +40,8 @@ public static class InfrastructureDependencyInjection
 
     public static IServiceCollection AddServices(this IServiceCollection services)
     {
+	    services.AddMemoryCache();
+	    services.AddScoped<ICacheService, InMemoryCacheService>();
 	    services.AddScoped<IEmailService, EmailService>();
 	    services.AddScoped<ParserSimple>();
 	    services.AddScoped<ParserMemory>();
