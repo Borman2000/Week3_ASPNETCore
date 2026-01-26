@@ -19,7 +19,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSwagger();
 builder.Services.AddApplication(builder.Configuration)
                 .AddDataAccess(builder.Configuration)
-                .AddServices();
+                .AddServices(builder.Configuration);
 builder.Services.AddHealthChecks();
 
 #if SERILOG_RESPONSES

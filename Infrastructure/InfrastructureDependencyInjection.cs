@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿#define IN_MEMORY_CACHE
+
+using System.ComponentModel.DataAnnotations;
 using Application.Interfaces;
 using CSVParser;
 using Infrastructure.Repositories;
@@ -38,10 +40,21 @@ public static class InfrastructureDependencyInjection
         services.AddDbContext<BookStoreDbContext>(opt => opt.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
     }
 
-    public static IServiceCollection AddServices(this IServiceCollection services)
+    public static IServiceCollection AddServices(this IServiceCollection services, IConfiguration configuration)
     {
-	    services.AddMemoryCache();
-	    services.AddScoped<ICacheService, InMemoryCacheService>();
+		#if IN_MEMORY_CACHE
+		    services.AddMemoryCache();
+		    services.AddScoped<ICacheService, InMemoryCacheService>();
+	    #else
+		    services.AddStackExchangeRedisCache(options =>
+		    {
+			    options.Configuration = configuration["Redis:Configuration"];
+	//		    options.InstanceName = configuration["Redis:InstanceName"];
+		    });
+
+		    services.AddScoped<ICacheService, RedisCacheService>();
+	    #endif
+
 	    services.AddScoped<IEmailService, EmailService>();
 	    services.AddScoped<ParserSimple>();
 	    services.AddScoped<ParserMemory>();
