@@ -19,7 +19,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSwagger();
 builder.Services.AddApplication(builder.Configuration)
                 .AddDataAccess(builder.Configuration)
-                .AddServices(builder.Configuration);
+                .AddServices(builder.Configuration)
+                .AddResponseCaching();
 builder.Services.AddHealthChecks();
 
 #if SERILOG_RESPONSES
@@ -62,6 +63,7 @@ if (app.Environment.IsDevelopment())
 // app.UseDefaultFiles(); // Enables serving default files like index.html
 app.UseStaticFiles();  // Enables serving static files from wwwroot
 app.UseHttpsRedirection();
+app.UseResponseCaching();
 
 Endpoints.MapCQRS(app);
 

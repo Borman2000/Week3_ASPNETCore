@@ -8,12 +8,14 @@ using Application.Books.UploadCsv;
 using Application.Books.UploadCsvSpan;
 using Application.DTOs;
 using Application.Interfaces;
+using AutoMapper;
 using BenchmarkDotNet.Exporters;
 using BenchmarkDotNet.Loggers;
 using BenchmarkDotNet.Reports;
 using BenchmarkDotNet.Running;
 using CSVParser;
 using Domain.Entities;
+using Infrastructure.Services;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -95,8 +97,12 @@ public static class Endpoints
 
         app.MapGet("/authors", (IAuthorRepository authorRepoService) => authorRepoService.GetAllAsync());
         app.MapGet("/authors/{id:guid}/books", (IAuthorRepository authorRepoService, [FromRoute] Guid id) =>  authorRepoService.GetByIdWithBooksAsync(id));
-        app.MapPost("/categories", (ICategoryRepository categoryRepoService, Category category) => categoryRepoService.AddAsync(category));
+        app.MapPost("/categories", (ICategoryRepository categoryRepoService, CategoryDto category, IMapper mapper) => categoryRepoService.AddAsync(mapper.Map<Category>(category)));
 //        app.MapPost("/authors", (IAuthorRepository authorRepoService, AuthorDto authorDto) => authorRepoService.AddAsync(authorDto));
+
+	    app.MapGet("/categories", (ICategoryRepository categoryRepoService) => categoryRepoService.GetAllAsync()).AddEndpointFilter<HttpResponseEtagFiler>().AddResponseCacheHeader(30);
+	    app.MapGet("/categories/{id:guid}", (ICategoryRepository categoryRepoService, [FromRoute] Guid id) =>  categoryRepoService.GetByIdAsync(id)).AddEndpointFilter<HttpResponseEtagFiler>().AddResponseCacheHeader(30);
+	    app.MapPut("/categories/", (ICategoryRepository categoryRepoService, Category category) => categoryRepoService.UpdateAsync(category));
     }
 
     private static string GetSummaryAsString(Summary summary)
