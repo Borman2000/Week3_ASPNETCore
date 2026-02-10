@@ -1,0 +1,31 @@
+global:
+  scrape_interval:     30s
+  evaluation_interval: 60s
+
+rule_files:
+  - "./rules/*.yml"
+
+# A scrape configuration containing exactly one endpoint to scrape:
+# Here it's Prometheus itself.
+scrape_configs:
+  - job_name: 'Books.API'
+    scrape_interval: 15s
+    scheme: http
+    honor_labels: true
+    static_configs:
+      - targets: ['host.docker.internal:5275']
+        labels:
+          app: 'Books.api'
+          env: 'development'
+
+  - job_name: 'otel-collector'
+    scrape_interval: 15s
+    scheme: http
+    static_configs:
+      - targets: ['172.17.0.1:8888']
+
+  - job_name: 'otel-collector-exporters'
+    scrape_interval: 15s
+    scheme: http
+    static_configs:
+      - targets: ['172.17.0.1:8889']

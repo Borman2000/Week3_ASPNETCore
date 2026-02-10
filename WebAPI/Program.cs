@@ -71,6 +71,9 @@ app.UseSwagger();
 app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPI V1"); });
 app.MapHealthChecks("/health");
 
+app.MapPrometheusScrapingEndpoint();
+app.UseOpenTelemetryPrometheusScrapingEndpoint("metrics");
+
 // To test Environments: Development <=> Production in IIS Express in launchSettings.json
 Console.WriteLine($"App name: {app.Services.GetRequiredService<IOptions<ApiSettings>>().Value.Name}, version: {app.Services.GetRequiredService<IOptions<ApiSettings>>().Value.Version}");
 

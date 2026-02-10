@@ -9,6 +9,9 @@ using Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using OpenTelemetry;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
 
 namespace Infrastructure;
 
@@ -42,6 +45,28 @@ public static class InfrastructureDependencyInjection
 
     public static IServiceCollection AddServices(this IServiceCollection services, IConfiguration configuration)
     {
+	    services.AddOpenTelemetry()
+		    .ConfigureResource(configuration => configuration.AddService("Books.api"))
+		    .WithMetrics(builder =>
+		    {
+			    builder
+				    .AddAspNetCoreInstrumentation()
+//				    .AddHttpClientInstrumentation()
+//				    .AddMeter("Microsoft.AspNetCore.Hosting", "Microsoft.AspNetCore.Server.Kestrel", "System.Net.Http", "Books.api")
+				    .AddMeter("Books.api")
+				    .AddInstrumentation<PerformanceMetrics>()
+				    .AddPrometheusExporter() // Configures an endpoint for Prometheus to scrape
+//				    .AddRuntimeInstrumentation() // Collects default .NET runtime metrics (GC, CPU, etc.)
+//				    .AddProcessInstrumentation()
+				    .AddOtlpExporter(options =>
+				    {
+//					    options.Endpoint = new Uri(configuration["Otlp:Endpoint"] ?? "http://localhost:4317");
+					    options.Endpoint = new Uri("http://localhost:4317");
+				    });
+		    });
+	    services.AddApplicationInsightsTelemetry();
+	    services.AddSingleton<PerformanceMetrics>();
+
 		#if IN_MEMORY_CACHE
 		    services.AddMemoryCache();
 		    services.AddScoped<ICacheService, InMemoryCacheService>();
