@@ -17,7 +17,9 @@ services:
     extra_hosts:
       - host.docker.internal:host-gateway
     ports:
-      - 9090:9090
+      - "9090:9090"
+#    links:
+#      - mysqld-exporter
     volumes:
       - prometheus-data:/prometheus
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
@@ -31,10 +33,53 @@ services:
       - '--web.enable-lifecycle'
       - '--web.enable-admin-api'
 
+  mysqld:
+    image: mysql:8.0
+    container_name: mysqld
+    environment:
+#      MYSQL_ROOT_HOST: "%"
+      MYSQL_ROOT_PASSWORD: "root"
+#      MYSQL_USER: exporter
+#      MYSQL_PASSWORD: exporter
+    volumes:
+      - ./mysql/setup.sql:/docker-entrypoint-initdb.d/setup.sql
+      - mysql-data:/var/lib/mysql
+#      - ~/var/mysql:/var/lib/mysql
+    ports:
+      - "33006:3306"
+
+  mysqld-exporter:
+    image: prom/mysqld-exporter:latest
+    container_name: mysqld-exporter
+    volumes:
+      - exporter-data:/mysqld-exporter
+      - ./mysql/config.my-cnf:/cfg/config.my-cnf
+    command:
+      - '--collect.info_schema.tablestats'
+      - '--collect.info_schema.processlist'
+#      - '--collect.perf_schema.memory_events'
+#      - '--mysqld.username=exporter:exporter'
+#      - '--mysqld.address=mysqld:33006'
+      - '--config.my-cnf=/cfg/config.my-cnf'
+#      - '--web.listen-address=:9104'
+#      - '--web.telemetry-path=/metrics'
+    environment:
+      - DATA_SOURCE_NAME=exporter:exporter@(mysqld:33006)/
+    ports:
+      - "9104:9104"
+#    links:
+#      - mysqld
+    depends_on:
+      - mysqld
+
   grafana:
     image: grafana/grafana:latest
     ports:
-      - 3000:3000
+      - "3000:3000"
+#    links:
+#      - prometheus
+    depends_on:
+        - prometheus
     volumes:
       - grafana-data:/var/lib/grafana
     environment:
@@ -47,8 +92,10 @@ services:
   renderer:
     image: grafana/grafana-image-renderer:latest
     ports:
-      - 8081
+      - "8081"
 
 volumes:
   prometheus-data: {}
   grafana-data: {}
+  mysql-data: {}
+  exporter-data: {}

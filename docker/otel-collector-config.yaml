@@ -14,7 +14,7 @@ processors:
           # Or filter based on attributes
 #          - attributes["http.request.operation"] == "GET: /metrics"
 #          - attributes["http.request.operation"] == "GET: /swagger/v1/swagger.json"
-          - attributes["http.target"] == "/metrics"
+#          - attributes["http.target"] == "/metrics"
           - attributes["url.path"] == "/metrics"
           - attributes["http_request_operation"] == '"GET:/metrics"'
 

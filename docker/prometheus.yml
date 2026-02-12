@@ -29,3 +29,24 @@ scrape_configs:
     scheme: http
     static_configs:
       - targets: ['172.17.0.1:8889']
+
+  - job_name: mysql # To get metrics about the mysql exporter’s targets
+    scrape_interval: 15s
+#    metrics_path: /probe
+    params:
+      # Not required. Will match value to child in config file. Default value is `client`.
+      auth_module: [client]
+    static_configs:
+      - targets:
+          # All mysql hostnames or unix sockets to monitor.
+          - mysqld:3306
+#          - server2:33006
+#          - unix:///run/mysqld/mysqld.sock
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        # The mysqld_exporter host:port
+        replacement: mysqld-exporter:9104

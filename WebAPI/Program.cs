@@ -74,6 +74,9 @@ app.MapHealthChecks("/health");
 app.MapPrometheusScrapingEndpoint();
 app.UseOpenTelemetryPrometheusScrapingEndpoint("metrics");
 
+// default endpoint: /healthmetrics
+app.UseHealthChecksPrometheusExporter("/healthmetrics");
+
 // To test Environments: Development <=> Production in IIS Express in launchSettings.json
 Console.WriteLine($"App name: {app.Services.GetRequiredService<IOptions<ApiSettings>>().Value.Name}, version: {app.Services.GetRequiredService<IOptions<ApiSettings>>().Value.Version}");
 
