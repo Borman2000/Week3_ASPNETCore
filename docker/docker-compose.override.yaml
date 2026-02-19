@@ -1,0 +1,8 @@
+services:
+
+# Use "docker compose config" to review the final merged configuration and troubleshoot any issues or unexpected merges.
+  mysqld:
+    environment:
+      MYSQL_ROOT_PASSWORD: "root"
+    volumes:
+      - ./mysql/setup.sql:/docker-entrypoint-initdb.d/setup.sql

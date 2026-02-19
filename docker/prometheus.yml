@@ -13,7 +13,7 @@ scrape_configs:
     scheme: http
     honor_labels: true
     static_configs:
-      - targets: ['host.docker.internal:5275']
+      - targets: ['host.docker.internal:5275', '172.17.0.1:5275']
         labels:
           app: 'Books.api'
           env: 'development'

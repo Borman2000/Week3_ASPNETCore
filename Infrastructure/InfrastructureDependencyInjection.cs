@@ -1,4 +1,4 @@
-﻿#define IN_MEMORY_CACHE
+﻿//#define IN_MEMORY_CACHE
 
 using System.ComponentModel.DataAnnotations;
 using Application.Interfaces;
@@ -74,7 +74,7 @@ public static class InfrastructureDependencyInjection
 		    services.AddStackExchangeRedisCache(options =>
 		    {
 			    options.Configuration = configuration["Redis:Configuration"];
-	//		    options.InstanceName = configuration["Redis:InstanceName"];
+			    options.InstanceName = configuration["Redis:InstanceName"];
 		    });
 
 		    services.AddScoped<ICacheService, RedisCacheService>();

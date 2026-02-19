@@ -38,11 +38,11 @@ services:
     container_name: mysqld
     environment:
 #      MYSQL_ROOT_HOST: "%"
-      MYSQL_ROOT_PASSWORD: "root"
+      MYSQL_ROOT_PASSWORD: "root_password"
 #      MYSQL_USER: exporter
 #      MYSQL_PASSWORD: exporter
     volumes:
-      - ./mysql/setup.sql:/docker-entrypoint-initdb.d/setup.sql
+#      - ./mysql/setup.sql:/docker-entrypoint-initdb.d/setup.sql
       - mysql-data:/var/lib/mysql
 #      - ~/var/mysql:/var/lib/mysql
     ports:
@@ -93,9 +93,17 @@ services:
     image: grafana/grafana-image-renderer:latest
     ports:
       - "8081"
+  redis:
+    image: redis:latest
+    container_name: redis-cache
+    volumes:
+      - redis-data:/redis-cache
+    ports:
+      - "6379:6379"
 
 volumes:
   prometheus-data: {}
   grafana-data: {}
   mysql-data: {}
   exporter-data: {}
+  redis-data: {}

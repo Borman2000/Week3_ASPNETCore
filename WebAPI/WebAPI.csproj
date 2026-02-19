@@ -5,6 +5,7 @@
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
 	</PropertyGroup>
 
 	<PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -35,6 +36,7 @@
 
 	<ItemGroup>
 	  <None Include="wwwroot\index.html" />
+	  <None Remove="Dockerfile" />
 	</ItemGroup>
 
 </Project>
