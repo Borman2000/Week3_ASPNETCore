@@ -65,7 +65,7 @@ public static class Endpoints
         });
         app.MapPost("/books", async (CreateBookCommand command, ISender mediatr) => {
 	        var book = await mediatr.Send(command);
-	        return Results.Created($"/products/{book.Id}", new { id = book.Id });
+	        return book == null ? Results.Problem("") : Results.Created($"/products/{book.Id}", new { id = book.Id });
         });
         app.MapPut("/books", async (UpdateBookCommand command, ISender mediatr) => {
 	        var book = await mediatr.Send(command);
