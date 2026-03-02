@@ -10,14 +10,14 @@ namespace IntegrationTests.Configuration;
 
 public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
 {
-    private readonly MySqlContainer _dbContainer = new MySqlBuilder()
-		    .WithImage("mysql:8.0")
-		    .WithDatabase("BooksDBTests")
-//		    .WithPortBinding(65530, 3306)	// bind to concrete port to connect to DB in manager during test's debug
-		    .WithPortBinding(65530, true)
-		    .WithUsername("root")
-		    .WithPassword("root")
-		    .Build();
+//    private readonly MySqlContainer _dbContainer = new MySqlBuilder()
+//		    .WithImage("mysql:8.0")
+//		    .WithDatabase("BooksDBTests")
+////		    .WithPortBinding(65530, 3306)	// bind to concrete port to connect to DB in manager during test's debug
+//		    .WithPortBinding(65530, true)
+//		    .WithUsername("root")
+//		    .WithPassword("root")
+//		    .Build();
 
 //    private Respawner _respawner = null!;
 
@@ -35,7 +35,8 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IAsyn
 
 		    services.AddDbContext<BookStoreDbContext>(options =>
 		    {
-			    var connectionString = _dbContainer.GetConnectionString();
+//			    var connectionString = _dbContainer.GetConnectionString();
+			    var connectionString = "Server=localhost;Port=33006;Database=BooksDBTests;User Id=root;Password=root;";
 			    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
 		    });
 	    });
@@ -43,10 +44,11 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IAsyn
 
     public async Task InitializeAsync()
     {
-	    await _dbContainer.StartAsync();
+//	    await _dbContainer.StartAsync();
 
 	    using var scope = Services.CreateScope();
 	    var dbContext = scope.ServiceProvider.GetRequiredService<BookStoreDbContext>();
+	    await dbContext.Database.EnsureDeletedAsync();
 	    await dbContext.Database.MigrateAsync();
 
 //	    await InitializeRespawnerAsync();
@@ -55,7 +57,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>, IAsyn
     public new async Task DisposeAsync()
     {
 //        await _dbContainer.DisposeAsync();
-        await _dbContainer.StopAsync();
+//        await _dbContainer.StopAsync();
     }
 
 //    public async Task ResetDatabaseAsync()

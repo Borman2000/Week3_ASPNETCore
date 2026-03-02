@@ -1,0 +1,29 @@
+services:
+
+  mysqltest:
+    image: mysql:8.0
+    environment:
+#      MYSQL_ROOT_HOST: "%"
+      MYSQL_ROOT_PASSWORD: "root"
+#      MYSQL_USER: exporter
+#      MYSQL_PASSWORD: exporter
+    volumes:
+#      - ./mysql/setup.sql:/docker-entrypoint-initdb.d/setup.sql
+      - mysqltest-data:/var/lib/mysql
+#      - ~/var/mysql:/var/lib/mysql
+    ports:
+      - "33006:3306"
+      - "65530:3306"
+      - "3306:3306"
+
+  redis:
+    image: redis:latest
+    container_name: redis-cache
+    volumes:
+      - redis-data:/redis-cache
+    ports:
+      - "6379:6379"
+
+volumes:
+  mysqltest-data: {}
+  redis-data: {}
