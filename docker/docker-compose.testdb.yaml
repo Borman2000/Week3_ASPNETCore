@@ -24,6 +24,15 @@ services:
     ports:
       - "6379:6379"
 
+  sonarqube:
+    image: sonarqube:latest
+    volumes:
+      - sonarqube-data:/sonarqube
+    ports:
+      - "9000:9000"
+      - "9092:9092"
+
 volumes:
   mysqltest-data: {}
   redis-data: {}
+  sonarqube-data: {}
