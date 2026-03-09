@@ -22,14 +22,45 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-#      - name: Set up JDK 17
-#        uses: actions/setup-java@v4
-#        with:
-#          java-version: 17
-#          distribution: 'zulu' # Alternative distribution options are available.
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: 'zulu' # Alternative distribution options are available.
 
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Set up Docker Buildx for advanced features
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # Log in to GitHub Container Registry
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Generate tags and labels from Git metadata
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}
+          github-token: '${{ secrets.GITHUB_TOKEN }}'
+          tags: |
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=raw,value={{date 'YYYYMMDD'}},enable={{is_not_default_branch}}
+#            type=sha,prefix=
+            # Add 'latest' for the main branch
+#            type=raw,value=latest,enable={{is_default_branch}}
+            # or for pushes to any branch/tag
+#            type=raw,value=latest,enable=true
 
       - name: Build and run the services with docker
 #        working-directory: ./docker # Specify the target directory
@@ -56,7 +87,7 @@ jobs:
       - name: Build
         run: |
           export PATH="$PATH:/root/.dotnet/tools"
-          dotnet-sonarscanner begin /k:"Borman2000_ASPNETCore" /d:sonar.token="sqp_e5568e5d11eca09f34ea308ce1d3f8cc95bc4318" /d:sonar.host.url="http://localhost:9000" /d:sonar.cs.opencover.reportsPaths="./IntegrationTests/coverage.xml,./UnitTests/coverage.xml" /d:sonar.coverage.exclusions="**Tests*.cs"
+          dotnet-sonarscanner begin /k:"Borman2000_ASPNETCore" /d:sonar.token="sqp_3c705e1f055ef5936a00201b7ee73906de453565" /d:sonar.host.url="http://localhost:9000" /d:sonar.cs.opencover.reportsPaths="./IntegrationTests/coverage.xml,./UnitTests/coverage.xml" /d:sonar.coverage.exclusions="**Tests*.cs"
           dotnet build --no-restore
 
 
@@ -101,7 +132,25 @@ jobs:
 #          dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
         run: |
           export PATH="$PATH:/root/.dotnet/tools"
-          dotnet-sonarscanner end /d:sonar.token="sqp_e5568e5d11eca09f34ea308ce1d3f8cc95bc4318"
+          dotnet-sonarscanner end /d:sonar.token="sqp_3c705e1f055ef5936a00201b7ee73906de453565"
+
+      - name: Stop/remove test containers
+        run: docker compose -f ./docker/docker-compose.testdb.yaml stop
+#        run: docker compose down -v
 
       - name: Publish
         run: dotnet publish -c Release -o ./publish
+
+      # Build and push the Docker image
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./docker/Dockerfile
+          # Only push on main branch and tags, not PRs
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          # Enable build cache for faster builds
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
