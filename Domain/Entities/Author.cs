@@ -40,11 +40,11 @@ public class Author : BaseEntity
     }
 
     [Required(ErrorMessage = "Author's first name is required")]
-    [StringLength(20, ErrorMessage = "First name must not exceed 50 characters.")]
+    [StringLength(20, ErrorMessage = "First name must not exceed 20 characters.")]
     public required string FirstName {get; set;}
 
     [Required(ErrorMessage = "Author's last name is required")]
-    [StringLength(20, ErrorMessage = "Last name must not exceed 50 characters.")]
+    [StringLength(20, ErrorMessage = "Last name must not exceed 20 characters.")]
     public required string LastName { get; set; }
 
     [Required(ErrorMessage = "Birth date is required")]

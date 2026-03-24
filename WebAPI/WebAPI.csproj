@@ -31,12 +31,21 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\AuthAPI\AuthAPI.Domain\AuthAPI.Domain.csproj" />
+	  <ProjectReference Include="..\AuthAPI\AuthAPI.Infrastructure\AuthAPI.Infrastructure.csproj" />
 	  <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <None Include="wwwroot\index.html" />
 	  <None Remove="Dockerfile" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Include="..\Config\JwtConfig.json">
+	    <Link>JwtConfig.json</Link>
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
 	</ItemGroup>
 
 </Project>

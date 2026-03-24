@@ -2,11 +2,13 @@
 
 using Application;
 using Application.Models;
+using AuthAPI.Infrastructure;
 using Infrastructure;
 using Microsoft.Extensions.Options;
 using Serilog;
 using WebAPI;
 using WebAPI.Middleware;
+using InfrastructureDependencyInjection = Infrastructure.InfrastructureDependencyInjection;
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
@@ -16,10 +18,13 @@ Log.Information("----- STARTING -----");
 
 var builder = WebApplication.CreateBuilder(args);
 
+var sharedFolder = Path.Combine(builder.Environment.ContentRootPath, "..", "Config");
+builder.Configuration.AddJsonFile(Path.Combine(sharedFolder, "JwtConfig.json"), optional: true);
+
 builder.Services.AddSwagger();
-builder.Services.AddApplication(builder.Configuration)
-                .AddDataAccess(builder.Configuration)
+InfrastructureDependencyInjection.AddDataAccess(builder.Services.AddApplication(builder.Configuration), builder.Configuration)
                 .AddServices(builder.Configuration)
+                .AddJwtData(builder.Configuration)
                 .AddResponseCaching();
 builder.Services.AddHealthChecks();
 
@@ -44,6 +49,9 @@ app.UseExceptionHandler(exceptionHandlerApp =>
 	});
 });
 
+app.UseAuthentication(); // Must come before UseAuthorization
+app.UseAuthorization();
+
 app.MapGet("/exception", () =>
 {
 	throw new InvalidOperationException("Sample Exception");
@@ -66,6 +74,7 @@ app.UseHttpsRedirection();
 app.UseResponseCaching();
 
 Endpoints.MapCQRS(app);
+//Endpoints.Map(app);
 
 app.UseSwagger();
 app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPI V1"); });

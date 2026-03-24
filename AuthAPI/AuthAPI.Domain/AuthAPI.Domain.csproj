@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<RootNamespace>AuthApi.Domain</RootNamespace>
+	</PropertyGroup>
+
+	<ItemGroup>
+<!--	  <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.3.1" />-->
+	  <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.20" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Reference Include="Microsoft.AspNetCore.Http.Abstractions">
+	    <HintPath>..\..\..\..\..\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.19\Microsoft.AspNetCore.Http.Abstractions.dll</HintPath>
+	  </Reference>
+	</ItemGroup>
+
+</Project>

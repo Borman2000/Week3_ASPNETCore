@@ -1,0 +1,56 @@
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using AuthAPI.Application.Interfaces;
+using Microsoft.IdentityModel.Tokens;
+
+namespace AuthAPI.Infrastructure.Services;
+
+public class TokenGenerator : ITokenGenerator
+{
+	private readonly string _key;
+	private readonly string _issuer;
+	private readonly string _audience;
+	private readonly int _expiryMinutes;
+
+	public TokenGenerator(string key, string issueer, string audience, int expiryMinutes)
+	{
+		_key = key;
+		_issuer = issueer;
+		_audience = audience;
+		_expiryMinutes = expiryMinutes;
+	}
+
+	public string GenerateJwtToken((string userId, string userName, IList<Claim> roleClaims) userDetails)
+	{
+		var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_key));
+		var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+		var (userId, userName, roles) = userDetails;
+
+		var claims = new List<Claim>()
+		{
+			new Claim(JwtRegisteredClaimNames.Sub, userName),
+			new Claim(JwtRegisteredClaimNames.Jti, userId),
+			new Claim(ClaimTypes.Name, userName),
+			new Claim("UserId", userId)
+		};
+		claims.AddRange(roles.Select(role => new Claim(role.Type, role.Value)));
+
+//		foreach (var roleClaim in roles)
+//		{
+//			claims.Add(new Claim(roleClaim.Type, roleClaim.Value));
+//		}
+
+		var token = new JwtSecurityToken(
+			issuer: _issuer,
+			audience: _audience,
+			claims: claims,
+			expires: DateTime.Now.AddMinutes(_expiryMinutes),
+			signingCredentials: signingCredentials
+		);
+
+		var encodedToken = new JwtSecurityTokenHandler().WriteToken(token);
+		return encodedToken;
+	}
+}
