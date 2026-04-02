@@ -6,6 +6,7 @@ public static class ClaimType
 	public static Scope Authors => new("authors");
 	public static Scope Books => new("books");
 	public static Scope Categories => new("categories");
+	public static Scope Notification => new("notification");
 
 	public class Scope(string scopeName)
 	{

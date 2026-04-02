@@ -22,5 +22,9 @@ public static class Endpoints
         app.MapPost("/users", (IUserRepository<ApplicationUser, UserDto> usersRepoService, UserDto user) => usersRepoService.AddAsync(user.UserName, user.Password, user.Roles)).RequireAuthorization(ClaimType.Users.Create);
         app.MapPut("/users/", (IUserRepository<ApplicationUser, UserDto> usersRepoService, ApplicationUser user) => usersRepoService.UpdateAsync(user)).RequireAuthorization(ClaimType.Users.Update);
         app.MapDelete("/users/{id:guid}", (IUserRepository<ApplicationUser, UserDto> usersRepoService, [FromRoute] Guid id) => usersRepoService.DeleteAsync(id)).RequireAuthorization(ClaimType.Users.Delete);
+
+        app.MapGet("/notificationUser/{id:guid}",
+	        (IUserRepository<ApplicationUser, UserDto> usersRepoService, [FromRoute] Guid id) =>
+		        usersRepoService.GetByIdAsync(id)).ExcludeFromDescription();
     }
 }

@@ -34,6 +34,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\Application\Application.csproj" />
 		<ProjectReference Include="..\CSVParser\CSVParser.csproj" />
+		<ProjectReference Include="..\NotificationAPI\NotificationAPI.Domain\NotificationAPI.Domain.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

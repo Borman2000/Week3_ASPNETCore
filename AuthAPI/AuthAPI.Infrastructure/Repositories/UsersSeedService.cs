@@ -49,6 +49,8 @@ public static class UsersSeedService
 		result = await roleManager.AddClaimAsync(creatorRole, new Claim(ClaimType.Categories.Create, "true"));
 		result = await roleManager.AddClaimAsync(creatorRole, new Claim(ClaimType.Categories.Update, "true"));
 		result = await roleManager.AddClaimAsync(creatorRole, new Claim(ClaimType.Categories.Delete, "true"));
+		result = await roleManager.AddClaimAsync(creatorRole, new Claim(ClaimType.Notification.Create, "true"));
+		result = await roleManager.AddClaimAsync(creatorRole, new Claim(ClaimType.Notification.Read, "true"));
 
 		result = await roleManager.AddClaimAsync(editorRole, new Claim(ClaimType.Authors.Read, "true"));
 		result = await roleManager.AddClaimAsync(editorRole, new Claim(ClaimType.Authors.Update, "true"));
@@ -60,6 +62,7 @@ public static class UsersSeedService
 		result = await roleManager.AddClaimAsync(userRole, new Claim(ClaimType.Authors.Read, "true"));
 		result = await roleManager.AddClaimAsync(userRole, new Claim(ClaimType.Books.Read, "true"));
 		result = await roleManager.AddClaimAsync(userRole, new Claim(ClaimType.Categories.Read, "true"));
+		result = await roleManager.AddClaimAsync(userRole, new Claim(ClaimType.Notification.Read, "true"));
 
 		var adminUser = new ApplicationUser
 		{
