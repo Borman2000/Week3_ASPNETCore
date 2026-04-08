@@ -1,11 +1,21 @@
+using System.Diagnostics;
 using Application.Authors.Create;
 using Application.Books.Create;
 using Application.Books.GetById;
 using Application.Books.GetPagedList;
 using Application.Books.Update;
+using Application.Books.UploadCsv;
+using Application.Books.UploadCsvSpan;
 using Application.DTOs;
 using Application.Interfaces;
+using AutoMapper;
+using BenchmarkDotNet.Exporters;
+using BenchmarkDotNet.Loggers;
+using BenchmarkDotNet.Reports;
+using BenchmarkDotNet.Running;
+using CSVParser;
 using Domain.Entities;
+using Infrastructure.Services;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -61,10 +71,56 @@ public static class Endpoints
 	        var book = await mediatr.Send(command);
 	        return Results.Accepted($"/products/{book.Id}", new { id = book.Id });
         });
+        app.MapPost("/uploadCsv", async ([FromForm] UploadCsvCommand command, ISender mediatr) => {
+	        var book = await mediatr.Send(command);
+	        return Results.Created($"/products/{book.Id}", new { id = book.Id });
+        }).DisableAntiforgery();;
+        app.MapPost("/uploadCsvMemory", async ([FromForm] UploadCsvSpanCommand command, ISender mediatr) => {
+	        var book = await mediatr.Send(command);
+	        return Results.Created($"/products/{book.Id}", new { id = book.Id });
+        }).DisableAntiforgery();;
+        app.MapGet("/benchmark", () => {
+	        var summary = BenchmarkRunner.Run<CsvParserBenchmark>();
+	        var p = new Process();
+	        p.StartInfo = new ProcessStartInfo(@"BenchmarkDotNet.Artifacts\\results\\CSVParser.CsvParserBenchmark-report.html")
+	        {
+		        UseShellExecute = true
+	        };
+	        p.Start();
+	        return Results.Ok(GetSummaryAsString(summary));
+        });
 
         app.MapPost("/authors", async (CreateAuthorCommand command, ISender mediatr) => {
 	        var author = await mediatr.Send(command);
 	        return Results.Created($"/products/{author.Id}", new { id = author.Id });
         });
+
+        app.MapGet("/authors", (IAuthorRepository authorRepoService) => authorRepoService.GetAllAsync());
+        app.MapGet("/authors/{id:guid}/books", (IAuthorRepository authorRepoService, [FromRoute] Guid id) =>  authorRepoService.GetByIdWithBooksAsync(id));
+        app.MapPost("/categories", (ICategoryRepository categoryRepoService, CategoryDto category, IMapper mapper) => categoryRepoService.AddAsync(mapper.Map<Category>(category)));
+//        app.MapPost("/authors", (IAuthorRepository authorRepoService, AuthorDto authorDto) => authorRepoService.AddAsync(authorDto));
+
+	    app.MapGet("/categories", (ICategoryRepository categoryRepoService) => categoryRepoService.GetAllAsync()).AddEndpointFilter<HttpResponseEtagFiler>().AddResponseCacheHeader(30);
+	    app.MapGet("/categories/{id:guid}", (ICategoryRepository categoryRepoService, [FromRoute] Guid id) =>  categoryRepoService.GetByIdAsync(id)).AddEndpointFilter<HttpResponseEtagFiler>().AddResponseCacheHeader(30);
+	    app.MapPut("/categories/", (ICategoryRepository categoryRepoService, Category category) => categoryRepoService.UpdateAsync(category));
     }
+
+    private static string GetSummaryAsString(Summary summary)
+    {
+	    var stringWriter = new StringWriter();
+	    var consoleLogger = new TextLogger(stringWriter);
+
+	    // Use any of the built-in exporters, for example, MarkdownExporter.Default
+	    // Other options include HtmlExporter.Default, CsvExporter.Default, etc.
+	    var exporter = MarkdownExporter.Default;
+//	    var exporter = HtmlExporter.Default;
+//	    var exporter = CsvExporter.Default;
+//exporter = XmlExporter.Default;
+
+	    // The ExportToLog method writes the formatted summary to the logger (StringWriter)
+	    exporter.ExportToLog(summary, consoleLogger);
+
+	    return stringWriter.ToString();
+    }
+
 }

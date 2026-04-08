@@ -25,6 +25,10 @@ public static class ApplicationDependencyInjection
 		{
 			cfg.AutoRegisterRequestProcessors = true;
 			cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
+//			services.AddScoped(typeof(IPipelineBehavior<,>), typeof(CachingBehavior<,>));
+//			services.AddScoped(typeof(IPipelineBehavior<,>), typeof(CacheInvalidationBehavior<,>));
+			cfg.AddOpenBehavior(typeof(CachingBehavior<,>));
+			cfg.AddOpenBehavior(typeof(CacheInvalidationBehavior<,>));
 			cfg.AddOpenBehavior(typeof(LoggingBehavior<,>));
 			cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
 			cfg.AddOpenBehavior(typeof(PerformanceBehavior<,>));

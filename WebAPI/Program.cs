@@ -19,7 +19,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSwagger();
 builder.Services.AddApplication(builder.Configuration)
                 .AddDataAccess(builder.Configuration)
-                .AddServices();
+                .AddServices(builder.Configuration)
+                .AddResponseCaching();
 builder.Services.AddHealthChecks();
 
 #if SERILOG_RESPONSES
@@ -62,11 +63,19 @@ if (app.Environment.IsDevelopment())
 // app.UseDefaultFiles(); // Enables serving default files like index.html
 app.UseStaticFiles();  // Enables serving static files from wwwroot
 app.UseHttpsRedirection();
-	Endpoints.MapCQRS(app);
+app.UseResponseCaching();
+
+Endpoints.MapCQRS(app);
 
 app.UseSwagger();
 app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPI V1"); });
 app.MapHealthChecks("/health");
+
+app.MapPrometheusScrapingEndpoint();
+app.UseOpenTelemetryPrometheusScrapingEndpoint("metrics");
+
+// default endpoint: /healthmetrics
+app.UseHealthChecksPrometheusExporter("/healthmetrics");
 
 // To test Environments: Development <=> Production in IIS Express in launchSettings.json
 Console.WriteLine($"App name: {app.Services.GetRequiredService<IOptions<ApiSettings>>().Value.Name}, version: {app.Services.GetRequiredService<IOptions<ApiSettings>>().Value.Version}");
@@ -75,3 +84,5 @@ app.Run();
 
 Log.Information("----- FINISHING -----");
 Log.CloseAndFlush();
+
+public partial class Program { }

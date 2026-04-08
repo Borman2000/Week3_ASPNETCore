@@ -4,6 +4,7 @@
 		<TargetFramework>net8.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
+		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -11,6 +12,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\CSVParser\CSVParser.csproj" />
 		<ProjectReference Include="..\Domain\Domain.csproj" />
 	</ItemGroup>
 
@@ -20,5 +22,9 @@
 	  <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.0" />
 	  <PackageReference Include="MediatR" Version="13.1.0" />
 	  <PackageReference Include="Serilog" Version="3.1.1" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<InternalsVisibleTo Include="UnitTests"/>
 	</ItemGroup>
 </Project>
