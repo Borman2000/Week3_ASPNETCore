@@ -4,6 +4,11 @@ using Application;
 using Application.Models;
 using AuthAPI.Infrastructure;
 using Infrastructure;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Serilog;
 using WebAPI;
@@ -18,8 +23,7 @@ Log.Information("----- STARTING -----");
 
 var builder = WebApplication.CreateBuilder(args);
 
-var sharedFolder = Path.Combine(builder.Environment.ContentRootPath, "..", "Config");
-builder.Configuration.AddJsonFile(Path.Combine(sharedFolder, "JwtConfig.json"), optional: true);
+builder.Configuration.AddJsonFile("JwtConfig.json", optional: false);
 
 builder.Services.AddSwagger();
 InfrastructureDependencyInjection.AddDataAccess(builder.Services.AddApplication(builder.Configuration), builder.Configuration)
