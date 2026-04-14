@@ -6,7 +6,6 @@ using AuthAPI.Infrastructure;
 using Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
@@ -23,12 +22,10 @@ Log.Information("----- STARTING -----");
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Configuration.AddJsonFile("JwtConfig.json", optional: false);
-
 builder.Services.AddSwagger();
 InfrastructureDependencyInjection.AddDataAccess(builder.Services.AddApplication(builder.Configuration), builder.Configuration)
                 .AddServices(builder.Configuration)
-                .AddJwtData(builder.Configuration)
+                .AddJwtData(builder)
                 .AddResponseCaching();
 builder.Services.AddHealthChecks();
 

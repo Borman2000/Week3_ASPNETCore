@@ -3,6 +3,7 @@ using AuthAPI.Application.Interfaces;
 using AuthAPI.Domain;
 using AuthAPI.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -11,9 +12,11 @@ namespace AuthAPI.Infrastructure;
 
 public static class JwtHelper
 {
-	public static IServiceCollection AddJwtData(this IServiceCollection services, IConfiguration configuration)
+	public static IServiceCollection AddJwtData(this IServiceCollection services, WebApplicationBuilder builder)
 	{
-		services.AddJwtAuthentication(configuration);
+		builder.Configuration.AddJsonFile("JwtConfig.json", optional: false);
+
+		services.AddJwtAuthentication(builder.Configuration);
 		services.AddClaimsAuthorization();
 
 		return services;
