@@ -46,3 +46,16 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=${ENVIRONMENT}
       - DBSettings__ConnectionString=${DOCKER_BOOKS_DB_STRING}
+
+  gateway-service:
+    build:
+      context: ..   # one level up
+      dockerfile: docker/Gateway.Dockerfile
+      args:
+        BUILD_CONFIGURATION: ${BUILD_CONFIGURATION}
+    image: gateway-service:dev
+    ports:
+      - "7319:8080"   # map swaggers 8080 to app 7119
+      - "5278:5278"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=${ENVIRONMENT}
