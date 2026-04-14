@@ -2,7 +2,7 @@
 
 namespace Application.Books.Update;
 
-internal sealed class UpdateBookCommandValidator : AbstractValidator<UpdateBookCommand>
+public sealed class UpdateBookCommandValidator : AbstractValidator<UpdateBookCommand>
 {
     public UpdateBookCommandValidator()
     {

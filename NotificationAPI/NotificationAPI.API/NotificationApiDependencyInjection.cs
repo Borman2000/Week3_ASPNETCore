@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 
-namespace NotificationAPI.API;
+namespace NotificationAPI.Api;
 
 public static class NotificationApiDependencyInjection
 {
@@ -16,6 +16,7 @@ public static class NotificationApiDependencyInjection
 	    services.AddEndpointsApiExplorer();
 	    services.AddSwaggerGen(s =>
 	    {
+		    s.SwaggerDoc("v1", new OpenApiInfo { Title = "Notification API", Version = "v1" });
 		    s.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
 		    {
 			    Description = "JWT Authorization header using the Bearer scheme (Example: 'Bearer YOUR_TOKEN')",

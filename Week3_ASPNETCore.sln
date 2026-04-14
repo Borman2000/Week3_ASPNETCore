@@ -26,11 +26,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		docker\mysql\setup.sql = docker\mysql\setup.sql
 		docker\otel-collector-config.yaml = docker\otel-collector-config.yaml
 		docker\prometheus.yml = docker\prometheus.yml
-		.dockerignore = .dockerignore
 		docker\docker-compose.override.yaml = docker\docker-compose.override.yaml
-		docker\Dockerfile = docker\Dockerfile
+		docker\Book.Dockerfile = docker\Book.Dockerfile
 		.github\workflows\ci.yml = .github\workflows\ci.yml
 		docker\docker-compose.testdb.yaml = docker\docker-compose.testdb.yaml
+		docker\Auth.Dockerfile = docker\Auth.Dockerfile
+		docker\Notification.Dockerfile = docker\Notification.Dockerfile
+		.dockerignore = .dockerignore
+		docker\docker-compose.localservices.yaml = docker\docker-compose.localservices.yaml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BooksAPI", "BooksAPI", "{073837E9-3428-4CF4-93F8-ABEF3728B1D8}"
@@ -63,7 +66,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationAPI.Infrastruct
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationAPI.Application", "NotificationAPI\NotificationAPI.Application\NotificationAPI.Application.csproj", "{48D4D0E3-7536-4834-AC56-D6F69101AC24}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationAPI.API", "NotificationAPI\NotificationAPI.API\NotificationAPI.API.csproj", "{E6F2941B-4A8A-45B8-8E04-3A4C44483830}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationAPI.Api", "NotificationAPI\NotificationAPI.Api\NotificationAPI.Api.csproj", "{E6F2941B-4A8A-45B8-8E04-3A4C44483830}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

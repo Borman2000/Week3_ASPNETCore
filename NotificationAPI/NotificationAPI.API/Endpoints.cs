@@ -6,7 +6,7 @@ using NotificationAPI.Domain;
 using NotificationAPI.Domain.Interfaces;
 using NotificationAPI.Infrastructure.Services;
 
-namespace NotificationAPI.API;
+namespace NotificationAPI.Api;
 
 public static class Endpoints
 {

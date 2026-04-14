@@ -77,9 +77,16 @@ app.UseResponseCaching();
 Endpoints.MapCQRS(app);
 //Endpoints.Map(app);
 
-app.UseSwagger();
-app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPI V1"); });
-app.MapHealthChecks("/health");
+if (app.Environment.IsDevelopment())
+{
+	app.UseSwagger();
+	app.UseSwaggerUI(c =>
+	{
+		c.SwaggerEndpoint("/swagger/v1/swagger.json", "Book API v1");
+		c.DocumentTitle = "Book API";
+	});
+}
+app.MapHealthChecks("/healthz");
 
 app.MapPrometheusScrapingEndpoint();
 app.UseOpenTelemetryPrometheusScrapingEndpoint("metrics");

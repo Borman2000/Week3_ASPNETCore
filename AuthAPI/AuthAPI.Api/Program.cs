@@ -8,7 +8,7 @@ using Serilog;
 
 Log.Logger = new LoggerConfiguration()
 	.WriteTo.Console()
-	.WriteTo.File($"Users_API_{DateTime.Now.ToString("yyyyMMdd")}.log")
+	.WriteTo.File($"AuthAPI_{DateTime.Now.ToString("yyyyMMdd")}.log")
 	.CreateLogger();
 Log.Information("----- STARTING -----");
 
@@ -18,6 +18,7 @@ builder.Services
 	.AddGeneralServices()
 	.AddDataAccess(builder.Configuration)
 	.AddJwtData(builder)
+	.AddHealthChecks();
 
 var app = builder.Build();
 
@@ -30,8 +31,14 @@ Endpoints.Map(app);
 if (app.Environment.IsDevelopment())
 {
 	app.UseSwagger();
-	app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "AuthAPI.Api V1"); });
+	app.UseSwaggerUI(c =>
+	{
+		c.SwaggerEndpoint("/swagger/v1/swagger.json", "Auth API v1");
+		c.DocumentTitle = "Auth API";
+	});
 }
+
+app.MapHealthChecks("/healthz");
 
 // Create and seed database
 using (var scope = app.Services.CreateScope())

@@ -21,6 +21,7 @@ public static class AuthApiDependencyInjection
 	    services.AddEndpointsApiExplorer();
 	    services.AddSwaggerGen(s =>
 	    {
+		    s.SwaggerDoc("v1", new OpenApiInfo { Title = "Auth API", Version = "v1" });
 		    s.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
 		    {
 			    Description = "JWT Authorization header using the Bearer scheme (Example: 'Bearer YOUR_TOKEN')",

@@ -1,4 +1,3 @@
-using AuthAPI.Domain.Entities;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using NotificationAPI.Application.DTOs;

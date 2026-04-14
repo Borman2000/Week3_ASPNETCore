@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace Application.Books.Create;
 
-internal sealed class CreateBookCommandValidator : AbstractValidator<CreateBookCommand>
+public sealed class CreateBookCommandValidator : AbstractValidator<CreateBookCommand>
 {
     public CreateBookCommandValidator()
     {
