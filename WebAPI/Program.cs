@@ -2,6 +2,7 @@
 
 using Application;
 using Application.Models;
+using Asp.Versioning.ApiExplorer;
 using AuthAPI.Infrastructure;
 using Infrastructure;
 using Microsoft.AspNetCore.Builder;
@@ -16,13 +17,15 @@ using InfrastructureDependencyInjection = Infrastructure.InfrastructureDependenc
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
-    .WriteTo.File($"Minimal_API_{DateTime.Now.ToString("yyyyMMdd")}.log")
+    .WriteTo.File($"Minimal_API_{DateTime.Now:yyyyMMdd}.log")
     .CreateLogger();
 Log.Information("----- STARTING -----");
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSwagger();
+builder.Services.AddVersioning();
+
 InfrastructureDependencyInjection.AddDataAccess(builder.Services.AddApplication(builder.Configuration), builder.Configuration)
                 .AddServices(builder.Configuration)
                 .AddJwtData(builder)
@@ -74,15 +77,20 @@ app.UseStaticFiles();  // Enables serving static files from wwwroot
 app.UseHttpsRedirection();
 app.UseResponseCaching();
 
-Endpoints.MapCQRS(app);
-//Endpoints.Map(app);
+Endpoints.MapAll(app);
 
 if (app.Environment.IsDevelopment())
 {
 	app.UseSwagger();
 	app.UseSwaggerUI(c =>
 	{
-		c.SwaggerEndpoint("/swagger/v1/swagger.json", "Book API v1");
+		var versionDescriptions = app.DescribeApiVersions();
+//		var provider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
+		foreach (var desc in versionDescriptions)
+		{
+			c.SwaggerEndpoint($"/swagger/{desc.GroupName}/swagger.json",$"Book API {desc.GroupName}");
+		}
+
 		c.DocumentTitle = "Book API";
 	});
 }
