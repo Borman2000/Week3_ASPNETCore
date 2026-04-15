@@ -59,8 +59,8 @@ public static class ApiDependencyInjection
 			    options.ReportApiVersions = true;
 			    options.ApiVersionReader = ApiVersionReader.Combine(
 				    new UrlSegmentApiVersionReader(),
-				    new QueryStringApiVersionReader());
-//				    new HeaderApiVersionReader("X-Api-Version"));
+				    new QueryStringApiVersionReader(),
+				    new HeaderApiVersionReader("X-Api-Version"));
 		    })
 		    .AddApiExplorer(options =>
 		    {
