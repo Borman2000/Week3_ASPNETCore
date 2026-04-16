@@ -22,6 +22,7 @@ using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ActionResult = Application.DTOs.ActionResult;
 
 namespace WebAPI;
 
@@ -70,36 +71,60 @@ public static class Endpoints
 	    var v2 = app.NewVersionedApi()
 		    .MapGroup("/api/v{version:apiVersion}")
 		    .HasApiVersion(new ApiVersion(2,0))
-		    .ReportApiVersions();
+		    .ReportApiVersions()
+		    .WithOpenApi();
 
 	    v2.MapGet("/", () => Results.Redirect("swagger/index.html")).ExcludeFromDescription();
 
         v2.MapGet("/books", async ([FromQuery] int? page, [FromQuery] int? pageSize, [FromQuery] string? searchTerm, ISender mediatr) => {
 	        var books = await mediatr.Send(new GetBooksQuery(page, pageSize, searchTerm));
-	        return Results.Ok(books);
-        }).WithName("GetBooksV2");
-	    v2.MapGet("/books/{id:guid}", async ([FromRoute] Guid id, ISender mediatr) => {
-	        var bookDto = await mediatr.Send(new GetBookByIdQuery(id));
-	        if (bookDto == null) return Results.NotFound();
-	        return Results.Ok(bookDto);
-        }).RequireAuthorization(ClaimType.Books.Read);
+	        return TypedResults.Ok(books);
+        }).ProducesProblem(StatusCodes.Status401Unauthorized);
+
+        v2.MapGet("/books/{id:guid}", async ([FromRoute] Guid id, ISender mediatr) => {
+		    BookDto? bookDto = await mediatr.Send(new GetBookByIdQuery(id));
+//	        if (bookDto == null) return Results.NotFound();
+	        return bookDto != null ? (IResult)TypedResults.NotFound() : TypedResults.Ok(bookDto);
+        })
+	        .RequireAuthorization(ClaimType.Books.Read)
+	        .Produces<BookDto>()
+	        .ProducesProblem(StatusCodes.Status404NotFound)
+	        .ProducesProblem(StatusCodes.Status401Unauthorized);
+
 	    v2.MapPost("/books", async (CreateBookCommand command, ISender mediatr) => {
 	        var book = await mediatr.Send(command);
-	        return book == null ? Results.Problem("") : Results.Created($"/products/{book.Id}", new { id = book.Id });
-        }).RequireAuthorization(ClaimType.Books.Create);
+	        return book == null ? (IResult)TypedResults.Problem("") : TypedResults.Created($"/products/{book.Id}", new ActionResult(book.Id));
+        })
+		    .RequireAuthorization(ClaimType.Books.Create)
+			.Produces<ActionResult>(StatusCodes.Status201Created)
+			.ProducesProblem(StatusCodes.Status400BadRequest)
+			.ProducesProblem(StatusCodes.Status401Unauthorized)
+			.ProducesValidationProblem();
+
 	    v2.MapPut("/books", async (UpdateBookCommand command, ISender mediatr) => {
 	        var book = await mediatr.Send(command);
-	        return Results.Accepted($"/products/{book.Id}", new { id = book.Id });
-        }).RequireAuthorization(ClaimType.Books.Update);
+	        return TypedResults.Accepted($"/products/{book.Id}", new ActionResult(book.Id));
+        })
+		    .RequireAuthorization(ClaimType.Books.Update)
+		    .ProducesProblem(StatusCodes.Status401Unauthorized);
+
 	    v2.MapPost("/uploadCsv", async ([FromForm] UploadCsvCommand command, ISender mediatr) => {
 	        var book = await mediatr.Send(command);
-	        return Results.Created($"/products/{book.Id}", new { id = book.Id });
-        }).DisableAntiforgery().RequireAuthorization(ClaimType.Books.Create);
+	        return TypedResults.Created($"/products/{book.Id}", new { id = book.Id });
+        })
+		    .DisableAntiforgery()
+		    .RequireAuthorization(ClaimType.Books.Create)
+		    .ProducesProblem(StatusCodes.Status401Unauthorized);
+
 	    v2.MapPost("/uploadCsvMemory", async ([FromForm] UploadCsvSpanCommand command, ISender mediatr) => {
 	        var book = await mediatr.Send(command);
-	        return Results.Created($"/products/{book.Id}", new { id = book.Id });
-        }).DisableAntiforgery().RequireAuthorization(ClaimType.Books.Create);
-        v2.MapGet("/benchmark", () => {
+	        return TypedResults.Created($"/products/{book.Id}", new { id = book.Id });
+        })
+		    .DisableAntiforgery()
+		    .RequireAuthorization(ClaimType.Books.Create)
+		    .ProducesProblem(StatusCodes.Status401Unauthorized);
+
+	    v2.MapGet("/benchmark", () => {
 	        var summary = BenchmarkRunner.Run<CsvParserBenchmark>();
 	        var p = new Process();
 	        p.StartInfo = new ProcessStartInfo(@"BenchmarkDotNet.Artifacts\\results\\CSVParser.CsvParserBenchmark-report.html")
@@ -107,16 +132,23 @@ public static class Endpoints
 		        UseShellExecute = true
 	        };
 	        p.Start();
-	        return Results.Ok(GetSummaryAsString(summary));
+	        return TypedResults.Ok(GetSummaryAsString(summary));
         });
 
         v2.MapPost("/authors", async (CreateAuthorCommand command, ISender mediatr) => {
 	        var author = await mediatr.Send(command);
-	        return Results.Created($"/products/{author.Id}", new { id = author.Id });
-        }).RequireAuthorization(ClaimType.Authors.Create);
+	        return TypedResults.Created($"/products/{author.Id}", new ActionResult(author.Id));
+        })
+	        .RequireAuthorization(ClaimType.Authors.Create)
+	        .ProducesProblem(StatusCodes.Status401Unauthorized)
+	        .ProducesValidationProblem();
 
         v2.MapGet("/authors", (IAuthorRepository authorRepoService) => authorRepoService.GetAllAsync()).RequireAuthorization(ClaimType.Authors.Read);
-        v2.MapGet("/authors/{id:guid}/books", (IAuthorRepository authorRepoService, [FromRoute] Guid id) =>  authorRepoService.GetByIdWithBooksAsync(id)).RequireAuthorization(ClaimType.Authors.Read);
+        v2.MapGet("/authors/{id:guid}/books", (IAuthorRepository authorRepoService, [FromRoute] Guid id) =>  authorRepoService.GetByIdWithBooksAsync(id))
+	        .RequireAuthorization(ClaimType.Authors.Read)
+	        .ProducesProblem(StatusCodes.Status401Unauthorized)
+	        .ProducesProblem(StatusCodes.Status404NotFound);
+
         v2.MapPost("/categories", (ICategoryRepository categoryRepoService, CategoryDto category, IMapper mapper) => categoryRepoService.AddAsync(mapper.Map<Category>(category))).RequireAuthorization(ClaimType.Authors.Create);
 //        v2.MapPost("/authors", (IAuthorRepository authorRepoService, AuthorDto authorDto) => authorRepoService.AddAsync(authorDto));
 
