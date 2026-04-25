@@ -58,6 +58,10 @@ public static class OpenTelemetryExtensions
                 };
             });
 
+// Note that the AddHttpClientInstrumentation() call is required along with the AddSource("Yarp.ReverseProxy") call to make the request spans emit.
+// https://learn.microsoft.com/en-us/aspnet/core/fundamentals/servers/yarp/distributed-tracing
+            options.AddHttpClientInstrumentation();
+
             options.AddEntityFrameworkCoreInstrumentation(opt =>
             {
 //                opt.SetDbStatementForText = true;
