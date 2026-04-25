@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Common.OpenTelemetryService;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -24,6 +25,9 @@ builder.Services
 	.AddHealthChecks();
 //	.AddJwtData(builder.Configuration);
 
+builder.Services.AddOpenTelemetryTracing(builder.Configuration);
+builder.Services.AddOpenTelemetryMetrics(builder.Configuration);
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline
@@ -34,16 +38,20 @@ Endpoints.Map(app);
 
 if (app.Environment.IsDevelopment())
 {
-	if (app.Environment.IsDevelopment())
+	app.UseSwagger();
+	app.UseSwaggerUI(c =>
 	{
-		app.UseSwagger();
-		app.UseSwaggerUI(c =>
-		{
-			c.SwaggerEndpoint("/swagger/v1/swagger.json", "Notification API v1");
-			c.DocumentTitle = "Notification API";
-		});
-	}
+		c.SwaggerEndpoint("/swagger/v1/swagger.json", "Notification API v1");
+		c.DocumentTitle = "Notification API";
+	});
 }
+
 app.MapHealthChecks("/healthz");
+
+app.MapPrometheusScrapingEndpoint();
+app.UseOpenTelemetryPrometheusScrapingEndpoint("metrics");
+
+// default endpoint: /healthmetrics
+app.UseHealthChecksPrometheusExporter("/healthz");
 
 app.Run();

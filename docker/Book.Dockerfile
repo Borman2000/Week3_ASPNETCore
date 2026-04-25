@@ -8,6 +8,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 
 WORKDIR /src/
+COPY ["Common/OpenTelemetryService/OpenTelemetryService.csproj", "Common/OpenTelemetryService/"]
 COPY ["AuthAPI/AuthAPI.Domain/AuthAPI.Domain.csproj", "AuthAPI/AuthAPI.Domain/"]
 COPY ["AuthAPI/AuthAPI.Application/AuthAPI.Application.csproj", "AuthAPI/AuthAPI.Application/"]
 COPY ["AuthAPI/AuthAPI.Infrastructure/AuthAPI.Infrastructure.csproj", "AuthAPI/AuthAPI.Infrastructure/"]

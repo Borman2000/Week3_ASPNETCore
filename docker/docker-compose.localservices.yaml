@@ -9,7 +9,6 @@ services:
     image: auth-service:dev
     ports:
       - "7219:8080"   # map swaggers 8080 to app 7219
-      - "5276:5276"
     environment:
       - ASPNETCORE_ENVIRONMENT=${ENVIRONMENT}
       - UsersDBSettings__ConnectionString=${DOCKER_AUTH_DB_STRING}
@@ -28,7 +27,6 @@ services:
     image: notification-service:dev
     ports:
       - "7019:8080"   # map swaggers 8080 to app 7019
-      - "5277:5277"
     environment:
       - ASPNETCORE_ENVIRONMENT=${ENVIRONMENT}
       - NotificationsDBSettings__ConnectionString=${DOCKER_NOTIFICATION_DB_STRING}
@@ -42,7 +40,6 @@ services:
     image: book-service:dev
     ports:
       - "7119:8080"   # map swaggers 8080 to app 7119
-      - "5275:5275"
     environment:
       - ASPNETCORE_ENVIRONMENT=${ENVIRONMENT}
       - DBSettings__ConnectionString=${DOCKER_BOOKS_DB_STRING}
@@ -55,7 +52,6 @@ services:
         BUILD_CONFIGURATION: ${BUILD_CONFIGURATION}
     image: gateway-service:dev
     ports:
-      - "7319:8080"   # map swaggers 8080 to app 7119
-      - "5278:5278"
+      - "7319:8080"   # map swaggers 8080 to app 7319
     environment:
       - ASPNETCORE_ENVIRONMENT=${ENVIRONMENT}

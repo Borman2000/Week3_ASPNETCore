@@ -1,6 +1,7 @@
 ﻿using AuthAPI.Api;
 using AuthAPI.Infrastructure;
 using AuthAPI.Infrastructure.Repositories;
+using Common.OpenTelemetryService;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -18,7 +19,11 @@ builder.Services
 	.AddGeneralServices()
 	.AddDataAccess(builder.Configuration)
 	.AddJwtData(builder)
+//	.AddAuthOpenTelemetry(builder.Configuration)
 	.AddHealthChecks();
+
+builder.Services.AddOpenTelemetryTracing(builder.Configuration);
+builder.Services.AddOpenTelemetryMetrics(builder.Configuration);
 
 var app = builder.Build();
 
@@ -39,6 +44,12 @@ if (app.Environment.IsDevelopment())
 }
 
 app.MapHealthChecks("/healthz");
+
+app.MapPrometheusScrapingEndpoint();
+app.UseOpenTelemetryPrometheusScrapingEndpoint("metrics");
+
+// default endpoint: /healthmetrics
+app.UseHealthChecksPrometheusExporter("/healthz");
 
 // Create and seed database
 using (var scope = app.Services.CreateScope())

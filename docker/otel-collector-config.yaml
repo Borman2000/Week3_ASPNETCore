@@ -2,7 +2,7 @@ receivers:
   otlp:
     protocols:
       grpc:
-        endpoint: otel-collector:4317
+        endpoint: 0.0.0.0:4317
 
 processors:
   filter:
@@ -25,6 +25,10 @@ exporters:
     metric_expiration: 5m
 #    const_labels:
 #      env: development
+  otlp:
+    endpoint: jaeger-tracing:4317
+    tls:
+      insecure: true
 
 extensions:
   health_check:
@@ -42,3 +46,6 @@ service:
       receivers: [otlp]
       processors: [filter]
       exporters: [prometheus]
+    traces:
+      receivers: [ otlp ]
+      exporters: [ otlp ]

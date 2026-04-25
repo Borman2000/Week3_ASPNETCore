@@ -1,8 +1,13 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="docker/docker-compose.localservices.yaml: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" server-name="Docker">
+  <configuration default="false" name="Books services" type="docker-deploy" factoryName="docker-compose.yml" server-name="Docker">
     <deployment type="docker-compose.yml">
       <settings>
         <option name="commandLineOptions" value="--build" />
+        <option name="services">
+          <list>
+            <option value="auth-service" />
+          </list>
+        </option>
         <option name="sourceFilePath" value="docker/docker-compose.localservices.yaml" />
       </settings>
     </deployment>

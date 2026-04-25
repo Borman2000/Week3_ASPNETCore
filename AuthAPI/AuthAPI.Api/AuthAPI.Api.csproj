@@ -10,12 +10,14 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\..\Common\OpenTelemetryService\OpenTelemetryService.csproj" />
 	  <ProjectReference Include="..\AuthAPI.Application\AuthAPI.Application.csproj" />
 	  <ProjectReference Include="..\AuthAPI.Domain\AuthAPI.Domain.csproj" />
 	  <ProjectReference Include="..\AuthAPI.Infrastructure\AuthAPI.Infrastructure.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="AspNetCore.HealthChecks.Prometheus.Metrics" Version="9.0.0" />
 		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.20" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.20" />

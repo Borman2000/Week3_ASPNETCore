@@ -7,6 +7,8 @@ EXPOSE 5277
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 
+WORKDIR /src/Common/OpenTelemetryService/
+COPY "Common/OpenTelemetryService/OpenTelemetryService.csproj" .
 WORKDIR /src/AuthAPI/
 COPY ["AuthAPI/AuthAPI.Domain/AuthAPI.Domain.csproj", "AuthAPI.Domain/"]
 WORKDIR /src/NotificationAPI/
@@ -19,6 +21,8 @@ RUN dotnet restore "NotificationAPI.Api/NotificationAPI.Api.csproj"
 COPY "NotificationAPI/" .
 WORKDIR /src/AuthAPI/AuthAPI.Domain/
 COPY "AuthAPI/AuthAPI.Domain/" .
+WORKDIR /src/Common/OpenTelemetryService/
+COPY Common/OpenTelemetryService/ .
 
 WORKDIR /src/Config/
 COPY "Config/" .

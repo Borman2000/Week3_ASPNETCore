@@ -1,5 +1,7 @@
 ﻿using AuthAPI.Infrastructure;
+using Common.OpenTelemetryService;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -20,8 +22,7 @@ builder.Services.AddJwtData(builder);
 
 builder.Services.AddAuthorization(options =>
 {
-	options.AddPolicy("authenticated", policy =>
-		policy.RequireAuthenticatedUser());
+	options.AddPolicy("authenticated", policy => policy.RequireAuthenticatedUser());
 });
 
 builder.Services.AddRateLimiter(rateLimiterOptions =>
@@ -33,6 +34,11 @@ builder.Services.AddRateLimiter(rateLimiterOptions =>
 	});
 });
 
+//builder.Services.AddBookOpenTelemetry(builder.Configuration);
+builder.Services.AddOpenTelemetryTracing(builder.Configuration);
+builder.Services.AddOpenTelemetryMetrics(builder.Configuration);
+builder.Services.AddHealthChecks();
+
 var proxyConf = builder.Configuration.GetSection("ReverseProxy");
 builder.Services
 	.AddReverseProxy()
@@ -43,13 +49,7 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment() || app.Environment.IsStaging())
 {
-	app.UseSwagger(c => {
-//		c.PreSerializeFilters.Add((swaggerDoc, httpReq) => {
-//			swaggerDoc.Servers = new List<OpenApiServer> {
-//				new OpenApiServer { Url = "https://localhost" }
-//			};
-//		});
-	});
+	app.UseSwagger();
 	app.UseSwaggerUI(options =>
 	{
 		options.DocumentTitle = "YARP Gateway";
@@ -57,6 +57,14 @@ if (app.Environment.IsDevelopment() || app.Environment.IsStaging())
 		options.ConfigureSwaggerEndpoints(config);
 	});
 }
+
+app.MapHealthChecks("/healthz");
+
+app.MapPrometheusScrapingEndpoint();
+app.UseOpenTelemetryPrometheusScrapingEndpoint("metrics");
+
+// default endpoint: /healthmetrics
+app.UseHealthChecksPrometheusExporter("/healthz");
 
 app.UseHttpsRedirection();
 
@@ -66,5 +74,7 @@ app.UseAuthorization();
 app.UseRateLimiter();
 
 app.MapReverseProxy();
+
+app.MapGet("/", () => Results.Redirect("swagger/index.html")).ExcludeFromDescription();
 
 app.Run();

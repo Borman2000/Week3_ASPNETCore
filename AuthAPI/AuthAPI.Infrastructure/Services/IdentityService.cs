@@ -3,6 +3,7 @@ using AuthAPI.Application.Interfaces;
 using AuthAPI.Domain;
 using AuthAPI.Domain.Entities;
 using AutoMapper;
+using Common.OpenTelemetryService;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -222,15 +223,21 @@ public class IdentityService : IIdentityService
 
 	public async Task<IResult> SigninUserAsync(string userName, string password)
 	{
+		using var activity = ActivitySourceProvider.Source.StartActivity();
+		activity?.AddEvent(new("User login: started."));
+		activity?.SetTag("username", userName);
+
 		var user = await _userManager.FindByEmailAsync(userName);
 		if (user is null)
 		{
+			activity?.AddEvent(new("User login: user not found."));
 			return Results.NotFound("User not found");
 		}
 
 		var result = await _signInManager.CheckPasswordSignInAsync(user, password, false);
 		if (!result.Succeeded)
 		{
+			activity?.AddEvent(new("User login: invalid credentials."));
 			return Results.Unauthorized();
 		}
 
@@ -242,6 +249,7 @@ public class IdentityService : IIdentityService
 //		var roleClaims = role is not null ? await _userManager.GetRolesAsync(user) : [];
 
 		var token = _tokenGenerator.GenerateJwtToken((user.Id, userRole, roleClaims));
+		activity?.AddEvent(new("User login: success."));
 		return Results.Ok(new { Token = token });
 	}
 

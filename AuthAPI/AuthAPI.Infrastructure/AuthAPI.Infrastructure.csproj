@@ -8,6 +8,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\..\Common\OpenTelemetryService\OpenTelemetryService.csproj" />
 	  <ProjectReference Include="..\AuthAPI.Application\AuthAPI.Application.csproj" />
 	  <ProjectReference Include="..\AuthAPI.Domain\AuthAPI.Domain.csproj" />
 	</ItemGroup>

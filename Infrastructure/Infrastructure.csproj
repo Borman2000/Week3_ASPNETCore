@@ -17,14 +17,6 @@
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.2" />
 		<PackageReference Include="MySqlConnector" Version="2.4.0" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
-		<PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.15.0" />
-		<PackageReference Include="OpenTelemetry.Exporter.Prometheus.AspNetCore" Version="1.15.0-beta.1" />
-		<PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.15.0" />
-		<PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.15.0" />
-		<PackageReference Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" Version="1.15.0-beta.1" />
-		<PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.15.0" />
-		<PackageReference Include="OpenTelemetry.Instrumentation.Process" Version="1.15.0-beta.1" />
-		<PackageReference Include="OpenTelemetry.Instrumentation.Runtime" Version="1.15.0" />
 		<PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.3" />
 		<PackageReference Include="Scrutor.DecorateOnly" Version="6.1.0" />
 		<PackageReference Include="Serilog.AspNetCore" Version="8.0.3" />
@@ -33,6 +25,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\Application\Application.csproj" />
+		<ProjectReference Include="..\Common\OpenTelemetryService\OpenTelemetryService.csproj" />
 		<ProjectReference Include="..\CSVParser\CSVParser.csproj" />
 		<ProjectReference Include="..\NotificationAPI\NotificationAPI.Domain\NotificationAPI.Domain.csproj" />
 	</ItemGroup>

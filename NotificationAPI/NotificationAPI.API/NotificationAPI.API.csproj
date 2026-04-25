@@ -12,6 +12,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="AspNetCore.HealthChecks.Prometheus.Metrics" Version="9.0.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.3.9" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.20" />
 		<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.20" />
@@ -32,6 +33,7 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\..\AuthAPI\AuthAPI.Domain\AuthAPI.Domain.csproj" />
+	  <ProjectReference Include="..\..\Common\OpenTelemetryService\OpenTelemetryService.csproj" />
 	  <ProjectReference Include="..\NotificationAPI.Domain\NotificationAPI.Domain.csproj" />
 	  <ProjectReference Include="..\NotificationAPI.Infrastructure\NotificationAPI.Infrastructure.csproj" />
 	</ItemGroup>
