@@ -32,17 +32,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\AuthAPI\AuthAPI.Domain\AuthAPI.Domain.csproj" />
 	  <ProjectReference Include="..\..\Common\OpenTelemetryService\OpenTelemetryService.csproj" />
+	  <ProjectReference Include="..\..\Common\JwtHelperService\JwtHelperService.csproj" />
 	  <ProjectReference Include="..\NotificationAPI.Domain\NotificationAPI.Domain.csproj" />
 	  <ProjectReference Include="..\NotificationAPI.Infrastructure\NotificationAPI.Infrastructure.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Content Include="..\..\Config\JwtConfig.json">
-	    <Link>JwtConfig.json</Link>
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
 	</ItemGroup>
 
 	<ItemGroup>

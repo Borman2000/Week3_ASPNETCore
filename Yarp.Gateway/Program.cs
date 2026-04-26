@@ -1,4 +1,4 @@
-﻿using AuthAPI.Infrastructure;
+﻿using Common.JwtHelperService;
 using Common.OpenTelemetryService;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;

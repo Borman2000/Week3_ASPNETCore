@@ -7,10 +7,10 @@ EXPOSE 5277
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 
-WORKDIR /src/Common/OpenTelemetryService/
-COPY "Common/OpenTelemetryService/OpenTelemetryService.csproj" .
-WORKDIR /src/AuthAPI/
-COPY ["AuthAPI/AuthAPI.Domain/AuthAPI.Domain.csproj", "AuthAPI.Domain/"]
+WORKDIR /src/Common/
+COPY ["Common/OpenTelemetryService/OpenTelemetryService.csproj", "OpenTelemetryService/"]
+COPY ["Common/JwtHelperService/JwtHelperService.csproj", "JwtHelperService/"]
+
 WORKDIR /src/NotificationAPI/
 COPY ["NotificationAPI/NotificationAPI.Api/NotificationAPI.Api.csproj", "NotificationAPI.Api/"]
 COPY ["NotificationAPI/NotificationAPI.Application/NotificationAPI.Application.csproj", "NotificationAPI.Application/"]
@@ -19,13 +19,10 @@ COPY ["NotificationAPI/NotificationAPI.Infrastructure/NotificationAPI.Infrastruc
 RUN dotnet restore "NotificationAPI.Api/NotificationAPI.Api.csproj"
 
 COPY "NotificationAPI/" .
-WORKDIR /src/AuthAPI/AuthAPI.Domain/
-COPY "AuthAPI/AuthAPI.Domain/" .
-WORKDIR /src/Common/OpenTelemetryService/
-COPY Common/OpenTelemetryService/ .
 
-WORKDIR /src/Config/
-COPY "Config/" .
+WORKDIR /src/Common/
+COPY ["Common/OpenTelemetryService/", "OpenTelemetryService/"]
+COPY ["Common/JwtHelperService/", "JwtHelperService/"]
 
 WORKDIR /src/NotificationAPI/NotificationAPI.Api/
 RUN dotnet build "./NotificationAPI.Api.csproj" --no-restore -c $BUILD_CONFIGURATION -o /app/build

@@ -35,16 +35,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\AuthAPI\AuthAPI.Domain\AuthAPI.Domain.csproj" />
-	  <ProjectReference Include="..\AuthAPI\AuthAPI.Infrastructure\AuthAPI.Infrastructure.csproj" />
+	  <ProjectReference Include="..\Common\JwtHelperService\JwtHelperService.csproj" />
 	  <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Content Include="..\Config\JwtConfig.json">
-	    <Link>JwtConfig.json</Link>
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
 	</ItemGroup>
 
 	<ItemGroup>

@@ -3,6 +3,7 @@ using AuthAPI.Application.Interfaces;
 using AuthAPI.Domain;
 using AuthAPI.Domain.Entities;
 using AutoMapper;
+using Common.JwtHelperService.Interfaces;
 using Common.OpenTelemetryService;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;

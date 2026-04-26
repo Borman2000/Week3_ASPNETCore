@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 
-namespace AuthAPI.Application.Interfaces
+namespace Common.JwtHelperService.Interfaces
 {
     public interface ITokenGenerator
     {

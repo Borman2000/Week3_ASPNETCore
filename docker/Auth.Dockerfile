@@ -7,8 +7,10 @@ EXPOSE 5276
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 
-WORKDIR /src/Common/OpenTelemetryService/
-COPY "Common/OpenTelemetryService/OpenTelemetryService.csproj" .
+WORKDIR /src/Common/
+COPY ["Common/OpenTelemetryService/OpenTelemetryService.csproj", "OpenTelemetryService/"]
+COPY ["Common/JwtHelperService/JwtHelperService.csproj", "JwtHelperService/"]
+
 WORKDIR /src/AuthAPI/
 RUN echo "BUILD_CONFIGURATION = $BUILD_CONFIGURATION"
 COPY ["AuthAPI/AuthAPI.Api/AuthAPI.Api.csproj", "AuthAPI.Api/"]
@@ -19,10 +21,9 @@ RUN dotnet restore "AuthAPI.Api/AuthAPI.Api.csproj"
 
 COPY "AuthAPI/" .
 
-WORKDIR /src/Common/OpenTelemetryService/
-COPY Common/OpenTelemetryService/ .
-WORKDIR /src/Config/
-COPY "Config/" .
+WORKDIR /src/Common/
+COPY ["Common/OpenTelemetryService/", "OpenTelemetryService/"]
+COPY ["Common/JwtHelperService/", "JwtHelperService/"]
 
 WORKDIR /src/AuthAPI/AuthAPI.Api/
 RUN dotnet build "./AuthAPI.Api.csproj" --no-restore -c $BUILD_CONFIGURATION -o /app/build

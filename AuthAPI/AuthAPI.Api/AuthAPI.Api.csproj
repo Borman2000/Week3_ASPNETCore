@@ -11,8 +11,8 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\..\Common\OpenTelemetryService\OpenTelemetryService.csproj" />
+	  <ProjectReference Include="..\..\Common\JwtHelperService\JwtHelperService.csproj" />
 	  <ProjectReference Include="..\AuthAPI.Application\AuthAPI.Application.csproj" />
-	  <ProjectReference Include="..\AuthAPI.Domain\AuthAPI.Domain.csproj" />
 	  <ProjectReference Include="..\AuthAPI.Infrastructure\AuthAPI.Infrastructure.csproj" />
 	</ItemGroup>
 
@@ -41,13 +41,6 @@
 	  <None Update="appsettings.Production.json">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Content Include="..\..\Config\JwtConfig.json">
-	    <Link>JwtConfig.json</Link>
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
 	</ItemGroup>
 
 </Project>

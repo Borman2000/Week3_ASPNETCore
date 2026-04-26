@@ -1,10 +1,10 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+﻿using Common.JwtHelperService.Interfaces;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using AuthAPI.Application.Interfaces;
-using Microsoft.IdentityModel.Tokens;
 
-namespace AuthAPI.Infrastructure.Services;
+namespace Common.JwtHelperService;
 
 public class TokenGenerator : ITokenGenerator
 {

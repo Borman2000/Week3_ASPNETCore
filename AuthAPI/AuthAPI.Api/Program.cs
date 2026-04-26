@@ -1,6 +1,7 @@
 ﻿using AuthAPI.Api;
 using AuthAPI.Infrastructure;
 using AuthAPI.Infrastructure.Repositories;
+using Common.JwtHelperService;
 using Common.OpenTelemetryService;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;

@@ -1,4 +1,4 @@
-namespace AuthAPI.Domain;
+namespace Common.JwtHelperService.Models;
 
 public static class ClaimType
 {

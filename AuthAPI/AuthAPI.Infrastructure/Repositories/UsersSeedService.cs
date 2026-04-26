@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
 using AuthAPI.Domain;
 using AuthAPI.Domain.Entities;
+using Common.JwtHelperService.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;

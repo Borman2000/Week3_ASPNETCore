@@ -2,8 +2,7 @@
 
 using Application;
 using Application.Models;
-using Asp.Versioning.ApiExplorer;
-using AuthAPI.Infrastructure;
+using Common.JwtHelperService;
 using Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;

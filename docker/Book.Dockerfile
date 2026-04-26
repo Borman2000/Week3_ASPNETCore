@@ -8,10 +8,8 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 
 WORKDIR /src/
+COPY ["Common/JwtHelperService/JwtHelperService.csproj", "Common/JwtHelperService/"]
 COPY ["Common/OpenTelemetryService/OpenTelemetryService.csproj", "Common/OpenTelemetryService/"]
-COPY ["AuthAPI/AuthAPI.Domain/AuthAPI.Domain.csproj", "AuthAPI/AuthAPI.Domain/"]
-COPY ["AuthAPI/AuthAPI.Application/AuthAPI.Application.csproj", "AuthAPI/AuthAPI.Application/"]
-COPY ["AuthAPI/AuthAPI.Infrastructure/AuthAPI.Infrastructure.csproj", "AuthAPI/AuthAPI.Infrastructure/"]
 COPY ["NotificationAPI/NotificationAPI.Domain/NotificationAPI.Domain.csproj", "NotificationAPI/NotificationAPI.Domain/"]
 COPY ["WebAPI/WebAPI.csproj", "WebAPI/"]
 COPY ["Infrastructure/Infrastructure.csproj", "Infrastructure/"]
@@ -20,9 +18,6 @@ COPY ["CSVParser/CSVParser.csproj", "CSVParser/"]
 COPY ["Domain/Domain.csproj", "Domain/"]
 RUN dotnet restore "WebAPI/WebAPI.csproj"
 COPY . .
-
-WORKDIR /src/Config/
-COPY "Config/" .
 
 WORKDIR /src/WebAPI/
 RUN dotnet build "./WebAPI.csproj" --no-restore -c $BUILD_CONFIGURATION -o /app/build

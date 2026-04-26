@@ -1,4 +1,4 @@
-﻿namespace AuthAPI.Infrastructure;
+﻿namespace Common.JwtHelperService.Models;
 
 public record JwtSettings
 {

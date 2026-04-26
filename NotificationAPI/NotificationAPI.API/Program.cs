@@ -1,6 +1,5 @@
 ﻿using Common.OpenTelemetryService;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NotificationAPI.Api;
@@ -15,8 +14,6 @@ Log.Logger = new LoggerConfiguration()
 Log.Information("----- STARTING -----");
 
 var builder = WebApplication.CreateBuilder(args);
-
-builder.Configuration.AddJsonFile("JwtConfig.json", optional: false);
 
 builder.Services
 	.AddGeneralServices()

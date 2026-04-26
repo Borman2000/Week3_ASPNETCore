@@ -1,8 +1,8 @@
 using AuthAPI.Application.DTOs;
 using AuthAPI.Application.Interfaces;
-using AuthAPI.Domain;
 using AuthAPI.Domain.Entities;
 using AuthAPI.Domain.Interfaces;
+using Common.JwtHelperService.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
