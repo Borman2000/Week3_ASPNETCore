@@ -11,6 +11,7 @@ using Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using StackExchange.Redis;
 
 namespace Infrastructure;
 
@@ -59,6 +60,8 @@ public static class InfrastructureDependencyInjection
 		    {
 			    options.Configuration = configuration["Redis:Configuration"];
 			    options.InstanceName = configuration["Redis:InstanceName"];
+			    IConnectionMultiplexer connectionMultiplexer = ConnectionMultiplexer.Connect(configuration["Redis:Configuration"]!);
+			    options.ConnectionMultiplexerFactory = () => Task.FromResult(connectionMultiplexer);
 		    });
 
 		    services.AddScoped<ICacheService, RedisCacheService>();

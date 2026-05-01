@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
+using StackExchange.Redis;
 
 namespace Common.OpenTelemetryService;
 
@@ -74,8 +75,9 @@ public static class OpenTelemetryExtensions
                 };
             });
 
+            IConnectionMultiplexer connectionMultiplexer = ConnectionMultiplexer.Connect(configuration["Redis:Configuration"]!);
             options
-	            .AddRedisInstrumentation()
+	            .AddRedisInstrumentation(connectionMultiplexer)
 	            .AddMySqlDataInstrumentation(opt => opt.RecordException = true);
 
 
