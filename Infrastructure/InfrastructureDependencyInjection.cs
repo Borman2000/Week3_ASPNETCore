@@ -74,14 +74,14 @@ public static class InfrastructureDependencyInjection
     }
 
     private static void AddHttpClient(this IServiceCollection services, IConfiguration configuration)
-    {
+	{
 	    services.AddHttpClient("NotificationApiService", client =>
 	    {
-		    client.BaseAddress = new Uri("https://localhost:7019");
+		    client.BaseAddress = new Uri(configuration["NotificationApiSettings:BaseUrl"] ?? "https://localhost:7019");
 		    client.DefaultRequestHeaders.Accept.Clear();
 		    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 	    });
-    }
+	}
 
     public class DbSettings
     {

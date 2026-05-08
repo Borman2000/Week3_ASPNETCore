@@ -50,7 +50,7 @@ public static class InfrastructureDependencyInjection
     {
 	    services.AddHttpClient("UsersApiService", client =>
 	    {
-		    client.BaseAddress = new Uri("https://localhost:7219");
+		    client.BaseAddress = new Uri(configuration["AuthApiSettings:BaseUrl"] ?? "https://localhost:7219");
 		    client.DefaultRequestHeaders.Accept.Clear();
 		    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 	    });
