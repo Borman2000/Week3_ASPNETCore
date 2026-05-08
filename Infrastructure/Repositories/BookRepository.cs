@@ -59,7 +59,7 @@ public class BookRepository(BookStoreDbContext dbContext, IMapper dtoMapper) : E
 
 		await DbContext.Commit();
 
-		return null;
+		return book;
 	}
 
 	public override async Task AddBulkAsync(IEnumerable<Book> entities)

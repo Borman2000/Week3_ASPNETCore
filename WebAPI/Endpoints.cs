@@ -84,7 +84,7 @@ public static class Endpoints
         v2.MapGet("/books/{id:guid}", async ([FromRoute] Guid id, ISender mediatr) => {
 		    BookDto? bookDto = await mediatr.Send(new GetBookByIdQuery(id));
 //	        if (bookDto == null) return Results.NotFound();
-	        return bookDto != null ? (IResult)TypedResults.NotFound() : TypedResults.Ok(bookDto);
+	        return bookDto == null ? (IResult)TypedResults.NotFound() : TypedResults.Ok(bookDto);
         })
 	        .RequireAuthorization(ClaimType.Books.Read)
 	        .Produces<BookDto>()
