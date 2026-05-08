@@ -15,7 +15,7 @@ public static class Endpoints
     {
         app.MapGet("/", () => Results.Redirect("swagger/index.html")).ExcludeFromDescription();
 
-        app.MapPost("/users/login", (IIdentityService identityService, [FromQuery] string login, [FromQuery] string psw) => identityService.SigninUserAsync(login, psw)).WithDescription("admin@email.com / Test1234!");
+        app.MapPost("/users/login", (IIdentityService identityService, [FromBody] LoginRequest request) => identityService.SigninUserAsync(request.Login, request.Password)).WithDescription("admin@email.com / Test1234!");
 //        app.MapPost("/users/login", (IUserRepository<ApplicationUser, UserDto> usersRepoService, [FromQuery] string login, [FromQuery] string psw) => usersRepoService.Login(login, psw)).ExcludeFromDescription();
         app.MapGet("/users", (IUserRepository<ApplicationUser, UserDto> usersRepoService) => usersRepoService.GetAllAsync()).RequireAuthorization(ClaimType.Users.Read);
         app.MapGet("/users/{id:guid}", (IUserRepository<ApplicationUser, UserDto> usersRepoService, [FromRoute] Guid id) =>  usersRepoService.GetByIdAsync(id)).RequireAuthorization(ClaimType.Users.Read);
