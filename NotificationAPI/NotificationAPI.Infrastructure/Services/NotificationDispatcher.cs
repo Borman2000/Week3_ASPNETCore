@@ -42,7 +42,7 @@ public class NotificationDispatcher
 
         // Get user contact information
 //        var user = await _userRepository.GetByIdAsync(request.UserId);
-		var user = request.UserId == Guid.Empty && !String.IsNullOrEmpty(request.Email) ? new NotificationUser(request.Email) : GetUserFromApiAsync(request.UserId).Result;
+		var user = request.UserId == Guid.Empty && !String.IsNullOrEmpty(request.Email) ? new NotificationUser(request.Email) : await GetUserFromApiAsync(request.UserId);
         if (user == null)
         {
             _logger.LogWarning("User {UserId} not found for notification {NotificationId}", request.UserId, request.Id);
@@ -97,7 +97,7 @@ public class NotificationDispatcher
 	    }
 
 	    // Handle the error (e.g., throw an exception, return null, log the error)
+	    _logger.LogError("Error calling UsersApiService for user {UserId}: {StatusCode}", userId, response.StatusCode);
 	    return null;
-	    throw new HttpRequestException($"Error calling API: {response.StatusCode}");
-    }
+	}
 }

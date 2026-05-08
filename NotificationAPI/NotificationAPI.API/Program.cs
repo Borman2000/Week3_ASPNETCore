@@ -1,4 +1,5 @@
-﻿using Common.OpenTelemetryService;
+﻿using Common.JwtHelperService;
+using Common.OpenTelemetryService;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -19,8 +20,8 @@ builder.Services
 	.AddGeneralServices()
 	.AddDataAccess(builder.Configuration)
 	.AddApplication(builder.Configuration)
+	.AddJwtData(builder)
 	.AddHealthChecks();
-//	.AddJwtData(builder.Configuration);
 
 builder.Services.AddOpenTelemetryTracing(builder.Configuration);
 builder.Services.AddOpenTelemetryMetrics(builder.Configuration);
@@ -28,8 +29,8 @@ builder.Services.AddOpenTelemetryMetrics(builder.Configuration);
 var app = builder.Build();
 
 // Configure the HTTP request pipeline
-//app.UseAuthentication(); // Must come before UseAuthorization
-//app.UseAuthorization();
+app.UseAuthentication(); // Must come before UseAuthorization
+app.UseAuthorization();
 
 Endpoints.Map(app);
 
