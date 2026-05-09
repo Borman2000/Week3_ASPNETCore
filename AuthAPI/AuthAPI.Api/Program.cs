@@ -23,8 +23,11 @@ builder.Services
 //	.AddAuthOpenTelemetry(builder.Configuration)
 	.AddHealthChecks();
 
-builder.Services.AddOpenTelemetryTracing(builder.Configuration);
-builder.Services.AddOpenTelemetryMetrics(builder.Configuration);
+if (!builder.Environment.IsEnvironment("Testing"))
+{
+	builder.Services.AddOpenTelemetryTracing(builder.Configuration);
+	builder.Services.AddOpenTelemetryMetrics(builder.Configuration);
+}
 
 var app = builder.Build();
 
@@ -46,11 +49,14 @@ if (app.Environment.IsDevelopment())
 
 app.MapHealthChecks("/healthz");
 
-app.MapPrometheusScrapingEndpoint();
-app.UseOpenTelemetryPrometheusScrapingEndpoint("metrics");
+if (!app.Environment.IsEnvironment("Testing"))
+{
+	app.MapPrometheusScrapingEndpoint();
+	app.UseOpenTelemetryPrometheusScrapingEndpoint("metrics");
 
-// default endpoint: /healthmetrics
-app.UseHealthChecksPrometheusExporter("/healthz");
+	// default endpoint: /healthmetrics
+	app.UseHealthChecksPrometheusExporter("/healthz");
+}
 
 // Create and seed database
 using (var scope = app.Services.CreateScope())
@@ -59,3 +65,5 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.Run();
+
+public partial class Program { }

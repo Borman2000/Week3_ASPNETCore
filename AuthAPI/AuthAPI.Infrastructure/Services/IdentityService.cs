@@ -224,7 +224,7 @@ public class IdentityService : IIdentityService
 
 	public async Task<IResult> SigninUserAsync(string userName, string password)
 	{
-		using var activity = ActivitySourceProvider.Source.StartActivity();
+		using var activity = ActivitySourceProvider.Source?.StartActivity();
 		activity?.AddEvent(new("User login: started."));
 		activity?.SetTag("username", userName);
 
