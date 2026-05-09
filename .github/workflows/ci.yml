@@ -95,7 +95,7 @@ jobs:
       - name: Build
         run: |
           export PATH="$PATH:/root/.dotnet/tools"
-          dotnet-sonarscanner begin /k:"Borman2000_ASPNETCore" /d:sonar.token="sqp_3c705e1f055ef5936a00201b7ee73906de453565" /d:sonar.host.url="http://localhost:9000" /d:sonar.cs.opencover.reportsPaths="./IntegrationTests/coverage.xml,./UnitTests/coverage.xml" /d:sonar.coverage.exclusions="**Tests*.cs"
+          dotnet-sonarscanner begin /k:"Borman2000_ASPNETCore" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.cs.opencover.reportsPaths="./IntegrationTests/coverage.xml,./UnitTests/coverage.xml" /d:sonar.coverage.exclusions="**Tests*.cs"
           dotnet build --no-restore
 
 
@@ -137,10 +137,9 @@ jobs:
         run: dotnet test --no-build --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=./coverage.xml
 
       - name: SonarCube end
-#          dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
         run: |
           export PATH="$PATH:/root/.dotnet/tools"
-          dotnet-sonarscanner end /d:sonar.token="sqp_3c705e1f055ef5936a00201b7ee73906de453565"
+          dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
 
       - name: Stop/remove test containers
         run: docker compose -f ./docker/docker-compose.testdb.yaml stop

@@ -363,3 +363,6 @@ MigrationBackup/
 FodyWeavers.xsd
 
 .idea.Week3_ASPNETCore
+lcov.info
+.secrets_local
+ci_local.yml
