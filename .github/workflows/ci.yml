@@ -95,7 +95,7 @@ jobs:
       - name: Build
         run: |
           export PATH="$PATH:/root/.dotnet/tools"
-          dotnet-sonarscanner begin /k:"Borman2000_ASPNETCore" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.cs.opencover.reportsPaths="./IntegrationTests/coverage.xml,./UnitTests/coverage.xml" /d:sonar.coverage.exclusions="**Tests*.cs"
+          dotnet-sonarscanner begin /o:"borman2000" /k:"Borman2000_ASPNETCore" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.cs.opencover.reportsPaths="./IntegrationTests/coverage.xml,./UnitTests/coverage.xml" /d:sonar.coverage.exclusions="**Tests*.cs"
           dotnet build --no-restore
 
 
