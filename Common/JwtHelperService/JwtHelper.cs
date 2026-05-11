@@ -13,7 +13,7 @@ public static class JwtHelper
 {
 	public static IServiceCollection AddJwtData(this IServiceCollection services, WebApplicationBuilder builder)
 	{
-		builder.Configuration.AddJsonFile("Config/JwtConfig.json", optional: false);
+        builder.Configuration.AddJsonFile(Path.Combine(Environment.CurrentDirectory, "Config/JwtConfig.json"), optional: false);
 
 		services.AddJwtAuthentication(builder.Configuration);
 		services.AddClaimsAuthorization();

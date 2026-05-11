@@ -4,6 +4,8 @@
 		<TargetFramework>net8.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
+		<AssemblyName>AuthAPI.UnitTests</AssemblyName>
+		<RootNamespace>AuthAPI.UnitTests</RootNamespace>
 
 		<IsPackable>false</IsPackable>
 		<IsTestProject>true</IsTestProject>
@@ -20,12 +22,10 @@
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.20" />
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0"/>
 		<PackageReference Include="Moq" Version="4.20.72" />
 		<PackageReference Include="xunit" Version="2.5.3"/>
 		<PackageReference Include="xunit.runner.visualstudio" Version="3.1.5"/>
-		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.20" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -33,8 +33,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\Application\Application.csproj" />
-	  <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
+	  <ProjectReference Include="..\..\AuthAPI\AuthAPI.Application\AuthAPI.Application.csproj" />
+	  <ProjectReference Include="..\..\AuthAPI\AuthAPI.Infrastructure\AuthAPI.Infrastructure.csproj" />
+	  <ProjectReference Include="..\..\AuthAPI\AuthAPI.Domain\AuthAPI.Domain.csproj" />
+	  <ProjectReference Include="..\..\Common\JwtHelperService\JwtHelperService.csproj" />
 	</ItemGroup>
 
 </Project>

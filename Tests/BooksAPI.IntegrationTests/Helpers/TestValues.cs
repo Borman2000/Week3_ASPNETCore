@@ -1,4 +1,4 @@
-namespace IntegrationTests.Helpers;
+namespace BooksAPI.IntegrationTests.Helpers;
 
 public class TestValues
 {

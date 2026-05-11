@@ -12,10 +12,10 @@ public static class OpenTelemetryExtensions
 {
     public static void AddOpenTelemetryTracing(this IServiceCollection services, IConfiguration configuration)
     {
-        services.Configure<OpenTelemetryParameters>(configuration.GetSection("OpenTelemetry"));
+		services.Configure<OpenTelemetryParameters>(configuration.GetSection("OpenTelemetry"));
         var otlpParams = configuration.GetSection("OpenTelemetry").Get<OpenTelemetryParameters>();
 
-        ActivitySourceProvider.Source = new ActivitySource(otlpParams!.ActivitySourceName);
+		ActivitySourceProvider.Source = new ActivitySource(otlpParams!.ActivitySourceName);
 
         services.AddOpenTelemetry().WithTracing(options =>
         {

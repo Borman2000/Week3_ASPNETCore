@@ -1,6 +1,6 @@
 using Application.DTOs;
 
-namespace IntegrationTests.Helpers;
+namespace BooksAPI.IntegrationTests.Helpers;
 
 public class AuthorDtoBuilder
 {

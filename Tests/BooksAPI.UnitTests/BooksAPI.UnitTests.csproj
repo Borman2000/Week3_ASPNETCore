@@ -4,6 +4,8 @@
 		<TargetFramework>net8.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
+		<AssemblyName>BooksAPI.UnitTests</AssemblyName>
+		<RootNamespace>BooksAPI.UnitTests</RootNamespace>
 
 		<IsPackable>false</IsPackable>
 		<IsTestProject>true</IsTestProject>
@@ -20,12 +22,12 @@
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.20" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.20" />
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0"/>
-		<PackageReference Include="Testcontainers.MySql" Version="4.9.0" />
-		<PackageReference Include="xunit.core" Version="2.5.3"/>
-		<PackageReference Include="xunit.assert.source" Version="2.5.3" />
-		<PackageReference Include="xunit.runner.visualstudio" Version="2.5.3"/>
+		<PackageReference Include="Moq" Version="4.20.72" />
+		<PackageReference Include="xunit" Version="2.5.3"/>
+		<PackageReference Include="xunit.runner.visualstudio" Version="3.1.5"/>
+		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.20" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -33,13 +35,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\WebAPI\WebAPI.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Content Include="..\.dockerignore">
-	    <Link>.dockerignore</Link>
-	  </Content>
+	  <ProjectReference Include="..\..\Application\Application.csproj" />
+	  <ProjectReference Include="..\..\Infrastructure\Infrastructure.csproj" />
 	</ItemGroup>
 
 </Project>

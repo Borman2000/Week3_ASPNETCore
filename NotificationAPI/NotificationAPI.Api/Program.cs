@@ -46,10 +46,13 @@ if (app.Environment.IsDevelopment())
 
 app.MapHealthChecks("/healthz");
 
-app.MapPrometheusScrapingEndpoint();
-app.UseOpenTelemetryPrometheusScrapingEndpoint("metrics");
+if (!app.Environment.IsEnvironment("Testing"))
+{
+	app.MapPrometheusScrapingEndpoint();
+	app.UseOpenTelemetryPrometheusScrapingEndpoint("metrics");
 
 // default endpoint: /healthmetrics
-app.UseHealthChecksPrometheusExporter("/healthz");
+	app.UseHealthChecksPrometheusExporter("/healthz");
+}
 
 app.Run();

@@ -4,7 +4,7 @@ using Infrastructure.Repositories;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace IntegrationTests.Configuration;
+namespace BooksAPI.IntegrationTests.Configuration;
 
 public class BaseTestClient : IClassFixture<CustomWebApplicationFactory>, IDisposable
 {
@@ -21,12 +21,8 @@ public class BaseTestClient : IClassFixture<CustomWebApplicationFactory>, IDispo
 	{
 		_factory = factory;
 		_scope = factory.Services.CreateScope();
-		TestHttpClient = _factory.CreateClient();
+		TestHttpClient = factory.CreateAuthenticatedClient();
 		DbContext = _scope.ServiceProvider.GetRequiredService<BookStoreDbContext>();
-//		Sender = _scope.ServiceProvider.GetRequiredService<ISender>();
-//		BookRepository = _scope.ServiceProvider.GetRequiredService<IBookRepository>();
-//		Mapper = factory.Services.GetRequiredService<IMapper>();
-//		Mediator = factory.Services.GetRequiredService<IMediator>();
 	}
 
 	public void Dispose()

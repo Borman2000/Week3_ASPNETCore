@@ -1,6 +1,9 @@
+name: ci-test-services
+
 services:
 
-  mysqltest:
+  mysql:
+    container_name: mysql-test
     image: mysql:8.0
     environment:
 #      MYSQL_ROOT_HOST: "%"
@@ -18,16 +21,20 @@ services:
 
   redis:
     image: redis:latest
-    container_name: redis-cache
+    container_name: redis-test
     volumes:
       - redistest-data:/redis-cache
     ports:
       - "6379:6379"
 
   sonarqube:
+    container_name: sonarqube-test
     image: sonarqube:latest
     volumes:
-      - sonarqube-data:/sonarqube
+      - sonarqube-test-data:/opt/sonarqube/data
+      - sonarqube-test-extensions:/opt/sonarqube/extensions
+      - sonarqube-test-logs:/opt/sonarqube/logs
+      - sonarqube-test-temp:/opt/sonarqube/temp
     ports:
       - "9000:9000"
       - "9092:9092"
@@ -35,4 +42,7 @@ services:
 volumes:
   mysqltest-data: {}
   redistest-data: {}
-  sonarqube-data: {}
+  sonarqube-test-data: {}
+  sonarqube-test-extensions: {}
+  sonarqube-test-logs: {}
+  sonarqube-test-temp: {}

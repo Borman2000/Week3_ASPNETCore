@@ -1,10 +1,9 @@
 using System.Net;
 using System.Net.Http.Json;
 using Application.DTOs;
-using Domain.Entities;
-using IntegrationTests.Configuration;
+using BooksAPI.IntegrationTests.Configuration;
 
-namespace IntegrationTests;
+namespace BooksAPI.IntegrationTests;
 
 [Collection("ApiTests")]
 public class AuthorsApiTests(CustomWebApplicationFactory factory) : BaseTestClient(factory)
@@ -15,8 +14,8 @@ public class AuthorsApiTests(CustomWebApplicationFactory factory) : BaseTestClie
 		// Arrange
 
 		// Act
-		var httpResponse = await TestHttpClient.GetAsync("/authors");
-		var result = await httpResponse.Content.ReadFromJsonAsync<List<Author>>();
+		var httpResponse = await TestHttpClient.GetAsync("/api/v2/authors");
+		var result = await httpResponse.Content.ReadFromJsonAsync<List<AuthorDto>>();
 
 		// Assert
 		Assert.True(httpResponse.IsSuccessStatusCode);
@@ -32,7 +31,7 @@ public class AuthorsApiTests(CustomWebApplicationFactory factory) : BaseTestClie
 		Guid authorId = Guid.Parse("AB29FC40-CA47-1067-B31D-00DD010662D2");
 
 		// Act
-		var httpResponse = await TestHttpClient.GetAsync($"/authors/{authorId}/books");
+		var httpResponse = await TestHttpClient.GetAsync($"/api/v2/authors/{authorId}/books");
 		var result = await httpResponse.Content.ReadFromJsonAsync<AuthorDto>();
 
 		// Assert

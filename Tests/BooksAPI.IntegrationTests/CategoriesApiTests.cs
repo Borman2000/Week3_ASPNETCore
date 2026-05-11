@@ -1,16 +1,16 @@
 using System.Net;
 using System.Net.Http.Json;
 using Application.DTOs;
-using IntegrationTests.Configuration;
-using IntegrationTests.Helpers;
+using BooksAPI.IntegrationTests.Configuration;
+using BooksAPI.IntegrationTests.Helpers;
 
-namespace IntegrationTests;
+namespace BooksAPI.IntegrationTests;
 
 [Collection("ApiTests")]
 public class CategoriesApiTests(CustomWebApplicationFactory factory) : BaseTestClient(factory)
 {
 	[Fact]
-	public async Task PostAuthors_Should_Add_New_Author_To_DB()
+	public async Task PostCategory_Should_Add_New_Category_To_DB()
 	{
 		// Arrange
 		CategoryDto categoryDto = CategoryDtoBuilder
@@ -19,7 +19,7 @@ public class CategoriesApiTests(CustomWebApplicationFactory factory) : BaseTestC
 			.Create();
 
 		// Act
-		var httpResponse = await TestHttpClient.PostAsJsonAsync("/categories", categoryDto);
+		var httpResponse = await TestHttpClient.PostAsJsonAsync("/api/v2/categories", categoryDto);
 		var result = await httpResponse.Content.ReadFromJsonAsync<CategoryDto>();
 
 		// Assert

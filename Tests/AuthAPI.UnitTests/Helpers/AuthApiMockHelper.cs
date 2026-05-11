@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Moq;
 
-namespace AuthAPI.Tests.Helpers;
+namespace AuthAPI.UnitTests.Helpers;
 
 /// <summary>
 /// Helper class for setting up mocks commonly used in AuthAPI unit tests.

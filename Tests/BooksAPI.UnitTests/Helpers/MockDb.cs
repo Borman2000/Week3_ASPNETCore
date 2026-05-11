@@ -3,7 +3,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 
-namespace UnitTests.Helpers;
+namespace BooksAPI.UnitTests.Helpers;
 
 public class MockDb : IDbContextFactory<BookStoreDbContext>
 {

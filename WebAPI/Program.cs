@@ -95,11 +95,14 @@ if (app.Environment.IsDevelopment())
 }
 app.MapHealthChecks("/healthz");
 
-app.MapPrometheusScrapingEndpoint();
-app.UseOpenTelemetryPrometheusScrapingEndpoint("metrics");
+if (!app.Environment.IsEnvironment("Testing"))
+{
+	app.MapPrometheusScrapingEndpoint();
+	app.UseOpenTelemetryPrometheusScrapingEndpoint("metrics");
 
 // default endpoint: /healthmetrics
-app.UseHealthChecksPrometheusExporter("/healthmetrics");
+	app.UseHealthChecksPrometheusExporter("/healthz");
+}
 
 // To test Environments: Development <=> Production in IIS Express in launchSettings.json
 Console.WriteLine($"App name: {app.Services.GetRequiredService<IOptions<ApiSettings>>().Value.Name}, version: {app.Services.GetRequiredService<IOptions<ApiSettings>>().Value.Version}");

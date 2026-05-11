@@ -1,7 +1,7 @@
 using Infrastructure.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace IntegrationTests.Configuration;
+namespace BooksAPI.IntegrationTests.Configuration;
 
 public class BaseTestCqrs : IClassFixture<CustomWebApplicationFactory>, IDisposable
 {
@@ -13,7 +13,7 @@ public class BaseTestCqrs : IClassFixture<CustomWebApplicationFactory>, IDisposa
 	{
 		_scope = factory.Services.CreateScope();
 
-		TestHttpClient = factory.CreateClient();
+		TestHttpClient = factory.CreateAuthenticatedClient();
 
 		DbContext = _scope.ServiceProvider.GetRequiredService<BookStoreDbContext>();
 	}

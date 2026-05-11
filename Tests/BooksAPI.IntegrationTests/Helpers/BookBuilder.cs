@@ -1,6 +1,6 @@
 using Domain.Entities;
 
-namespace IntegrationTests.Helpers;
+namespace BooksAPI.IntegrationTests.Helpers;
 
 public class BookBuilder
 {

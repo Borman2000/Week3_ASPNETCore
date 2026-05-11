@@ -18,7 +18,7 @@ This repository is a .NET 8 multi-service backend organized around a books domai
 
 `AuthAPI` provides ASP.NET Identity-based user management and JWT issuance, `NotificationAPI` dispatches notifications across multiple channels and depends on Auth for recipient lookup, and `Yarp.Gateway` fronts the services with reverse-proxy routing, Swagger aggregation, rate limiting, and shared authentication.
 
-Operational support lives under `docker/` with MySQL, Redis, Prometheus, Grafana, Jaeger, and OTEL collector configuration. Testing is split between `UnitTests` for handlers/validators/repositories and `IntegrationTests` for HTTP-level verification of the books API.
+Operational support lives under `docker/` with MySQL, Redis, Prometheus, Grafana, Jaeger, and OTEL collector configuration. Testing is split into four projects under `Tests/`: `BooksAPI.UnitTests` for handlers/validators/repositories, `BooksAPI.IntegrationTests` for HTTP-level verification of the books API, `AuthAPI.UnitTests` for identity-service unit tests, and `AuthAPI.IntegrationTests` for auth endpoint coverage.
 
 ```mermaid
 graph LR
@@ -87,11 +87,11 @@ graph LR
 | `NotificationAPI/` | 14727 | Notification service, channel implementations, templates, persistence |
 | `Application/` | 6660 | Commands, queries, validators, pipeline behaviors, DTOs |
 | `.claude/` | 5777 | Local AI/cartographer skill config |
-| `IntegrationTests/` | 4985 | HTTP integration tests for `WebAPI` |
+| `Tests/BooksAPI.IntegrationTests/` | 4985 | HTTP integration tests for `WebAPI` |
 | `docker/` | 4810 | Compose files, Dockerfiles, OTEL/Prometheus/Grafana setup |
 | `Yarp.Gateway/` | 4487 | Reverse proxy, Swagger aggregation, rate limiting, routing config |
 | `Common/` | 4030 | Shared JWT and OpenTelemetry packages |
-| `UnitTests/` | 3198 | Handler, repository, and validator tests |
+| `Tests/BooksAPI.UnitTests/` | 3198 | Handler, repository, and validator tests |
 | `Domain/` | 2244 | Entities, domain events, validation helpers |
 | `.github/` | 1710 | CI workflow definitions |
 | `CSVParser/` | 1419 | Simple vs span-based CSV parsing implementations |
@@ -300,24 +300,24 @@ graph LR
 
 **Dependents**: external clients.
 
-### `IntegrationTests`
+### `BooksAPI.IntegrationTests`
 
 **Purpose**: End-to-end verification of HTTP contracts for the main books service.
 
 **Entry points**:
-- `IntegrationTests/Configuration/CustomWebApplicationFactory.cs`
-- `IntegrationTests/BookApiTests.cs`
+- `Tests/BooksAPI.IntegrationTests/Configuration/CustomWebApplicationFactory.cs`
+- `Tests/BooksAPI.IntegrationTests/BookApiTests.cs`
 
 **Key files**:
 
 | File | Purpose | Tokens |
 |---|---|---:|
-| `IntegrationTests/Configuration/CustomWebApplicationFactory.cs` | Test host customization and schema reset | 641 |
-| `IntegrationTests/BookApiTests.cs` | Integration coverage for book endpoints | 1617 |
+| `Tests/BooksAPI.IntegrationTests/Configuration/CustomWebApplicationFactory.cs` | Test host customization and schema reset | 641 |
+| `Tests/BooksAPI.IntegrationTests/BookApiTests.cs` | Integration coverage for book endpoints | 1617 |
 
-**Dependencies**: ASP.NET test host, `WebAPI`, EF Core, MySQL.
+**Dependencies**: ASP.NET test host, `WebAPI`, EF Core, MySQL (Testcontainers).
 
-### `UnitTests`
+### `BooksAPI.UnitTests`
 
 **Purpose**: Lower-level verification of handlers, validators, repository behavior, and domain events.
 
@@ -325,9 +325,35 @@ graph LR
 
 | File | Purpose | Tokens |
 |---|---|---:|
-| `UnitTests/BookTests.cs` | Tests CQRS handlers, validators, domain event behavior | 2691 |
+| `Tests/BooksAPI.UnitTests/BookTests.cs` | Tests CQRS handlers, validators, domain event behavior | 2691 |
 
 **Dependencies**: xUnit, Moq, application/infrastructure types.
+
+### `AuthAPI.UnitTests`
+
+**Purpose**: Unit tests for `AuthAPI.Infrastructure.Services.IdentityService` — login, user creation, role management, and validation.
+
+**Key files**:
+
+| File | Purpose | Tokens |
+|---|---|---:|
+| `Tests/AuthAPI.UnitTests/IdentityServiceTests.cs` | Tests IdentityService methods with Moq | ~800 |
+| `Tests/AuthAPI.UnitTests/Helpers/AuthApiMockHelper.cs` | Shared mock factory for UserManager/SignInManager/RoleManager | ~280 |
+
+**Dependencies**: xUnit, Moq, `AuthAPI.Infrastructure`, `AuthAPI.Domain`, `JwtHelperService`.
+
+### `AuthAPI.IntegrationTests`
+
+**Purpose**: End-to-end HTTP contract tests for auth endpoints.
+
+**Key files**:
+
+| File | Purpose | Tokens |
+|---|---|---:|
+| `Tests/AuthAPI.IntegrationTests/Configuration/AuthApiWebApplicationFactory.cs` | Test host with MySQL Testcontainer | ~400 |
+| `Tests/AuthAPI.IntegrationTests/AuthEndpointsIntegrationTests.cs` | Login, user CRUD, and auth flows | ~600 |
+
+**Dependencies**: ASP.NET test host, `AuthAPI.Api`, MySQL (Testcontainers).
 
 ### `docker`
 
@@ -439,7 +465,7 @@ graph TD
 - `NotificationAPI` requires auth on one endpoint but comments out `UseAuthentication()` / `UseAuthorization()` in `Program.cs`.
 - `NotificationDispatcher` mixes async and blocking calls (`.Result`) and includes unreachable code after `return null`.
 - Auth login takes credentials through query parameters, which is easy to leak in logs, browser history, and proxies.
-- `IntegrationTests` currently depend on a hard-coded local MySQL connection rather than the commented testcontainer flow.
+- `IntegrationTests` currently depend on Testcontainers (MySQL) and require Docker — they are not run in the local unit-test suite.
 - Localhost service URLs are scattered across the gateway and service HTTP clients; environment portability depends on config discipline.
 - Runtime logs and generated migration files add substantial repo size/noise for both humans and mapping tools.
 
@@ -460,7 +486,7 @@ Top items from that list:
 1. Start in `WebAPI/Endpoints.cs`.
 2. For v2, add a request/handler/validator in `Application/Books/`.
 3. Extend repository/service code in `Infrastructure/` if data access changes.
-4. Add unit and/or integration tests.
+4. Add unit and/or integration tests in `Tests/BooksAPI.UnitTests` or `Tests/BooksAPI.IntegrationTests`.
 
 **To add a new CQRS command/query**
 1. Create request and handler under `Application`.

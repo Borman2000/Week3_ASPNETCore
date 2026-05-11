@@ -14,7 +14,7 @@ This project contains integration tests for `AuthAPI.Api` authentication and aut
 ## Run tests
 
 ```powershell
-cd AuthAPI/AuthAPI.IntegrationTests
+cd Tests/AuthAPI.IntegrationTests
 dotnet test
 ```
 

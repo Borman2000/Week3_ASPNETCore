@@ -103,7 +103,7 @@ public static class Endpoints
 
 	    v2.MapPut("/books", async (UpdateBookCommand command, ISender mediatr) => {
 	        var book = await mediatr.Send(command);
-	        return TypedResults.Accepted($"/products/{book.Id}", new ActionResult(book.Id));
+	        return book == null ? (IResult)TypedResults.NotFound() : TypedResults.Accepted($"/products/{book.Id}", new ActionResult(book.Id));
         })
 		    .RequireAuthorization(ClaimType.Books.Update)
 		    .ProducesProblem(StatusCodes.Status401Unauthorized);

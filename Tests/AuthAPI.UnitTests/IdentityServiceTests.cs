@@ -1,12 +1,12 @@
 using AuthAPI.Domain.Entities;
 using AuthAPI.Infrastructure.Services;
-using AuthAPI.Tests.Helpers;
+using AuthAPI.UnitTests.Helpers;
 using AutoMapper;
 using Common.JwtHelperService.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Moq;
 
-namespace AuthAPI.Tests;
+namespace AuthAPI.UnitTests;
 
 /// <summary>
 /// Unit tests for AuthAPI.Infrastructure.Services.IdentityService

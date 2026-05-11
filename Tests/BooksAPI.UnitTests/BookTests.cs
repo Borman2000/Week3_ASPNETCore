@@ -9,9 +9,9 @@ using Domain.Events;
 using FluentValidation.TestHelper;
 using Infrastructure.Repositories;
 using Moq;
-using UnitTests.Helpers;
+using BooksAPI.UnitTests.Helpers;
 
-namespace UnitTests;
+namespace BooksAPI.UnitTests;
 
 public class BookTests
 {

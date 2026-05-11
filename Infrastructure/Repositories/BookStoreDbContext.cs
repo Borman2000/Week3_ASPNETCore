@@ -18,7 +18,9 @@ public class BookStoreDbContext : DbContext, IUnitOfWork
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-		modelBuilder.Entity<Category>(category =>
+	    base.OnModelCreating(modelBuilder);
+
+	    modelBuilder.Entity<Category>(category =>
 		{
 			category.Ignore(c => c.DomainEvents);
 			category.HasIndex(c => new { c.Name }).IsUnique();
@@ -106,8 +108,6 @@ public class BookStoreDbContext : DbContext, IUnitOfWork
 								);
 				    });
 	    });
-
-	    base.OnModelCreating(modelBuilder);
     }
 
     public DbSet<Author> Authors => Set<Author>();

@@ -1,3 +1,5 @@
+name: external-services
+
 services:
 
   otel-collector:
@@ -106,7 +108,8 @@ services:
       image: jaegertracing/all-in-one:1.75.0
       container_name: jaeger-tracing
       volumes:
-        - jaeger-data:/jaeger-tracing
+        - jaeger-tracing:/jaeger-tracing
+        - jaeger-tmp:/jaeger-tmp
       ports:
 #        - "6831:6831"
 #        - "6832:6832"
@@ -123,4 +126,5 @@ volumes:
   mysql-data: {}
   exporter-data: {}
   redis-data: {}
-  jaeger-data: {}
+  jaeger-tracing: {}
+  jaeger-tmp: {}
