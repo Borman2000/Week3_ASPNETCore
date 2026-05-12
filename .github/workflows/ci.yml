@@ -134,7 +134,9 @@ jobs:
 #          ${{ runner.temp }}/scanner/dotnet-sonarscanner end -d:sonar.token="${{ secrets.SONAR_TOKEN }}"
 
       - name: Test
-        run: dotnet test --no-build --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=./coverage.xml
+        run: |
+          export JWT_SECRET_KEY="${{ secrets.JWT_SECRET_KEY }}"
+          dotnet test --no-build --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=./coverage.xml
 
       - name: SonarCube end
         run: |
