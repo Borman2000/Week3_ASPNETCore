@@ -7,6 +7,8 @@
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
 		<OutputType>Exe</OutputType>
+
+		<UserSecretsId>07676ae7-1d9e-4fc6-ac56-f17f7e9c5ec3</UserSecretsId>
 	</PropertyGroup>
 
 	<PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -50,6 +52,9 @@
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
 	  <None Update="appsettings.Testing.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="appsettings.Local.json">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
 	</ItemGroup>

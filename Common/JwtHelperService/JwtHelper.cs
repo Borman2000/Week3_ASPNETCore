@@ -11,6 +11,8 @@ namespace Common.JwtHelperService;
 
 public static class JwtHelper
 {
+	private const string JwtSecretEnvVar = "JWT_SECRET_KEY";
+
 	public static IServiceCollection AddJwtData(this IServiceCollection services, WebApplicationBuilder builder)
 	{
         builder.Configuration.AddJsonFile(Path.Combine(Environment.CurrentDirectory, "Config/JwtConfig.json"), optional: false);
@@ -26,6 +28,15 @@ public static class JwtHelper
 // Configure JWT settings
 		IConfigurationSection jwtConfig = configuration.GetSection(nameof(JwtSettings));
 		JwtSettings jwtSettings = configuration.GetSection(nameof(JwtSettings)).Get<JwtSettings>()!;
+		var configuredSecret = Environment.GetEnvironmentVariable(JwtSecretEnvVar);
+		var secretKey = string.IsNullOrWhiteSpace(configuredSecret) ? jwtSettings.SecretKey : configuredSecret;
+
+		if (string.IsNullOrWhiteSpace(secretKey) || secretKey.StartsWith("__", StringComparison.Ordinal))
+		{
+			throw new InvalidOperationException($"JWT secret key is not configured. Set {JwtSecretEnvVar} or JwtSettings:SecretKey.");
+		}
+
+		jwtSettings = jwtSettings with { SecretKey = secretKey };
 	    services.Configure<JwtSettings>(jwtConfig);
 	    services.AddOptions<JwtSettings>().Bind(jwtConfig);
 

@@ -40,7 +40,7 @@ services:
     container_name: mysqld
     environment:
 #      MYSQL_ROOT_HOST: "%"
-      MYSQL_ROOT_PASSWORD: "root_password"
+      MYSQL_ROOT_PASSWORD: "root"
 #      MYSQL_USER: exporter
 #      MYSQL_PASSWORD: exporter
     volumes:
@@ -110,6 +110,7 @@ services:
       volumes:
         - jaeger-tracing:/jaeger-tracing
         - jaeger-tmp:/jaeger-tmp
+        - jaeger-tmp2:/tmp
       ports:
 #        - "6831:6831"
 #        - "6832:6832"
@@ -128,3 +129,8 @@ volumes:
   redis-data: {}
   jaeger-tracing: {}
   jaeger-tmp: {}
+  jaeger-tmp2: {}
+
+networks:
+    default:
+        name: book-api-network

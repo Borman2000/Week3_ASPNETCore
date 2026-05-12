@@ -1,6 +1,6 @@
 {
   "JwtSettings": {
-	"SecretKey": "52692497083f1a9fbabe42f7b8031e72",
+	"SecretKey": "__SET_VIA_ENV_OR_USER_SECRETS__",
 	"Issuer": "VentionDotNet",
 	"Audience": "VentionDotNet"
   }

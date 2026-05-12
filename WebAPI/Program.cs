@@ -63,7 +63,7 @@ app.MapGet("/exception", () =>
 app.UseMiddleware<ValidationExceptionHandlingMiddleware>();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (!app.Environment.IsProduction())
 {
 #if SERILOG_RESPONSES
     app.UseSerilogRequestLogging();
@@ -78,7 +78,7 @@ app.UseResponseCaching();
 
 Endpoints.MapAll(app);
 
-if (app.Environment.IsDevelopment())
+if (!app.Environment.IsProduction())
 {
 	app.UseSwagger();
 	app.UseSwaggerUI(c =>

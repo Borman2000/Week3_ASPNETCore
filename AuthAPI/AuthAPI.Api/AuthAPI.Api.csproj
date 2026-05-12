@@ -7,6 +7,8 @@
 		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
 		<OutputType>Exe</OutputType>
 		<RootNamespace>AuthAPI.Api</RootNamespace>
+
+		<UserSecretsId>07676ae7-1d9e-4fc6-ac56-f17f7e9c5ec3</UserSecretsId>
 	</PropertyGroup>
 
 	<ItemGroup>

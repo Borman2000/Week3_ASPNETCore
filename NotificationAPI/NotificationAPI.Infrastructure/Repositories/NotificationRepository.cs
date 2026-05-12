@@ -30,14 +30,20 @@ public class NotificationRepository : INotificationRepository
 
 	public async Task<IResult> SaveResultAsync(NotificationResult entity)
 	{
-		var result = DbSet.FindAsync(entity.Id).Result;
+		var result = await DbSet.FindAsync(entity.Id);
+		if (result is null)
+		{
+			return Results.NotFound();
+		}
+
 		DtoMapper.Map(entity, result);
 		await DbContext.SaveChangesAsync();
-		return Results.Ok(result!.Id);
+		return Results.Ok(result.Id);
 	}
 
 	public async Task<IResult> GetResultsAsync(Guid id)
 	{
-		return await Task.FromResult<IResult>(Results.Ok(DbSet.Find(id)));
+		var result = await DbSet.FindAsync(id);
+		return result is null ? Results.NotFound() : Results.Ok(result);
 	}
 }

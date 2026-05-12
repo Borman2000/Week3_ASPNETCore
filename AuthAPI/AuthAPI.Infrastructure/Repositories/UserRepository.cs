@@ -37,22 +37,29 @@ public class UserRepository : IUserRepository<ApplicationUser, UserDto>
 			UserName = login
 		};
 		var result = await UserManager.CreateAsync(user, password);
+		if (!result.Succeeded)
+		{
+			return Results.BadRequest(result.Errors);
+		}
 
 		if (roles == null || roles.Count == 0)
 		{
-			await UserManager.AddToRoleAsync(user, nameof(RoleEnum.User));
+			var roleResult = await UserManager.AddToRoleAsync(user, nameof(RoleEnum.User));
+			if (!roleResult.Succeeded)
+			{
+				return Results.BadRequest(roleResult.Errors);
+			}
 		}
 		else
 		{
 			foreach (string role in roles)
 			{
-				await UserManager.AddToRoleAsync(user, role);
+				var roleResult = await UserManager.AddToRoleAsync(user, role);
+				if (!roleResult.Succeeded)
+				{
+					return Results.BadRequest(roleResult.Errors);
+				}
 			}
-		}
-
-		if (!result.Succeeded)
-		{
-			return Results.BadRequest(result.Errors);
 		}
 
 

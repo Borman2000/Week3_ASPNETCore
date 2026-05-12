@@ -14,6 +14,8 @@
 		<CollectCoverage>true</CollectCoverage>
 		<CoverletOutputFormat>lcov</CoverletOutputFormat>
 		<CoverletOutput>./lcov.info</CoverletOutput>
+
+		<UserSecretsId>07676ae7-1d9e-4fc6-ac56-f17f7e9c5ec3</UserSecretsId>
 	</PropertyGroup>
 
 	<ItemGroup>
