@@ -249,7 +249,7 @@ public class IdentityService : IIdentityService
 		var roleClaims = role is not null ? await _roleManager.GetClaimsAsync(role) : [];
 //		var roleClaims = role is not null ? await _userManager.GetRolesAsync(user) : [];
 
-		var token = _tokenGenerator.GenerateJwtToken((user.Id, userRole, roleClaims));
+		var token = _tokenGenerator.GenerateJwtToken((user.Id, user.UserName ?? user.Email ?? userName, roleClaims));
 		activity?.AddEvent(new("User login: success."));
 		return Results.Ok(new { Token = token });
 	}
