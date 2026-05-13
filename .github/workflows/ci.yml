@@ -93,9 +93,11 @@ jobs:
         run: dotnet tool install --global dotnet-sonarscanner
 
       - name: Build
+        env:
+          SONAR_SECRET: ${{ secrets.SONAR_TOKEN }}
         run: |
           export PATH="$PATH:/root/.dotnet/tools"
-          dotnet-sonarscanner begin /o:"borman2000" /k:"Borman2000_ASPNETCore" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.cs.opencover.reportsPaths="./Tests/BooksAPI.IntegrationTests/coverage.xml,./Tests/BooksAPI.UnitTests/coverage.xml" /d:sonar.coverage.exclusions="**Tests*.cs"
+          dotnet-sonarscanner begin /o:"borman2000" /k:"Borman2000_ASPNETCore" /d:sonar.token="$SONAR_SECRET" /d:sonar.cs.opencover.reportsPaths="./Tests/BooksAPI.IntegrationTests/coverage.xml,./Tests/BooksAPI.UnitTests/coverage.xml" /d:sonar.coverage.exclusions="**Tests*.cs"
           dotnet build --no-restore
 
 
@@ -134,14 +136,18 @@ jobs:
 #          ${{ runner.temp }}/scanner/dotnet-sonarscanner end -d:sonar.token="${{ secrets.SONAR_TOKEN }}"
 
       - name: Test
+        env:
+          JWT_SECRET: ${{ secrets.JWT_SECRET_KEY }}
         run: |
-          export JWT_SECRET_KEY="${{ secrets.JWT_SECRET_KEY }}"
+          export JWT_SECRET_KEY="$JWT_SECRET"
           dotnet test --no-build --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=./coverage.xml
 
       - name: SonarCube end
+        env:
+          SONAR_SECRET: ${{ secrets.SONAR_TOKEN }}
         run: |
           export PATH="$PATH:/root/.dotnet/tools"
-          dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+          dotnet-sonarscanner end /d:sonar.token="$SONAR_SECRET"
 
       - name: Stop/remove test containers
         run: docker compose -f ./docker/docker-compose.testdb.yaml stop
