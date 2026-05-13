@@ -1,5 +1,13 @@
 ﻿FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-USER $APP_UID
+ARG APP_UID=10001
+RUN adduser \
+	--disabled-password \
+	--gecos "" \
+	--home "/nonexistent" \
+	--shell "/usr/sbin/nologin" \
+	--uid "${APP_UID}" \
+	appuser
+USER appuser
 WORKDIR /app
 EXPOSE 7119
 EXPOSE 5275
