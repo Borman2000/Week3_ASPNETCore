@@ -17,7 +17,14 @@ COPY ["Application/Application.csproj", "Application/"]
 COPY ["CSVParser/CSVParser.csproj", "CSVParser/"]
 COPY ["Domain/Domain.csproj", "Domain/"]
 RUN dotnet restore "WebAPI/WebAPI.csproj"
-COPY . .
+
+COPY ["Application", "Application"]
+COPY ["Common", "Common"]
+COPY ["CSVParser", "CSVParser"]
+COPY ["Domain", "Domain"]
+COPY ["Infrastructure", "Infrastructure"]
+COPY ["WebAPI", "WebAPI"]
+COPY ["NotificationAPI/NotificationAPI.Domain", "NotificationAPI/NotificationAPI.Domain"]
 
 WORKDIR /src/WebAPI/
 RUN dotnet build "./WebAPI.csproj" --no-restore -c $BUILD_CONFIGURATION -o /app/build
