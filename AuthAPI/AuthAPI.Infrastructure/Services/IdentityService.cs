@@ -24,7 +24,6 @@ public class IdentityService : IIdentityService
 		_userManager = userManager;
 		_signInManager = signInManager;
 		_roleManager = roleManager;
-		_roleManager = roleManager;
 		_mapper = dtoMapper;
 		_tokenGenerator = tokenGenerator;
 	}
