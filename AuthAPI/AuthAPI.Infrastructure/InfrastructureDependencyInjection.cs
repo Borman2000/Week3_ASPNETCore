@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using AuthAPI.Application.DTOs;
+﻿using AuthAPI.Application.DTOs;
 using AuthAPI.Application.Interfaces;
 using AuthAPI.Domain.Entities;
 using AuthAPI.Domain.Interfaces;
@@ -27,7 +26,7 @@ public static class InfrastructureDependencyInjection
     {
 	    services.AddSingleton<AuditableInterceptor>();
 
-	    var connectionString = configuration.GetSection(DbSettings.Section).Get<DbSettings>()?.ConnectionString;
+	    var connectionString = configuration.GetConnectionString("DefaultConnection");
 	    services.AddDbContext<UsersDbContext>((provider, opt) =>
 	    {
 		    var interceptor = provider.GetRequiredService<AuditableInterceptor>();
@@ -54,13 +53,5 @@ public static class InfrastructureDependencyInjection
 		    .AddDefaultTokenProviders();
 
 	    services.AddScoped<IIdentityService, IdentityService>();
-    }
-
-    public class DbSettings
-    {
-        public const string Section = "UsersDBSettings";
-
-        [Required(AllowEmptyStrings = false)]
-        public string ConnectionString { get; set; }
     }
 }

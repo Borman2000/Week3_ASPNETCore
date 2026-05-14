@@ -13,7 +13,7 @@ services:
       - "7219:8080"   # map swaggers 8080 to app 7219
     environment:
       - ASPNETCORE_ENVIRONMENT=${ENVIRONMENT}
-      - UsersDBSettings__ConnectionString=${DOCKER_AUTH_DB_STRING}
+      - ConnectionStrings__DefaultConnection=${DOCKER_AUTH_DB_STRING}
       - JWT_SECRET_KEY=${JWT_SECRET_KEY}
 #      - ASPNETCORE_URLS=https://+:7219;http://+:5276
 #      - ASPNETCORE_Kestrel__Certificates__Default__Password=
@@ -32,7 +32,7 @@ services:
       - "7019:8080"   # map swaggers 8080 to app 7019
     environment:
       - ASPNETCORE_ENVIRONMENT=${ENVIRONMENT}
-      - NotificationsDBSettings__ConnectionString=${DOCKER_NOTIFICATION_DB_STRING}
+      - ConnectionStrings__DefaultConnection=${DOCKER_NOTIFICATION_DB_STRING}
       - JWT_SECRET_KEY=${JWT_SECRET_KEY}
 
   book-service:
@@ -46,7 +46,7 @@ services:
       - "7119:8080"   # map swaggers 8080 to app 7119
     environment:
       - ASPNETCORE_ENVIRONMENT=${ENVIRONMENT}
-      - DBSettings__ConnectionString=${DOCKER_BOOKS_DB_STRING}
+      - ConnectionStrings__DefaultConnection=${DOCKER_BOOKS_DB_STRING}
       - JWT_SECRET_KEY=${JWT_SECRET_KEY}
 
   gateway-service:

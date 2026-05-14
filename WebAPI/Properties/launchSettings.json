@@ -16,8 +16,7 @@
       "launchUrl": "",
       "applicationUrl": "http://localhost:5275",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Local",
-        "JWT_SECRET_KEY": "+/V>a?RRyYz%&T0U&j%(0C$Cl^*0!Z3SWE3yxmJ>6LT"
+        "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
     "https": {
@@ -27,8 +26,7 @@
       "launchUrl": "swagger",
       "applicationUrl": "https://localhost:7119;http://localhost:5275",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Local",
-        "JWT_SECRET_KEY": "+/V>a?RRyYz%&T0U&j%(0C$Cl^*0!Z3SWE3yxmJ>6LT"
+        "ASPNETCORE_ENVIRONMENT": "Development"
       }
     }
   }

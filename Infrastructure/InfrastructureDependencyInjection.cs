@@ -1,6 +1,5 @@
 ﻿//#define IN_MEMORY_CACHE
 
-using System.ComponentModel.DataAnnotations;
 using System.Net.Http.Headers;
 using Application.Interfaces;
 using Common.OpenTelemetryService;
@@ -40,7 +39,7 @@ public static class InfrastructureDependencyInjection
 
     private static void AddDatabase(this IServiceCollection services, IConfiguration configuration)
     {
-        var connectionString = configuration.GetSection(DbSettings.Section).Get<DbSettings>()?.ConnectionString;
+        var connectionString = configuration.GetConnectionString("DefaultConnection");
         services.AddDbContext<BookStoreDbContext>(opt => opt.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
     }
 
@@ -82,11 +81,4 @@ public static class InfrastructureDependencyInjection
 		    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 	    });
 	}
-
-    public class DbSettings
-    {
-        public const string Section = "DBSettings";
-
-        [Required(AllowEmptyStrings = false)]
-        public string ConnectionString { get; set; }
-    }}
+}

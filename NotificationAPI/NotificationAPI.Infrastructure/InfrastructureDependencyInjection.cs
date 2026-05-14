@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Net.Http.Headers;
+﻿using System.Net.Http.Headers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,8 +24,8 @@ public static class InfrastructureDependencyInjection
 
     private static void AddDatabaseAndRepo(this IServiceCollection services, IConfiguration configuration)
     {
-	    var connectionString = configuration.GetSection(DbSettings.Section).Get<DbSettings>()?.ConnectionString;
-	    services.AddDbContext<NotificationDbContext>((provider, opt) =>
+	    var connectionString = configuration.GetConnectionString("DefaultConnection");
+	    services.AddDbContext<NotificationDbContext>(opt =>
 	    {
 		    opt.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
 	    });
@@ -54,13 +53,5 @@ public static class InfrastructureDependencyInjection
 		    client.DefaultRequestHeaders.Accept.Clear();
 		    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 	    });
-    }
-
-    public class DbSettings
-    {
-        public const string Section = "NotificationsDBSettings";
-
-        [Required(AllowEmptyStrings = false)]
-        public string ConnectionString { get; set; }
     }
 }
