@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace BooksAPI.IntegrationTests.Configuration;
 
-public class BaseTestClient : IClassFixture<CustomWebApplicationFactory>, IDisposable
+public class BaseTestClient : IDisposable
 {
 	private readonly IServiceScope _scope;
 	private readonly CustomWebApplicationFactory _factory;

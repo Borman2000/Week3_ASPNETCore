@@ -4,6 +4,7 @@ using Application;
 using Application.Models;
 using Common.JwtHelperService;
 using Infrastructure;
+using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -106,6 +107,12 @@ if (!app.Environment.IsEnvironment("Testing"))
 
 // To test Environments: Development <=> Production in IIS Express in launchSettings.json
 Console.WriteLine($"App name: {app.Services.GetRequiredService<IOptions<ApiSettings>>().Value.Name}, version: {app.Services.GetRequiredService<IOptions<ApiSettings>>().Value.Version}");
+
+// Create and seed database
+using (var scope = app.Services.CreateScope())
+{
+	await BooksSeedService.SeedAsync(scope.ServiceProvider);
+}
 
 app.Run();
 

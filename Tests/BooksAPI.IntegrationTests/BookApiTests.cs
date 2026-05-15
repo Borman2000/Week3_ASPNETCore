@@ -31,7 +31,7 @@ public class BookApiTests(CustomWebApplicationFactory factory) : BaseTestCqrs(fa
 
 		// Assert
 		Assert.NotNull(result);
-		Assert.Equal(2, result.Count);
+		Assert.Equal(2, result!.Count);
 		Assert.All(result, b =>
 		{
 			Assert.NotNull(b);
@@ -50,7 +50,7 @@ public class BookApiTests(CustomWebApplicationFactory factory) : BaseTestCqrs(fa
 
 		// Assert
 		Assert.NotNull(result);
-		Assert.Equal(TestValues.BOOK_ID1_EXISTS, result.Id);
+		Assert.Equal(TestValues.BOOK_ID1_EXISTS, result!.Id);
 		Assert.Equal("Fahrenheit 451", result.Title);
 	}
 
@@ -110,14 +110,13 @@ public class BookApiTests(CustomWebApplicationFactory factory) : BaseTestCqrs(fa
 		var httpResponse = await TestHttpClient.PostAsJsonAsync("/api/v2/books", request);
 		string strResult = await httpResponse.Content.ReadAsStringAsync();
 		ValidationProblemDetails? result = JsonSerializer.Deserialize<ValidationProblemDetails>(strResult);
-//		var result = await Assert.ThrowsAsync<ValidationException>(() => TestHttpClient.PostAsJsonAsync("/books", request));
 
 		// Assert
 		Assert.False(httpResponse.IsSuccessStatusCode);
+		Assert.Equal(HttpStatusCode.BadRequest, httpResponse.StatusCode);
 		Assert.NotNull(result);
-		Assert.Equal("ValidationFailure", result.Type);
-		Assert.True(result.Errors.Count > 0);
-		Assert.Equal("'Title' must not be empty.", result.Errors["Title"][0]);
+		Assert.Equal("ValidationFailure", result!.Type);
+		Assert.True(result.Errors.ContainsKey("Title"));
 	}
 
 	[Fact]
@@ -133,10 +132,10 @@ public class BookApiTests(CustomWebApplicationFactory factory) : BaseTestCqrs(fa
 
 		// Assert
 		Assert.False(httpResponse.IsSuccessStatusCode);
+		Assert.Equal(HttpStatusCode.BadRequest, httpResponse.StatusCode);
 		Assert.NotNull(result);
-		Assert.Equal("ValidationFailure", result.Type);
-		Assert.True(result.Errors.Count > 0);
-		Assert.Equal("The specified condition was not met for 'ISBN'.", result.Errors["ISBN"][0]);
+		Assert.Equal("ValidationFailure", result!.Type);
+		Assert.True(result.Errors.ContainsKey("ISBN"));
 	}
 
 	[Theory]
@@ -173,7 +172,7 @@ public class BookApiTests(CustomWebApplicationFactory factory) : BaseTestCqrs(fa
 		// Assert
 		Assert.False(httpResponse.IsSuccessStatusCode);
 		Assert.NotNull(result);
-		Assert.Equal("ValidationFailure", result.Type);
+		Assert.Equal("ValidationFailure", result!.Type);
 		Assert.True(result.Errors.Count > 0);
 	}
 

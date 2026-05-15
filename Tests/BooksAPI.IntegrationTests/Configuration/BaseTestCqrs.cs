@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace BooksAPI.IntegrationTests.Configuration;
 
-public class BaseTestCqrs : IClassFixture<CustomWebApplicationFactory>, IDisposable
+public class BaseTestCqrs : IDisposable
 {
 	private readonly IServiceScope _scope;
 	protected readonly HttpClient TestHttpClient;

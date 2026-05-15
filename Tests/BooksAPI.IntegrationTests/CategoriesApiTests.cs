@@ -26,8 +26,7 @@ public class CategoriesApiTests(CustomWebApplicationFactory factory) : BaseTestC
 		Assert.True(httpResponse.IsSuccessStatusCode);
 		Assert.Equal(HttpStatusCode.OK, httpResponse.StatusCode);
 		Assert.NotNull(result);
-		Assert.Equal(categoryDto, result);
-//		Assert.Equal(categoryDto.Name, result!.Name);
-//		Assert.Equal(categoryDto.Description, result.Description);
+		Assert.Equal(categoryDto.Name, result!.Name);
+		Assert.Equal(categoryDto.Description, result.Description);
 	}
 }

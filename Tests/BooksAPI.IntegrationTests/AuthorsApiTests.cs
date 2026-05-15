@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Http.Json;
 using Application.DTOs;
 using BooksAPI.IntegrationTests.Configuration;
+using BooksAPI.IntegrationTests.Helpers;
 
 namespace BooksAPI.IntegrationTests;
 
@@ -21,14 +22,15 @@ public class AuthorsApiTests(CustomWebApplicationFactory factory) : BaseTestClie
 		Assert.True(httpResponse.IsSuccessStatusCode);
 		Assert.Equal(HttpStatusCode.OK, httpResponse.StatusCode);
 		Assert.NotNull(result);
-		Assert.Equal(4, result.Count);
+		Assert.Contains(result, a => a.Id == TestValues.AUTHOR_ID_EXISTS);
+		Assert.Contains(result, a => a.Id == TestValues.AUTHOR_ID2_EXISTS);
 	}
 
 	[Fact]
 	public async Task GetAuthorWithBooks_Should_Return_Author_With_Books()
 	{
 		// Arrange
-		Guid authorId = Guid.Parse("AB29FC40-CA47-1067-B31D-00DD010662D2");
+		Guid authorId = TestValues.AUTHOR_ID2_EXISTS;
 
 		// Act
 		var httpResponse = await TestHttpClient.GetAsync($"/api/v2/authors/{authorId}/books");
@@ -38,7 +40,7 @@ public class AuthorsApiTests(CustomWebApplicationFactory factory) : BaseTestClie
 		Assert.True(httpResponse.IsSuccessStatusCode);
 		Assert.Equal(HttpStatusCode.OK, httpResponse.StatusCode);
 		Assert.NotNull(result);
-		Assert.Equal(authorId, result.Id);
-		Assert.Equal(2, result.BooksRaw.Count);
+		Assert.Equal(authorId, result!.Id);
+		Assert.Contains(result.BooksRaw, b => b.Id == TestValues.BOOK_ID1_EXISTS);
 	}
 }

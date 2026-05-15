@@ -3,6 +3,7 @@ namespace BooksAPI.IntegrationTests.Helpers;
 public class TestValues
 {
 	public static readonly Guid AUTHOR_ID_EXISTS = Guid.Parse("AB29FC40-CA47-1067-B31D-00DD010662D1");
+	public static readonly Guid AUTHOR_ID2_EXISTS = Guid.Parse("AB29FC40-CA47-1067-B31D-00DD010662D2");
 	public static readonly Guid AUTHOR_ID_NOT_EXISTS = Guid.Parse("AAAAAAAA-BBBB-CCCC-DDDD-000000000000");
 
 	public static readonly string ISBN_VALID = "978-0-7432-4722-1";
