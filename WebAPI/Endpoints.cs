@@ -45,7 +45,7 @@ public static class Endpoints
 
         v1.MapGet("/statistics", (IBookRepository bookRepoService) => bookRepoService.GetStatistics());
         v1.MapGet("/books", (IBookRepository bookRepoService) => bookRepoService.GetAllAsync()).WithName("GetBooksV1");
-        v1.MapGet("/books/{id:guid}", (IBookRepository bookRepoService, [FromRoute] Guid id) =>  bookRepoService.GetByIdAsync(id)).RequireAuthorization(ClaimType.Books.Read);;
+        v1.MapGet("/books/{id:guid}", (IBookRepository bookRepoService, [FromRoute] Guid id) =>  bookRepoService.GetByIdAsync(id)).RequireAuthorization(ClaimType.Books.Read);
         v1.MapPost("/books", (IBookRepository bookRepoService, Book book) => bookRepoService.AddAsync(book)).RequireAuthorization(ClaimType.Books.Create);
         v1.MapPut("/books/", (IBookRepository bookRepoService, Book book) => bookRepoService.UpdateAsync(book)).RequireAuthorization(ClaimType.Books.Update);
         v1.MapDelete("/books/{id:guid}", (IBookRepository bookRepoService, [FromRoute] Guid id) => bookRepoService.DeleteAsync(id)).RequireAuthorization(ClaimType.Books.Delete);

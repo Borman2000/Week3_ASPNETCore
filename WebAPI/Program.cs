@@ -17,7 +17,7 @@ using InfrastructureDependencyInjection = Infrastructure.InfrastructureDependenc
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
-    .WriteTo.File($"Minimal_API_{DateTime.Now:yyyyMMdd}.log")
+    .WriteTo.File($"Logs/Books_API_{DateTime.Now:yyyyMMdd}.log")
     .CreateLogger();
 Log.Information("----- STARTING -----");
 

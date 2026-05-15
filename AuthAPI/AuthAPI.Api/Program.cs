@@ -10,7 +10,7 @@ using Serilog;
 
 Log.Logger = new LoggerConfiguration()
 	.WriteTo.Console()
-	.WriteTo.File($"AuthAPI_{DateTime.Now.ToString("yyyyMMdd")}.log")
+	.WriteTo.File($"Logs/AuthAPI_{DateTime.Now.ToString("yyyyMMdd")}.log")
 	.CreateLogger();
 Log.Information("----- STARTING -----");
 

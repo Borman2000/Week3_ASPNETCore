@@ -10,7 +10,7 @@ using Serilog;
 
 Log.Logger = new LoggerConfiguration()
 	.WriteTo.Console()
-	.WriteTo.File($"NotificationAPI_{DateTime.Now.ToString("yyyyMMdd")}.log")
+	.WriteTo.File($"Logs/NotificationAPI_{DateTime.Now.ToString("yyyyMMdd")}.log")
 	.CreateLogger();
 Log.Information("----- STARTING -----");
 

@@ -25,6 +25,6 @@ public class CacheInvalidationBehavior<TRequest, TResponse> : IPipelineBehavior<
 			}
 		}
 
-		return await next();;
+		return await next();
 	}
 }
