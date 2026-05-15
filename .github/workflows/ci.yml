@@ -91,7 +91,7 @@ jobs:
           SONAR_SECRET: ${{ secrets.SONAR_TOKEN }}
         run: |
           export PATH="$PATH:/root/.dotnet/tools"
-          dotnet-sonarscanner begin /o:"borman2000" /k:"Borman2000_ASPNETCore" /d:sonar.token="$SONAR_SECRET" /d:sonar.cs.opencover.reportsPaths="./Tests/BooksAPI.IntegrationTests/coverage.xml,./Tests/BooksAPI.UnitTests/coverage.xml" /d:sonar.coverage.exclusions="**Tests*.cs"
+          dotnet-sonarscanner begin /o:"borman2000" /k:"Borman2000_ASPNETCore" /d:sonar.token="$SONAR_SECRET" /d:sonar.cs.opencover.reportsPaths="./Tests/BooksAPI.IntegrationTests/coverage.xml,./Tests/BooksAPI.UnitTests/coverage.xml,./Tests/AuthAPI.IntegrationTests/coverage.xml,./Tests/AuthAPI.UnitTests/coverage.xml" /d:sonar.coverage.exclusions="**Tests*.cs"
           dotnet build --no-restore
 
 
@@ -132,8 +132,10 @@ jobs:
       - name: Test
         env:
           JWT_SECRET: ${{ secrets.JWT_SECRET_KEY }}
+          DB_CRED: ${{ secrets.DB_CRED }}
         run: |
           export JWT_SECRET_KEY="$JWT_SECRET"
+          export ConnectionStrings__db_cred="$DB_CRED"
           dotnet test --no-build --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=./coverage.xml
 
       - name: SonarCube end

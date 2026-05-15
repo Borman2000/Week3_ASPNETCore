@@ -1,6 +1,7 @@
 ﻿//#define IN_MEMORY_CACHE
 
 using System.Net.Http.Headers;
+using System.Text.RegularExpressions;
 using Application.Interfaces;
 using Common.OpenTelemetryService;
 using CSVParser;
@@ -39,7 +40,11 @@ public static class InfrastructureDependencyInjection
 
     private static void AddDatabase(this IServiceCollection services, IConfiguration configuration)
     {
-        var connectionString = configuration.GetConnectionString("DefaultConnection");
+	    var userPswPattern = @"User Id=([^;]+);Password=([^;]+);";
+        var connectionString = configuration.GetConnectionString("BooksDB");
+        if(!Regex.Match(connectionString!, userPswPattern).Success)
+			connectionString += configuration.GetConnectionString("db_cred");
+
         services.AddDbContext<BookStoreDbContext>(opt => opt.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
     }
 

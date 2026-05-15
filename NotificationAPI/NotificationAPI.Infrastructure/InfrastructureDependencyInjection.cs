@@ -1,4 +1,5 @@
 ﻿using System.Net.Http.Headers;
+using System.Text.RegularExpressions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,7 +25,11 @@ public static class InfrastructureDependencyInjection
 
     private static void AddDatabaseAndRepo(this IServiceCollection services, IConfiguration configuration)
     {
-	    var connectionString = configuration.GetConnectionString("DefaultConnection");
+	    var userPswPattern = @"User Id=([^;]+);Password=([^;]+);";
+	    var connectionString = configuration.GetConnectionString("NotificationsDB");
+	    if(!Regex.Match(connectionString!, userPswPattern).Success)
+		    connectionString += configuration.GetConnectionString("db_cred");
+
 	    services.AddDbContext<NotificationDbContext>(opt =>
 	    {
 		    opt.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));

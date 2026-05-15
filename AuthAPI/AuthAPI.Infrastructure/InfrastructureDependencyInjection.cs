@@ -1,4 +1,5 @@
-﻿using AuthAPI.Application.DTOs;
+﻿using System.Text.RegularExpressions;
+using AuthAPI.Application.DTOs;
 using AuthAPI.Application.Interfaces;
 using AuthAPI.Domain.Entities;
 using AuthAPI.Domain.Interfaces;
@@ -26,7 +27,11 @@ public static class InfrastructureDependencyInjection
     {
 	    services.AddSingleton<AuditableInterceptor>();
 
-	    var connectionString = configuration.GetConnectionString("DefaultConnection");
+	    var userPswPattern = @"User Id=([^;]+);Password=([^;]+);";
+	    var connectionString = configuration.GetConnectionString("UsersDB");
+	    if(!Regex.Match(connectionString!, userPswPattern).Success)
+		    connectionString += configuration.GetConnectionString("db_cred");
+
 	    services.AddDbContext<UsersDbContext>((provider, opt) =>
 	    {
 		    var interceptor = provider.GetRequiredService<AuditableInterceptor>();
