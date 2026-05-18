@@ -19,7 +19,7 @@ public class InMemoryCacheService : ICacheService
 		_cache.TryGetValue(key, out T? value);
 
 		_metrics.AddCacheRequest();
-		if(value != null)
+		if (!EqualityComparer<T>.Default.Equals(value, default))
 			_metrics.AddCacheHit();
 
 		return Task.FromResult(value);
