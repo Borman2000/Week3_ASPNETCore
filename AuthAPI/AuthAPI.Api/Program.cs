@@ -14,6 +14,8 @@ Log.Logger = new LoggerConfiguration()
 	.CreateLogger();
 Log.Information("----- STARTING -----");
 
+AppDomain.CurrentDomain.SetData("REGEX_DEFAULT_MATCH_TIMEOUT", TimeSpan.FromMilliseconds(100)); // process-wide setting
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
