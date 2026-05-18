@@ -4,8 +4,8 @@ namespace NotificationAPI.Domain.Entities;
 
 public class NotificationTemplate
 {
-	public static string EMPTY_TEMPLATE_ID = "3d4cfc64-b7d9-4bf5-a89f-871e8443efe7";
-	public static string DEFAULT_TEMPLATE_ID = "3d4cfc64-b7d9-4bf5-a89f-871e8443efe8";
+	public const string EMPTY_TEMPLATE_ID = "3d4cfc64-b7d9-4bf5-a89f-871e8443efe7";
+	public const string DEFAULT_TEMPLATE_ID = "3d4cfc64-b7d9-4bf5-a89f-871e8443efe8";
 
 	[StringLength(40, ErrorMessage = "Template ID must not exceed 40 characters.")]
 	public string Id { get; set; } = string.Empty;
