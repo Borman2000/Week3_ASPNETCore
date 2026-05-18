@@ -31,6 +31,8 @@ public class PushChannel : INotificationChannel
 
     public async Task<NotificationResult> SendAsync(NotificationRequest request, RenderedTemplate template, NotificationUser user)
     {
+        _logger.LogInformation("Preparing to send push notification {NotificationId} to user {UserId}", request.Id, user.Id);
+
 //        if (string.IsNullOrEmpty(user.DeviceToken))
 //        {
 //            return new NotificationResult

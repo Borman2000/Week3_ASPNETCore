@@ -27,6 +27,8 @@ public class SmsChannel : INotificationChannel
 
     public async Task<NotificationResult> SendAsync(NotificationRequest request, RenderedTemplate template, NotificationUser user)
     {
+        _logger.LogInformation($"Sending notification to user {user.Email} from {_settings.FromNumber} via SMS channel");
+
         if (string.IsNullOrEmpty(user.PhoneNumber))
         {
             return new NotificationResult

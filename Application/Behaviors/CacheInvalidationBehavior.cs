@@ -21,6 +21,7 @@ public class CacheInvalidationBehavior<TRequest, TResponse> : IPipelineBehavior<
 		{
 			foreach (var cacheKey in invalidationCommand.CacheKeys)
 			{
+				_logger.LogInformation("Invalidating cache for key: {CacheKey}", cacheKey);
 				await _cache.RemoveAsync(cacheKey.ToLower());
 			}
 		}

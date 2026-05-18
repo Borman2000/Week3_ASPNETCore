@@ -26,6 +26,7 @@ public class CachingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, 
 			async Task<TResponse> GetResponseAddedToCache()
 			{
 				response = await next();
+				_logger.LogInformation($"Cached response: {response}");
 				await _cacheService.SetAsync(cacheableQuery.CacheKey.ToLower(), response, cacheableQuery.SlidingExpiration);
 				return response;
 			}
@@ -33,6 +34,7 @@ public class CachingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, 
 			var cachedResponse = await _cacheService.GetAsync<TResponse>(cacheableQuery.CacheKey.ToLower());
 			if (cachedResponse != null)
 			{
+				_logger.LogInformation($"Cache hit for key: {cacheableQuery.CacheKey}");
 				response = cachedResponse;
 			}
 			else
@@ -42,9 +44,7 @@ public class CachingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, 
 
 			return response;
 		}
-		else
-		{
-			return await next();
-		}
+
+		return await next();
 	}
 }

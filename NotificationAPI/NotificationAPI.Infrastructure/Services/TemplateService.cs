@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Logging;
+using NotificationAPI.Application.Common.Exceptions;
 using NotificationAPI.Domain;
 using NotificationAPI.Domain.Entities;
 using NotificationAPI.Domain.Interfaces;
@@ -29,8 +30,12 @@ public class TemplateService : ITemplateService
         var template = await _repository.GetByIdAsync(templateId);
         if (template == null)
         {
-//            throw new TemplateNotFoundException(templateId);
 			template = await _repository.GetByIdAsync(NotificationTemplate.DEFAULT_TEMPLATE_ID);
+
+            if (template == null)
+                throw new TemplateNotFoundException(templateId);
+
+            _logger.LogWarning("Template with ID {TemplateId} not found. Using default template.", templateId);
         }
 
         // Create a script object with the template data
