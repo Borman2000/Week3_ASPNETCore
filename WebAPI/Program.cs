@@ -2,24 +2,35 @@
 
 using Application;
 using Application.Models;
+using Common.JwtHelperService;
 using Infrastructure;
+using Infrastructure.Repositories;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Serilog;
 using WebAPI;
 using WebAPI.Middleware;
+using InfrastructureDependencyInjection = Infrastructure.InfrastructureDependencyInjection;
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
-    .WriteTo.File($"Minimal_API_{DateTime.Now.ToString("yyyyMMdd")}.log")
+    .WriteTo.File($"Logs/Books_API_{DateTime.Now:yyyyMMdd}.log")
     .CreateLogger();
 Log.Information("----- STARTING -----");
+
+AppDomain.CurrentDomain.SetData("REGEX_DEFAULT_MATCH_TIMEOUT", TimeSpan.FromMilliseconds(100)); // process-wide setting
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSwagger();
-builder.Services.AddApplication(builder.Configuration)
-                .AddDataAccess(builder.Configuration)
+builder.Services.AddVersioning();
+
+InfrastructureDependencyInjection.AddDataAccess(builder.Services.AddApplication(builder.Configuration), builder.Configuration)
                 .AddServices(builder.Configuration)
+                .AddJwtData(builder)
                 .AddResponseCaching();
 builder.Services.AddHealthChecks();
 
@@ -44,6 +55,9 @@ app.UseExceptionHandler(exceptionHandlerApp =>
 	});
 });
 
+app.UseAuthentication(); // Must come before UseAuthorization
+app.UseAuthorization();
+
 app.MapGet("/exception", () =>
 {
 	throw new InvalidOperationException("Sample Exception");
@@ -52,7 +66,7 @@ app.MapGet("/exception", () =>
 app.UseMiddleware<ValidationExceptionHandlingMiddleware>();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (!app.Environment.IsProduction())
 {
 #if SERILOG_RESPONSES
     app.UseSerilogRequestLogging();
@@ -65,20 +79,42 @@ app.UseStaticFiles();  // Enables serving static files from wwwroot
 app.UseHttpsRedirection();
 app.UseResponseCaching();
 
-Endpoints.MapCQRS(app);
+Endpoints.MapAll(app);
 
-app.UseSwagger();
-app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPI V1"); });
-app.MapHealthChecks("/health");
+if (!app.Environment.IsProduction())
+{
+	app.UseSwagger();
+	app.UseSwaggerUI(c =>
+	{
+		var versionDescriptions = app.DescribeApiVersions();
+//		var provider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
+		foreach (var desc in versionDescriptions)
+		{
+			c.SwaggerEndpoint($"/swagger/{desc.GroupName}/swagger.json",$"Book API {desc.GroupName}");
+		}
 
-app.MapPrometheusScrapingEndpoint();
-app.UseOpenTelemetryPrometheusScrapingEndpoint("metrics");
+		c.DocumentTitle = "Book API";
+	});
+}
+app.MapHealthChecks("/healthz");
+
+if (!app.Environment.IsEnvironment("Testing"))
+{
+	app.MapPrometheusScrapingEndpoint();
+	app.UseOpenTelemetryPrometheusScrapingEndpoint("metrics");
 
 // default endpoint: /healthmetrics
-app.UseHealthChecksPrometheusExporter("/healthmetrics");
+	app.UseHealthChecksPrometheusExporter("/healthz");
+}
 
 // To test Environments: Development <=> Production in IIS Express in launchSettings.json
 Console.WriteLine($"App name: {app.Services.GetRequiredService<IOptions<ApiSettings>>().Value.Name}, version: {app.Services.GetRequiredService<IOptions<ApiSettings>>().Value.Version}");
+
+// Create and seed database
+using (var scope = app.Services.CreateScope())
+{
+	await BooksSeedService.SeedAsync(scope.ServiceProvider);
+}
 
 app.Run();
 

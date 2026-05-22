@@ -10,11 +10,9 @@ public class AuthorRepository(BookStoreDbContext dbContext, IMapper dtoMapper) :
 {
 	public override async Task<Author?> GetByIdAsync(Guid id)
 	{
-		var a = await DbSet.AsNoTracking().Include(a => a.Books)
-			.ThenInclude(b => b.Categories).AsNoTracking()
+		var a = await DbSet.AsNoTracking()
 			.SingleOrDefaultAsync(a => a.Id == id);
-		var dto = DtoMapper.Map<Author>(a);
-		return dto;
+		return a;
 	}
 
 	public async Task<AuthorDto?> GetByIdWithBooksAsync(Guid id)

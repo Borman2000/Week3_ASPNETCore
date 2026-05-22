@@ -1,5 +1,5 @@
 global:
-  scrape_interval:     30s
+  scrape_interval:     5s
   evaluation_interval: 60s
 
 rule_files:
@@ -13,7 +13,7 @@ scrape_configs:
     scheme: http
     honor_labels: true
     static_configs:
-      - targets: ['host.docker.internal:5275', '172.17.0.1:5275']
+      - targets: ['book-service:8080', 'auth-service:8080', 'notification-service:8080', 'gateway-service:8080']
         labels:
           app: 'Books.api'
           env: 'development'

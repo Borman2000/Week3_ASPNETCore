@@ -39,7 +39,6 @@ public static class ApplicationDependencyInjection
 
 	private static void AddServices(this IServiceCollection services, IConfiguration configuration)
 	{
-		services.AddEndpointsApiExplorer();
 		services.AddOptions<ApiSettings>().Bind(configuration.GetSection(ApiSettings.Section)).ValidateDataAnnotations().ValidateOnStart();
 	}
 

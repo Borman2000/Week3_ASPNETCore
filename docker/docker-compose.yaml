@@ -1,3 +1,5 @@
+name: external-services
+
 services:
 
   otel-collector:
@@ -38,7 +40,7 @@ services:
     container_name: mysqld
     environment:
 #      MYSQL_ROOT_HOST: "%"
-      MYSQL_ROOT_PASSWORD: "root_password"
+      MYSQL_ROOT_PASSWORD: "root"
 #      MYSQL_USER: exporter
 #      MYSQL_PASSWORD: exporter
     volumes:
@@ -101,9 +103,34 @@ services:
     ports:
       - "6379:6379"
 
+  jaegertracing:
+#      image: jaegertracing/all-in-one:latest
+      image: jaegertracing/all-in-one:1.75.0
+      container_name: jaeger-tracing
+      volumes:
+        - jaeger-tracing:/jaeger-tracing
+        - jaeger-tmp:/jaeger-tmp
+        - jaeger-tmp2:/tmp
+      ports:
+#        - "6831:6831"
+#        - "6832:6832"
+        - "6831:6831/udp" # UDP port for Jaeger agent
+        - "16686:16686" # Web UI
+        - "14268:14268" # HTTP port for spans
+      environment:
+        - OTEL_EXPORTER_OTLP_ENDPOINT=${OTEL_EXPORTER_ENDPOINT}
+        - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=${OTEL_EXPORTER_ENDPOINT}
+
 volumes:
   prometheus-data: {}
   grafana-data: {}
   mysql-data: {}
   exporter-data: {}
   redis-data: {}
+  jaeger-tracing: {}
+  jaeger-tmp: {}
+  jaeger-tmp2: {}
+
+networks:
+    default:
+        name: book-api-network

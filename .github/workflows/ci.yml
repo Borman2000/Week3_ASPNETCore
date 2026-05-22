@@ -1,0 +1,218 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI/CD Pipeline
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "master" branch
+  push:
+    branches: [ "master", "dev" ]
+  pull_request:
+    branches: [ "master" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Set up Docker Buildx for advanced features
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # Log in to Azure
+#      - name: Log in to Azure
+#        uses: azure/login@v2
+#        with:
+#          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+#          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+#          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      # Log in to GitHub Container Registry
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Generate tags and labels from Git metadata
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}
+          github-token: '${{ secrets.GITHUB_TOKEN }}'
+          tags: |
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=raw,value={{date 'YYYYMMDD'}},enable={{is_not_default_branch}}
+#            type=sha,prefix=
+            # Add 'latest' for the main branch
+#            type=raw,value=latest,enable={{is_default_branch}}
+            # or for pushes to any branch/tag
+#            type=raw,value=latest,enable=true
+
+      - name: Build and run the services with docker
+#        working-directory: ./docker # Specify the target directory
+        run: docker compose -f ./docker/docker-compose.testdb.yaml up --build -d
+
+#      - name: Wait for services to be healthy (optional but recommended)
+#        # Use a third-party action or a simple wait/healthcheck command
+#        uses: jakejarvis/wait-action@master
+#        with:
+#          time: '10s' # Adjust based on your service startup time
+
+      # Runs a single command using the runners shell
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Install SonarScanner
+        run: dotnet tool install --global dotnet-sonarscanner
+
+      - name: Build
+        env:
+          SONAR_SECRET: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          export PATH="$PATH:/root/.dotnet/tools"
+          dotnet-sonarscanner begin /o:"borman2000" /k:"Borman2000_ASPNETCore" /d:sonar.token="$SONAR_SECRET" /d:sonar.cs.opencover.reportsPaths="./Tests/BooksAPI.IntegrationTests/coverage.xml,./Tests/BooksAPI.UnitTests/coverage.xml,./Tests/AuthAPI.IntegrationTests/coverage.xml,./Tests/AuthAPI.UnitTests/coverage.xml" /d:sonar.coverage.exclusions="**Tests*.cs"
+          dotnet build --no-restore
+
+
+
+#          dotnet-sonarscanner begin /o:"borman2000" /k:"Borman2000_ASPNETCore" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.branch.name=dev
+#          dotnet build --no-restore
+#          dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+
+#      - name: Cache SonarQube Cloud packages
+#        uses: actions/cache@v4
+#        with:
+#          path: ~/sonar/cache
+#          key: ${{ runner.os }}-sonar
+#          restore-keys: ${{ runner.os }}-sonar
+#      - name: Cache SonarQube Cloud scanner
+#        id: cache-sonar-scanner
+#        uses: actions/cache@v4
+#        with:
+#          path: ${{ runner.temp }}/scanner
+#          key: ${{ runner.os }}-sonar-scanner
+#          restore-keys: ${{ runner.os }}-sonar-scanner
+#      - name: Install SonarQube Cloud scanner
+#        if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
+#        shell: bash
+#        run: |
+#          mkdir -p "${{ runner.temp }}/scanner"
+#          dotnet tool update dotnet-sonarscanner --tool-path ${{ runner.temp }}/scanner
+#      - name: Build and analyze
+#        continue-on-error: true
+#        env:
+#          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+#        shell: bash
+#        run: |
+#          ${{ runner.temp }}/scanner/dotnet-sonarscanner begin -k:"Borman2000_ASPNETCore" -o:"borman2000" -d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+#          dotnet build --no-restore
+#          ${{ runner.temp }}/scanner/dotnet-sonarscanner end -d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+
+      - name: Test
+        env:
+          JWT_SECRET: ${{ secrets.JWT_SECRET_KEY }}
+          DB_CRED: ${{ secrets.DB_CRED }}
+        run: |
+          export JWT_SECRET_KEY="$JWT_SECRET"
+          export ConnectionStrings__db_cred="$DB_CRED"
+          dotnet test --no-build --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=./coverage.xml
+
+      - name: SonarCube end
+        env:
+          SONAR_SECRET: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          export PATH="$PATH:/root/.dotnet/tools"
+          dotnet-sonarscanner end /d:sonar.token="$SONAR_SECRET"
+
+      - name: Stop/remove test containers
+        run: docker compose -f ./docker/docker-compose.testdb.yaml stop
+#        run: docker compose down -v
+
+      - name: Publish
+        run: dotnet publish -c Release -o ./publish
+
+      # Build and push the Docker images
+      - name: Build and push AuthAPI image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./docker/Auth.Dockerfile
+          # Only push on main branch and tags, not PRs
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          # Enable build cache for faster builds
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build and push BooksAPI image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./docker/Book.Dockerfile
+          # Only push on main branch and tags, not PRs
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          # Enable build cache for faster builds
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build and push NotificationAPI image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./docker/Notification.Dockerfile
+          # Only push on main branch and tags, not PRs
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          # Enable build cache for faster builds
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build and push Gateway image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./docker/Gateway.Dockerfile
+          # Only push on main branch and tags, not PRs
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          # Enable build cache for faster builds
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+#      # Deploy to Azure
+#      - name: Deploy to Azure Web App
+#        uses: azure/webapps-deploy@v2
+#        with:
+#          app-name: '<YOUR_APP_NAME>' # Replace with your app name
+#          package: './build' # Replace with your build output directory
+#
+#      # Azure logout
+#      - name: Logout
+#        run: az logout
+#        if: always()

@@ -1,0 +1,67 @@
+name: book-api-services
+
+services:
+
+  auth-service:
+    build:
+      context: ..   # one level up
+      dockerfile: docker/Auth.Dockerfile
+      args:
+        BUILD_CONFIGURATION: ${BUILD_CONFIGURATION}
+    image: auth-service:dev
+    ports:
+      - "7219:8080"   # map swaggers 8080 to app 7219
+    environment:
+      - ASPNETCORE_ENVIRONMENT=${ENVIRONMENT}
+      - ConnectionStrings__db_cred=${DOCKER_DB_CRED}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+#      - ASPNETCORE_URLS=https://+:7219;http://+:5276
+#      - ASPNETCORE_Kestrel__Certificates__Default__Password=
+#      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+#    volumes:
+#      - ~/.aspnet/https:/https:ro
+
+  notification-service:
+    build:
+      context: ..   # one level up
+      dockerfile: docker/Notification.Dockerfile
+      args:
+        BUILD_CONFIGURATION: ${BUILD_CONFIGURATION}
+    image: notification-service:dev
+    ports:
+      - "7019:8080"   # map swaggers 8080 to app 7019
+    environment:
+      - ASPNETCORE_ENVIRONMENT=${ENVIRONMENT}
+      - ConnectionStrings__db_cred=${DOCKER_DB_CRED}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+
+  book-service:
+    build:
+      context: ..   # one level up
+      dockerfile: docker/Book.Dockerfile
+      args:
+        BUILD_CONFIGURATION: ${BUILD_CONFIGURATION}
+    image: book-service:dev
+    ports:
+      - "7119:8080"   # map swaggers 8080 to app 7119
+    environment:
+      - ASPNETCORE_ENVIRONMENT=${ENVIRONMENT}
+      - ConnectionStrings__db_cred=${DOCKER_DB_CRED}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+
+  gateway-service:
+    build:
+      context: ..   # one level up
+      dockerfile: docker/Gateway.Dockerfile
+      args:
+        BUILD_CONFIGURATION: ${BUILD_CONFIGURATION}
+    image: gateway-service:dev
+    ports:
+      - "7319:8080"   # map swaggers 8080 to app 7319
+    environment:
+      - ASPNETCORE_ENVIRONMENT=${ENVIRONMENT}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+
+networks:
+  default:
+    name: book-api-network

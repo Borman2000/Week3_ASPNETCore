@@ -59,7 +59,7 @@ public class BookRepository(BookStoreDbContext dbContext, IMapper dtoMapper) : E
 
 		await DbContext.Commit();
 
-		return null;
+		return book;
 	}
 
 	public override async Task AddBulkAsync(IEnumerable<Book> entities)
@@ -170,6 +170,7 @@ public class BookRepository(BookStoreDbContext dbContext, IMapper dtoMapper) : E
 			query = query.Where(b => b.Author.FirstName.Contains(author) || b.Author.LastName.Contains(author));
 		if(category is not null)
 			query = query.Where(b => b.Categories.Select(c => c.Name).Any(cat => cat.Contains(category)));
+		query = query.OrderBy(b => b.Title);
 		if (page > 0)
 			query = query.Skip((page - 1) * pageSize ?? 0).Take(pageSize ?? 10);
 		var res = await query.ToListAsync();

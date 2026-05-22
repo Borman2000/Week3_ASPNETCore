@@ -1,0 +1,48 @@
+name: ci-test-services
+
+services:
+
+  mysql:
+    container_name: mysql-test
+    image: mysql:8.0
+    environment:
+#      MYSQL_ROOT_HOST: "%"
+      MYSQL_ROOT_PASSWORD: "root"
+#      MYSQL_USER: exporter
+#      MYSQL_PASSWORD: exporter
+    volumes:
+#      - ./mysql/setup.sql:/docker-entrypoint-initdb.d/setup.sql
+      - mysqltest-data:/var/lib/mysql
+#      - ~/var/mysql:/var/lib/mysql
+    ports:
+      - "33006:3306"
+      - "65530:3306"
+      - "3306:3306"
+
+  redis:
+    image: redis:latest
+    container_name: redis-test
+    volumes:
+      - redistest-data:/redis-cache
+    ports:
+      - "6379:6379"
+
+  sonarqube:
+    container_name: sonarqube-test
+    image: sonarqube:latest
+    volumes:
+      - sonarqube-test-data:/opt/sonarqube/data
+      - sonarqube-test-extensions:/opt/sonarqube/extensions
+      - sonarqube-test-logs:/opt/sonarqube/logs
+      - sonarqube-test-temp:/opt/sonarqube/temp
+    ports:
+      - "9000:9000"
+      - "9092:9092"
+
+volumes:
+  mysqltest-data: {}
+  redistest-data: {}
+  sonarqube-test-data: {}
+  sonarqube-test-extensions: {}
+  sonarqube-test-logs: {}
+  sonarqube-test-temp: {}

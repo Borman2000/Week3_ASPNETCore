@@ -1,0 +1,41 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<OutputType>Exe</OutputType>
+	  <UserSecretsId>07676ae7-1d9e-4fc6-ac56-f17f7e9c5ec3</UserSecretsId>
+  </PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.26" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.1" />
+		<PackageReference Include="Treyt.Yarp.ReverseProxy.Swagger" Version="3.9.0" />
+		<PackageReference Include="AspNetCore.HealthChecks.Prometheus.Metrics" Version="9.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Update="appsettings.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="appsettings.Developmen.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="appsettings.Development.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="appsettings.Production.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="appsettings.Staging.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\Common\OpenTelemetryService\OpenTelemetryService.csproj" />
+	  <ProjectReference Include="..\Common\JwtHelperService\JwtHelperService.csproj" />
+	</ItemGroup>
+
+</Project>

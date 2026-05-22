@@ -1,4 +1,5 @@
 using Application.Exceptions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Middleware;
@@ -28,10 +29,8 @@ public class ValidationExceptionHandlingMiddleware
 				Detail = "One or more validation errors has occurred"
 			};
 
-//			if (exception.Errors is not null)
-//			{
-				problemDetails.Extensions["errors"] = exception.Errors;
-//			}
+			foreach (var error in exception.Errors)
+				problemDetails.Errors[error.Key] = error.Value;
 
 			context.Response.StatusCode = StatusCodes.Status400BadRequest;
 

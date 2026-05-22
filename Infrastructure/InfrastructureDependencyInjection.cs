@@ -1,7 +1,9 @@
 ﻿//#define IN_MEMORY_CACHE
 
-using System.ComponentModel.DataAnnotations;
+using System.Net.Http.Headers;
+using System.Text.RegularExpressions;
 using Application.Interfaces;
+using Common.OpenTelemetryService;
 using CSVParser;
 using Infrastructure.Repositories;
 using Infrastructure.Repositories.Impl;
@@ -9,9 +11,7 @@ using Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using OpenTelemetry;
-using OpenTelemetry.Metrics;
-using OpenTelemetry.Resources;
+using StackExchange.Redis;
 
 namespace Infrastructure;
 
@@ -23,6 +23,7 @@ public static class InfrastructureDependencyInjection
         services.AddDatabaseDeveloperPageExceptionFilter();
 
         services.AddRepositories();
+        services.AddHttpClient(configuration);
 
         return services;
     }
@@ -39,33 +40,21 @@ public static class InfrastructureDependencyInjection
 
     private static void AddDatabase(this IServiceCollection services, IConfiguration configuration)
     {
-        var connectionString = configuration.GetSection(DbSettings.Section).Get<DbSettings>()?.ConnectionString;
+	    var userPswPattern = @"User Id=([^;]+);Password=([^;]+);";
+        var connectionString = configuration.GetConnectionString("BooksDB");
+        if(!Regex.Match(connectionString!, userPswPattern).Success)
+			connectionString += configuration.GetConnectionString("db_cred");
+
         services.AddDbContext<BookStoreDbContext>(opt => opt.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
     }
 
     public static IServiceCollection AddServices(this IServiceCollection services, IConfiguration configuration)
     {
-	    services.AddOpenTelemetry()
-		    .ConfigureResource(configuration => configuration.AddService("Books.api"))
-		    .WithMetrics(builder =>
-		    {
-			    builder
-				    .AddAspNetCoreInstrumentation()
-//				    .AddHttpClientInstrumentation()
-//				    .AddMeter("Microsoft.AspNetCore.Hosting", "Microsoft.AspNetCore.Server.Kestrel", "System.Net.Http", "Books.api")
-				    .AddMeter("Books.api")
-				    .AddInstrumentation<PerformanceMetrics>()
-				    .AddPrometheusExporter() // Configures an endpoint for Prometheus to scrape
-//				    .AddRuntimeInstrumentation() // Collects default .NET runtime metrics (GC, CPU, etc.)
-//				    .AddProcessInstrumentation()
-				    .AddOtlpExporter(options =>
-				    {
-//					    options.Endpoint = new Uri(configuration["Otlp:Endpoint"] ?? "http://localhost:4317");
-					    options.Endpoint = new Uri("http://localhost:4317");
-				    });
-		    });
+	    services.AddOpenTelemetryTracing(configuration);
+	    services.AddOpenTelemetryMetrics(configuration)
+		    .WithInstrumentation<PerformanceMetrics>();
+
 	    services.AddApplicationInsightsTelemetry();
-	    services.AddSingleton<PerformanceMetrics>();
 
 		#if IN_MEMORY_CACHE
 		    services.AddMemoryCache();
@@ -75,6 +64,8 @@ public static class InfrastructureDependencyInjection
 		    {
 			    options.Configuration = configuration["Redis:Configuration"];
 			    options.InstanceName = configuration["Redis:InstanceName"];
+			    IConnectionMultiplexer connectionMultiplexer = ConnectionMultiplexer.Connect(configuration["Redis:Configuration"]!);
+			    options.ConnectionMultiplexerFactory = () => Task.FromResult(connectionMultiplexer);
 		    });
 
 		    services.AddScoped<ICacheService, RedisCacheService>();
@@ -86,10 +77,13 @@ public static class InfrastructureDependencyInjection
 	    return services;
     }
 
-    public class DbSettings
-    {
-        public const string Section = "DBSettings";
-
-        [Required(AllowEmptyStrings = false)]
-        public string ConnectionString { get; set; }
-    }}
+    private static void AddHttpClient(this IServiceCollection services, IConfiguration configuration)
+	{
+	    services.AddHttpClient("NotificationApiService", client =>
+	    {
+		    client.BaseAddress = new Uri(configuration["NotificationApiSettings:BaseUrl"] ?? "https://localhost:7019");
+		    client.DefaultRequestHeaders.Accept.Clear();
+		    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+	    });
+	}
+}

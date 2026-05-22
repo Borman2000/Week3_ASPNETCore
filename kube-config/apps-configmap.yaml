@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: apps
+data:
+  ASPNETCORE_ENVIRONMENT: "Staging"
+  OpenTelemetry__Endpoint: "http://otel-collector.observability.svc.cluster.local:4317"
+

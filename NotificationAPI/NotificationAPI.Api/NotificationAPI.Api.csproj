@@ -1,0 +1,58 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+
+		<UserSecretsId>07676ae7-1d9e-4fc6-ac56-f17f7e9c5ec3</UserSecretsId>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="AspNetCore.HealthChecks.Prometheus.Metrics" Version="9.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.3.9" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.20" />
+		<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.20" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.3.9" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.20">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.2" />
+		<PackageReference Include="Microsoft.Extensions.Options" Version="8.0.2" />
+		<PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.3" />
+		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.17.0" />
+		<PackageReference Include="Serilog" Version="3.1.1" />
+		<PackageReference Include="Serilog.AspNetCore" Version="8.0.3" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.1" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\Common\OpenTelemetryService\OpenTelemetryService.csproj" />
+	  <ProjectReference Include="..\..\Common\JwtHelperService\JwtHelperService.csproj" />
+	  <ProjectReference Include="..\NotificationAPI.Domain\NotificationAPI.Domain.csproj" />
+	  <ProjectReference Include="..\NotificationAPI.Infrastructure\NotificationAPI.Infrastructure.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Update="appsettings.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="appsettings.Production.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="appsettings.Development.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="appsettings.Staging.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
+
+</Project>
