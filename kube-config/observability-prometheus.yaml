@@ -1,0 +1,178 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: prometheus-data-pvc
+  namespace: observability
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config
+  namespace: observability
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval: 5s
+      evaluation_interval: 60s
+
+    rule_files:
+      - "/etc/prometheus/rules/*.yml"
+
+    scrape_configs:
+      - job_name: 'Books.API'
+        scrape_interval: 15s
+        scheme: http
+        honor_labels: true
+        static_configs:
+          - targets:
+              - 'book-service.apps.svc.cluster.local:8080'
+              - 'auth-service.apps.svc.cluster.local:8080'
+              - 'notification-service.apps.svc.cluster.local:8080'
+              - 'gateway-service.apps.svc.cluster.local:8080'
+            labels:
+              app: 'Books.api'
+              env: 'staging'
+
+      - job_name: 'otel-collector'
+        scrape_interval: 15s
+        scheme: http
+        static_configs:
+          - targets: ['otel-collector:8888']
+
+      - job_name: 'otel-collector-exporters'
+        scrape_interval: 15s
+        scheme: http
+        static_configs:
+          - targets: ['otel-collector:8889']
+
+      - job_name: mysql
+        scrape_interval: 15s
+        params:
+          auth_module: [client]
+        static_configs:
+          - targets:
+              - mysqld.apps.svc.cluster.local:3306
+        relabel_configs:
+          - source_labels: [__address__]
+            target_label: __param_target
+          - source_labels: [__param_target]
+            target_label: instance
+          - target_label: __address__
+            replacement: mysqld-exporter:9104
+  demo_service_rules.production.yml: |
+    groups:
+      - name: demo_service
+        rules:
+          - alert: demo_service_unhealthy.production
+            expr: health{job="Dotnext.Demo.Service", env="production"} == 0
+            for: 5m
+            labels:
+              priority: low
+              severity: warning
+            annotations:
+              summary: "{{ $labels.app }} is unhealthy on '{{ $labels.instance }}'"
+          - alert: demo_service_order_latency.production
+            expr: |
+              histogram_quantile(0.95, rate(handler_latency_milliseconds_bucket
+              {message="OrderMessage", job="Dotnext.Demo.Service", env="production"}[24h]))/1000/60
+              > 10
+            for: 5m
+            labels:
+              priority: medium
+              severity: critical
+            annotations:
+              summary: "Latency for {{ $labels.message }} is above 10 minutes"
+          - alert: demo_service_user_latency.production
+            expr: |
+              histogram_quantile(0.95, rate(handler_latency_milliseconds_bucket
+              {message="UserMessage", job="Dotnext.Demo.Service", env="production"}[24h]))/1000/60
+              > 10
+            for: 5m
+            labels:
+              priority: medium
+              severity: critical
+            annotations:
+              summary: "Latency for {{ $labels.message }} is above 10 minutes"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prometheus
+  namespace: observability
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prometheus
+  template:
+    metadata:
+      labels:
+        app: prometheus
+    spec:
+      containers:
+        - name: prometheus
+          image: prom/prometheus:latest
+          args:
+            - --config.file=/etc/prometheus/prometheus.yml
+            - --storage.tsdb.path=/prometheus
+            - --web.console.libraries=/etc/prometheus/console_libraries
+            - --web.console.templates=/etc/prometheus/consoles
+            - --storage.tsdb.retention.time=1y
+            - --web.enable-lifecycle
+            - --web.enable-admin-api
+          ports:
+            - containerPort: 9090
+          readinessProbe:
+            tcpSocket:
+              port: 9090
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 2
+          livenessProbe:
+            tcpSocket:
+              port: 9090
+            initialDelaySeconds: 30
+            periodSeconds: 20
+            timeoutSeconds: 2
+          volumeMounts:
+            - name: prometheus-data
+              mountPath: /prometheus
+            - name: prometheus-config
+              mountPath: /etc/prometheus/prometheus.yml
+              subPath: prometheus.yml
+            - name: prometheus-rules
+              mountPath: /etc/prometheus/rules/demo_service_rules.production.yml
+              subPath: demo_service_rules.production.yml
+      volumes:
+        - name: prometheus-data
+          persistentVolumeClaim:
+            claimName: prometheus-data-pvc
+        - name: prometheus-config
+          configMap:
+            name: prometheus-config
+        - name: prometheus-rules
+          configMap:
+            name: prometheus-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus
+  namespace: observability
+spec:
+  selector:
+    app: prometheus
+  ports:
+    - name: http
+      port: 9090
+      targetPort: 9090
+      nodePort: 30090
+  type: NodePort
+
+

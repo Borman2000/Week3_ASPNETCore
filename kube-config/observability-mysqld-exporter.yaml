@@ -1,0 +1,76 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysqld-exporter-config
+  namespace: observability
+data:
+  config.my-cnf: |
+    [client]
+    user = exporter
+    password = exporter
+    host = mysqld.apps.svc.cluster.local
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysqld-exporter
+  namespace: observability
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysqld-exporter
+  template:
+    metadata:
+      labels:
+        app: mysqld-exporter
+    spec:
+      containers:
+        - name: mysqld-exporter
+          image: prom/mysqld-exporter:latest
+          args:
+            - --collect.info_schema.tablestats
+            - --collect.info_schema.processlist
+            - --config.my-cnf=/cfg/config.my-cnf
+          env:
+            - name: DATA_SOURCE_NAME
+              value: exporter:exporter@(mysqld.apps.svc.cluster.local:3306)/
+          ports:
+            - containerPort: 9104
+          readinessProbe:
+            tcpSocket:
+              port: 9104
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 2
+          livenessProbe:
+            tcpSocket:
+              port: 9104
+            initialDelaySeconds: 30
+            periodSeconds: 20
+            timeoutSeconds: 2
+          volumeMounts:
+            - name: exporter-config
+              mountPath: /cfg/config.my-cnf
+              subPath: config.my-cnf
+      volumes:
+        - name: exporter-config
+          configMap:
+            name: mysqld-exporter-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysqld-exporter
+  namespace: observability
+spec:
+  selector:
+    app: mysqld-exporter
+  ports:
+    - name: metrics
+      port: 9104
+      targetPort: 9104
+      nodePort: 30104
+  type: NodePort
+
+
