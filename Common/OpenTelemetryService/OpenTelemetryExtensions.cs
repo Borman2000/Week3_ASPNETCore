@@ -14,19 +14,23 @@ public static class OpenTelemetryExtensions
     {
 		services.Configure<OpenTelemetryParameters>(configuration.GetSection("OpenTelemetry"));
         var otlpParams = configuration.GetSection("OpenTelemetry").Get<OpenTelemetryParameters>();
+    var serviceName = otlpParams?.ServiceName ?? "Books.api";
+    var serviceVersion = otlpParams?.ServiceVersion ?? "1.0.0";
+    var activitySourceName = otlpParams?.ActivitySourceName ?? serviceName;
+    var endpoint = otlpParams?.Endpoint ?? configuration["OpenTelemetry:Endpoint"] ?? "http://localhost:4317";
 
-		ActivitySourceProvider.SetSource(otlpParams!.ActivitySourceName);
+    ActivitySourceProvider.SetSource(activitySourceName);
 
         services.AddOpenTelemetry().WithTracing(options =>
         {
             options
 	            .AddSource("Yarp.ReverseProxy")
-	            .AddSource(otlpParams.ActivitySourceName)
+              .AddSource(activitySourceName)
                 .AddSource("MassTransit")
                 .ConfigureResource(resource =>
                 {
-                    resource.AddService(otlpParams.ServiceName,
-                        serviceVersion: otlpParams.ServiceVersion);
+                      resource.AddService(serviceName,
+                          serviceVersion: serviceVersion);
                 });
 
             options.AddAspNetCoreInstrumentation(o =>
@@ -81,12 +85,12 @@ public static class OpenTelemetryExtensions
 	            .AddMySqlDataInstrumentation(opt => opt.RecordException = true);
 
 
-            if(otlpParams.IsUseConsole)
+            if(otlpParams?.IsUseConsole == true)
 				options.AddConsoleExporter();
 
             options.AddOtlpExporter(opt =>
             {
-	            opt.Endpoint = new Uri(otlpParams.Endpoint);
+	            opt.Endpoint = new Uri(endpoint);
             });
         });
     }
@@ -103,12 +107,15 @@ public static class OpenTelemetryExtensions
 
 	    services.Configure<OpenTelemetryParameters>(configuration.GetSection("OpenTelemetry"));
         var otlpParams = configuration.GetSection("OpenTelemetry").Get<OpenTelemetryParameters>();
-        
+        var serviceName = otlpParams?.ServiceName ?? "Books.api";
+        var serviceVersion = otlpParams?.ServiceVersion ?? "1.0.0";
+        var endpoint = otlpParams?.Endpoint ?? configuration["OpenTelemetry:Endpoint"] ?? "http://localhost:4317";
+
         services.AddOpenTelemetry().WithMetrics(builder =>
         {
 	        outerBuilder = builder;
             builder
-	            .AddMeter(otlpParams!.ServiceName)
+	            .AddMeter(serviceName)
 	            // Metrics provider from OpenTelemetry
 	            .AddAspNetCoreInstrumentation()
 	            // Metrics provides by ASP.NET Core in .NET 8
@@ -121,13 +128,13 @@ public static class OpenTelemetryExtensions
 
             builder.ConfigureResource(resource =>
             {
-                resource.AddService(serviceName: otlpParams.ServiceName,
-                    serviceVersion: otlpParams.ServiceVersion);
+	                resource.AddService(serviceName: serviceName,
+	                    serviceVersion: serviceVersion);
             });
 
             builder.AddOtlpExporter(opt =>
             {
-	            opt.Endpoint = new Uri(otlpParams.Endpoint);
+	            opt.Endpoint = new Uri(endpoint);
             });
         });
 
